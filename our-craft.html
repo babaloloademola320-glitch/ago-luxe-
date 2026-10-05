@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/x-icon" href="favicon.ico">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="theme-color" content="#0A0A0A">
+<meta name="description" content="How ÀGÒ LUXE pieces are made — sourcing, construction, and quality.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="ÀGÒ LUXE">
+<meta property="og:title" content="Our Craft — ÀGÒ LUXE">
+<meta property="og:image" content="https://ago-luxeclothing.netlify.app/og-image.png">
+<title>Our Craft — ÀGÒ LUXE</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<script>window.__agoPageName = 'our-craft';</script>
+<script src="ago-cart.js?v=20260711b"></script>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Gentium+Plus:ital,wght@0,400;0,700;1,400;1,700&family=Newsreader:ital,wght@0,500;0,600;1,500&display=swap" rel="stylesheet">
+<style>
+:root[data-theme="dark"]{ --bg:#0A0A0A; --surface:#141414; --text:#F9F9F9; --text-soft:#9A9A9A; --border:#222222; }
+:root[data-theme="light"]{ --bg:#F9F9F9; --surface:#FFFFFF; --text:#0A0A0A; --text-soft:#6B6B6B; --border:#E8E8E8; }
+:root{ --accent:#C084FC; --accent-deep:#8B5CF6; }
+*{box-sizing:border-box; margin:0; padding:0;}
+html,body{background:var(--bg); color:var(--text); font-family:var(--theme-font-body, 'Newsreader', serif); font-weight:500; -webkit-tap-highlight-color:transparent; overflow-x:hidden;}
+img{display:block; max-width:100%;}
+a{color:inherit; text-decoration:none;}
+button{font-family:inherit; border:none; background:none; cursor:pointer; color:inherit;}
+h1,h2,h3{font-family:var(--theme-font-heading, 'Gentium Plus', serif); font-weight:700;}
+::selection{background:var(--accent); color:#0A0A0A;}
+body{padding-bottom:64px;}
+.logo{font-family:var(--theme-font-heading,'Cinzel Decorative',serif); font-style:italic; font-weight:700; font-size:1.15rem; color:var(--text); white-space:nowrap; letter-spacing:.02em;}
+.logo .mark{color:var(--accent);}
+.eyebrow{font-family:'Newsreader',serif; font-style:italic; letter-spacing:.14em; text-transform:uppercase; font-size:.72rem; color:var(--accent);}
+
+.navbar{position:sticky; top:0; z-index:50; background:var(--bg); border-bottom:1px solid var(--border); display:flex; align-items:center; gap:10px; padding:12px 14px;}
+.back-btn{display:flex; padding:4px;}
+.back-btn svg{width:20px; height:20px; stroke:var(--text); fill:none; stroke-width:1.8;}
+.nav-title{flex:1; text-align:center; font-family:'Gentium Plus',serif; font-style:italic; font-size:1.05rem;}
+.desktop-nav-links{display:none;}
+
+.page-header{padding:22px 16px 6px;}
+.page-header h1{font-size:1.7rem; font-style:italic;}
+.page-header .updated-note{font-size:.72rem; color:var(--text-soft); margin-top:6px;}
+.page-header p{font-size:.85rem; color:var(--text-soft); margin-top:10px; line-height:1.6;}
+
+.page-content{padding:20px 16px 40px; max-width:720px; margin:0 auto;}
+.policy-section{margin-bottom:26px;}
+.policy-section h2{font-size:1.02rem; margin-bottom:10px;}
+.policy-section p{font-size:.87rem; color:var(--text-soft); line-height:1.75;}
+.policy-cta{margin-top:36px; padding-top:24px; border-top:1px solid var(--border); text-align:center;}
+.policy-cta p{font-size:.85rem; color:var(--text-soft); margin-bottom:14px;}
+.policy-cta a{display:inline-block; padding:12px 28px; border:1px solid var(--accent); color:var(--accent); font-size:.74rem; font-weight:700; letter-spacing:.06em; text-transform:uppercase;}
+
+.craft-hero{width:100%; aspect-ratio:4/3; overflow:hidden; background:var(--surface); margin-bottom:8px;}
+.craft-hero img{width:100%; height:100%; object-fit:cover;}
+.craft-lead{padding:24px 16px 8px; max-width:720px; margin:0 auto;}
+.craft-lead p{font-family:var(--theme-font-heading,'Gentium Plus',serif); font-style:italic; font-size:1.1rem; line-height:1.55; color:var(--text);}
+
+footer{padding:36px 18px 20px;}
+.footer-grid{display:grid; grid-template-columns:1fr 1fr; gap:24px; margin-bottom:30px;}
+.footer-grid h4{font-size:.72rem; text-transform:uppercase; letter-spacing:.08em; color:var(--text-soft); margin-bottom:12px;}
+.footer-grid li{margin-bottom:8px; font-size:.8rem;}
+.payment-section{margin-bottom:16px;}
+.payment-section h4{font-size:.72rem; text-transform:uppercase; letter-spacing:.08em; color:var(--text-soft); margin-bottom:12px;}
+.payment-row{display:grid; grid-template-columns:1fr 1fr; gap:10px;}
+.payment-row img{width:100%; height:52px; background:#fff; border-radius:0; padding:10px 16px; object-fit:contain;}
+.copyright{font-size:.68rem; color:var(--text-soft); border-top:1px solid var(--border); padding-top:16px;}
+.bottom-nav{position:fixed; bottom:0; left:0; right:0; z-index:60; background:var(--bg); border-top:1px solid var(--border); display:flex; justify-content:space-around; padding:9px 0 11px;}
+.bottom-nav a{display:flex; flex-direction:column; align-items:center; gap:3px; font-size:.6rem; color:var(--text-soft); position:relative;}
+.bottom-nav a.active{color:var(--accent);}
+.bottom-nav svg{width:19px; height:19px; stroke:currentColor; fill:none; stroke-width:1.6;}
+.bottom-nav .badge{position:absolute; top:-4px; right:-8px; background:var(--accent); color:#0A0A0A; font-size:.6rem; font-weight:700; width:15px; height:15px; border-radius:50%; display:flex; align-items:center; justify-content:center;}
+.toast{position:fixed; bottom:78px; left:50%; transform:translateX(-50%) translateY(20px); background:var(--text); color:var(--bg); padding:10px 18px; border-radius:30px; font-size:.78rem; opacity:0; transition:all .3s ease; z-index:200; white-space:nowrap;}
+.toast.show{opacity:1; transform:translateX(-50%) translateY(0);}
+
+@media (min-width:860px){
+  body{padding-bottom:0;}
+  .bottom-nav{display:none;}
+  .navbar{padding:16px 40px; flex-wrap:wrap;}
+  .back-btn, .nav-title{display:none;}
+  .desktop-nav-links{display:flex; gap:26px; width:100%; padding-top:14px; border-top:1px solid var(--border); margin-top:14px; justify-content:center;}
+  .desktop-nav-links a{font-size:.78rem; letter-spacing:.04em; text-transform:uppercase; color:var(--text-soft);}
+  .desktop-nav-links a:hover{color:var(--accent);}
+
+  .page-header{max-width:720px; margin:0 auto; padding-left:40px; padding-right:40px; padding-top:36px;}
+  .page-content{padding:20px 40px 60px;}
+  .craft-hero{aspect-ratio:21/8; max-height:480px;}
+  .craft-lead{max-width:720px; padding:32px 40px 8px;}
+  .craft-lead p{font-size:1.35rem; text-align:center;}
+
+  .payment-row{grid-template-columns:repeat(4,1fr); max-width:520px;}
+  footer{padding:48px 40px 24px;}
+  .footer-grid{grid-template-columns:repeat(4,1fr);}
+}
+</style>
+</head>
+<body>
+
+<header class="navbar">
+  <button class="back-btn" data-back-fallback="account.html" aria-label="Back">
+    <svg viewBox="0 0 24 24"><path d="M19 12H5M11 18l-6-6 6-6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </button>
+  <div class="nav-title">Our Craft</div>
+  <a href="index.html" class="logo" style="display:none;"><span class="mark">ÀGÒ</span> LUXE</a>
+  <div class="desktop-nav-links">
+    <a href="index.html">Home</a>
+    <a href="categories.html">Categories</a>
+    <a href="shop.html?cat=women">Women</a>
+    <a href="shop.html?cat=men">Men</a>
+    <a href="jewelry.html">Jewelry</a>
+    <a href="cart.html">Cart</a>
+    <a href="wishlist.html">Wishlist</a>
+    <a href="account.html" data-account-link>Account</a>
+  </div>
+</header>
+
+<div class="page-header">
+  <span class="eyebrow">Company</span>
+  <h1 data-content-key="hero_title">Our Craft</h1>
+  <p data-content-key="hero_subtitle">Every piece is built by hand, not mass-produced on a line.</p>
+</div>
+
+<div class="craft-hero skel-loading">
+  <img class="skel-img" src="https://res.cloudinary.com/dikyzpmqi/image/upload/v1782747672/d2e263f5edb434c7dbcb15da98505626_tbidqh.jpg" alt="ÀGÒ LUXE craftsmanship in detail">
+</div>
+
+<div class="craft-lead">
+  <p data-content-key="intro_text">Behind every ÀGÒ LUXE piece is a real process — sourcing, cutting, sewing, finishing — done by people who take the work seriously.</p>
+</div>
+
+<div class="page-content">
+
+  <div class="policy-section">
+    <h2 data-content-key="sourcing_heading">Sourcing</h2>
+    <p data-content-key="sourcing_text">We work directly with fabric suppliers across Nigeria, choosing materials for how they wear, not just how they photograph. Heritage prints and weaves are sourced from artisans who've worked in textiles for years, not mass factories.</p>
+  </div>
+
+  <div class="policy-section">
+    <h2 data-content-key="construction_heading">Construction</h2>
+    <p data-content-key="construction_text">Every piece is cut and sewn by local tailors, many of whom we've worked with since the earliest days of ÀGÒ LUXE. Small-batch production means more attention per piece — not a rushed line trying to hit a quota.</p>
+  </div>
+
+  <div class="policy-section">
+    <h2 data-content-key="finishing_heading">Finishing & Quality Check</h2>
+    <p data-content-key="finishing_text">Before anything ships, it's checked by hand — stitching, fit, finish. If a piece doesn't meet the standard, it doesn't go out the door, no exceptions.</p>
+  </div>
+
+  <div class="policy-cta">
+    <p data-content-key="cta_text">See the craft for yourself.</p>
+    <a href="shop.html">Shop the Collection</a>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-grid">
+    <div><h4>Shop</h4><ul>
+      <li><a href="shop.html?cat=women">Women</a></li>
+      <li><a href="shop.html?cat=men">Men</a></li>
+      <li><a href="jewelry.html">Jewelry</a></li>
+      <li><a href="shop.html?cat=sale">Sale</a></li>
+    </ul></div>
+    <div><h4>Help</h4><ul>
+      <li><a href="shipping.html">Shipping & Returns</a></li>
+      <li><a href="size-guide.html">Size Guide</a></li>
+      <li><a href="contact.html">Contact Us</a></li>
+      <li><a href="track-order.html">Track Order</a></li>
+    </ul></div>
+    <div><h4>Company</h4><ul>
+      <li><a href="about.html">About ÀGÒ LUXE</a></li>
+      <li><a href="terms.html">Terms of Service</a></li>
+      <li><a href="privacy.html">Privacy Policy</a></li>
+    </ul></div>
+    <div><h4>Connect</h4><ul>
+      <li><a href="#" class="toast-link" data-toast="Instagram link coming soon">Instagram</a></li>
+      <li><a href="#" class="toast-link" data-toast="WhatsApp link coming soon">WhatsApp</a></li>
+      <li><a href="#" class="toast-link" data-toast="TikTok link coming soon">TikTok</a></li>
+    </ul></div>
+  </div>
+  <div class="payment-section">
+    <h4>Accepted Payments</h4>
+    <div class="payment-row">
+      <img src="https://res.cloudinary.com/dikyzpmqi/image/upload/v1782905659/Paystack_idSL4BuSLF_1_ihbzpo.png" alt="Paystack">
+      <img src="https://res.cloudinary.com/dikyzpmqi/image/upload/v1782905701/Visa_Inc-_idDUM8TcN7_1_y6azxr.png" alt="Visa">
+      <img src="https://res.cloudinary.com/dikyzpmqi/image/upload/v1782905614/MClogo-c823e495c5cf455c89ddfb0e17fc7978_j60mjl.jpg" alt="Mastercard">
+      <img src="https://res.cloudinary.com/dikyzpmqi/image/upload/v1782905615/Verve_Image_nraa6w.png" alt="Verve">
+    </div>
+  </div>
+  <p class="copyright">© 2026 ÀGÒ LUXE. All rights reserved.</p>
+</footer>
+
+<nav class="bottom-nav">
+  <a href="index.html">
+    <svg viewBox="0 0 24 24"><path d="M3 11l9-8 9 8M5 10v10h14V10" stroke-width="1.6"/></svg>Home
+  </a>
+  <a href="categories.html">
+    <svg viewBox="0 0 24 24"><rect x="3" y="3" width="8" height="8" stroke-width="1.6"/><rect x="13" y="3" width="8" height="8" stroke-width="1.6"/><rect x="3" y="13" width="8" height="8" stroke-width="1.6"/><rect x="13" y="13" width="8" height="8" stroke-width="1.6"/></svg>Categories
+  </a>
+  <a href="cart.html">
+    <svg viewBox="0 0 24 24" stroke-width="1.6"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>Cart
+    <span class="badge" data-cart-badge>0</span>
+  </a>
+  <a href="wishlist.html">
+    <svg viewBox="0 0 24 24" stroke-width="1.6"><path d="M12 21s-7.5-4.6-10-9.1C.4 8.5 2 4.5 6 4c2.2-.3 4 1 6 3.5C14 5 15.8 3.7 18 4c4 .5 5.6 4.5 4 7.9C19.5 16.4 12 21 12 21z"/></svg>Wishlist
+    <span class="badge" data-wish-badge>0</span>
+  </a>
+  <a href="account.html">
+    <svg viewBox="0 0 24 24" stroke-width="1.6"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-6 8-6s8 2 8 6"/></svg>Account
+  </a>
+</nav>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const toast = document.getElementById('toast');
+document.addEventListener('click', (e) => {
+  const link = e.target.closest('.toast-link');
+  if(!link) return;
+  e.preventDefault();
+  toast.textContent = link.dataset.toast || '';
+  toast.classList.add('show');
+  setTimeout(()=> toast.classList.remove('show'), 1800);
+});
+
+function skelInit(root){
+  (root||document).querySelectorAll('img.skel-img:not(.skel-bound)').forEach(img=>{
+    img.classList.add('skel-bound');
+    const container = img.closest('.skel-loading');
+    function done(){
+      img.classList.add('loaded');
+      if(container) container.classList.add('img-loaded');
+    }
+    if(img.complete && img.naturalWidth) done();
+    else { img.addEventListener('load', done); img.addEventListener('error', done); }
+  });
+}
+skelInit(document);
+
+if (window.__agoContentReady) window.__agoContentReady();
+</script>
+</body>
+</html>

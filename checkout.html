@@ -1,0 +1,2075 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- ── FAVICON ── -->
+<link rel="icon" type="image/x-icon" href="favicon.ico">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="theme-color" content="#0A0A0A">
+<meta name="description" content="Secure checkout — ÀGÒ LUXE. Pay with Paystack.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="ÀGÒ LUXE">
+<meta property="og:title" content="Checkout — ÀGÒ LUXE">
+<meta property="og:description" content="Secure checkout. Pay with Paystack.">
+<meta property="og:image" content="https://ago-luxeclothing.netlify.app/og-image.png">
+<title>Checkout — ÀGÒ LUXE</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Gentium+Plus:ital,wght@0,400;0,700;1,400;1,700&family=Newsreader:ital,wght@0,500;0,600;1,500&display=swap" rel="stylesheet">
+<script src="https://js.paystack.co/v1/inline.js"></script>
+<script>window.__agoPageName = 'checkout';</script>
+<script src="ago-cart.js?v=20260724g"></script>
+<script src="install-prompt.js?v=20260722"></script>
+<style>
+/* ============ TOKENS ============ */
+:root[data-theme="dark"]{
+  --bg:#0A0A0A; --surface:#141414; --text:#F9F9F9; --text-soft:#9A9A9A; --border:#222222;
+}
+:root[data-theme="light"]{
+  --bg:#F9F9F9; --surface:#FFFFFF; --text:#0A0A0A; --text-soft:#6B6B6B; --border:#E8E8E8;
+}
+:root{ --accent:#C084FC; --accent-deep:#8B5CF6; --success:#6FCF97; --danger:#FF6B6B; }
+
+*{box-sizing:border-box; margin:0; padding:0;}
+html,body{background:var(--bg); color:var(--text); font-family:'Newsreader',serif; font-weight:500; -webkit-tap-highlight-color:transparent;}
+@keyframes page-fade-in{from{opacity:0;} to{opacity:1;}}
+body{animation:page-fade-in .25s ease; padding-bottom:110px;}
+img{display:block; max-width:100%;}
+a{color:inherit; text-decoration:none;}
+button{font-family:inherit; border:none; background:none; cursor:pointer; color:inherit;}
+input,select{font-family:'Newsreader',serif;}
+h1,h2,h3{font-family:'Gentium Plus',serif; font-weight:700;}
+::selection{background:var(--accent); color:#0A0A0A;}
+.eyebrow{font-family:'Newsreader',serif; font-style:italic; letter-spacing:.14em; text-transform:uppercase; font-size:.72rem; color:var(--accent);}
+
+/* ============ NAVBAR ============ */
+.navbar{position:sticky; top:0; z-index:50; background:var(--bg); border-bottom:1px solid var(--border); display:flex; align-items:center; gap:10px; padding:12px 14px;}
+.logo{font-family:'Cinzel Decorative',serif; font-style:italic; font-weight:700; font-size:1.15rem; color:var(--text); white-space:nowrap; letter-spacing:.02em;}
+.logo .mark{color:var(--accent);}
+.nav-title{flex:1; text-align:center; font-family:'Gentium Plus',serif; font-style:italic; font-size:1rem; color:var(--text-soft);}
+.back-btn{display:flex; padding:4px;}
+.back-btn svg{width:20px; height:20px; stroke:var(--text); fill:none; stroke-width:1.8;}
+.secure-tag{display:flex; align-items:center; gap:5px; font-size:.66rem; color:var(--text-soft); letter-spacing:.04em; text-transform:uppercase;}
+.secure-tag svg{width:13px; height:13px; stroke:var(--success); fill:none; stroke-width:1.8;}
+
+/* ============ STEP PROGRESS ============ */
+.steps{display:flex; align-items:center; justify-content:center; gap:0; padding:20px 24px 4px;}
+.step{display:flex; flex-direction:column; align-items:center; gap:6px; position:relative; flex:1; max-width:110px;}
+.step-dot{width:28px; height:28px; border-radius:50%; border:1px solid var(--border); background:var(--surface); display:flex; align-items:center; justify-content:center; font-size:.72rem; font-weight:700; color:var(--text-soft); transition:all .3s; z-index:1;}
+.step-label{font-size:.62rem; letter-spacing:.08em; text-transform:uppercase; color:var(--text-soft); transition:color .3s;}
+.step.active .step-dot{border-color:var(--accent); background:var(--accent); color:#0A0A0A;}
+.step.active .step-label{color:var(--text);}
+.step.done .step-dot{border-color:var(--accent); background:none; color:var(--accent);}
+.step-line{flex:1; height:1px; background:var(--border); margin:0 4px 20px; max-width:48px; transition:background .3s;}
+.step-line.done{background:var(--accent);}
+
+/* ============ PANELS ============ */
+.panel{display:none; padding:20px 16px; max-width:640px; margin:0 auto;}
+.panel.active{display:block;}
+.panel h2{font-size:1.25rem; font-style:italic; margin-bottom:4px;}
+.panel .sub{font-size:.78rem; color:var(--text-soft); margin-bottom:20px;}
+
+/* ============ REVIEW ITEMS ============ */
+.rev-item{display:flex; gap:12px; padding:12px 0; border-bottom:1px solid var(--border); align-items:center;}
+.rev-img{width:56px; height:70px; flex-shrink:0; background:var(--surface); overflow:hidden;}
+.rev-img img{width:100%; height:100%; object-fit:cover;}
+.rev-info{flex:1; min-width:0;}
+.rev-name{font-family:'Gentium Plus',serif; font-size:.88rem; line-height:1.3;}
+.rev-meta{font-size:.72rem; color:var(--text-soft); margin-top:2px;}
+.rev-price{font-size:.82rem; font-weight:600; white-space:nowrap;}
+
+/* ============ FORMS ============ */
+.field{margin-bottom:14px;}
+.field label{display:block; font-size:.68rem; letter-spacing:.08em; text-transform:uppercase; color:var(--text-soft); margin-bottom:6px;}
+.field input, .field select{
+  width:100%; background:var(--surface); border:1px solid var(--border);
+  padding:13px 14px; font-size:.9rem; color:var(--text); outline:none;
+  transition:border-color .2s; border-radius:0; -webkit-appearance:none; appearance:none;
+}
+.field input:focus, .field select:focus{border-color:var(--accent);}
+.field select:disabled{opacity:.45; cursor:not-allowed;}
+
+/* ============ CUSTOM INLINE DROPDOWN (ago-select) ============ */
+.ago-select{margin-bottom:14px; position:relative;}
+.ago-select > label{display:block; font-size:.68rem; letter-spacing:.08em; text-transform:uppercase; color:var(--text-soft); margin-bottom:6px;}
+.ago-select-trigger{
+  width:100%; display:flex; align-items:center; justify-content:space-between;
+  background:var(--surface); border:1px solid var(--border);
+  padding:13px 14px; font-size:.9rem; color:var(--text);
+  cursor:pointer; transition:border-color .2s;
+  font-family:'Newsreader',serif;
+}
+.ago-select-trigger:disabled{opacity:.45; cursor:not-allowed;}
+.ago-select-trigger svg{width:14px; height:14px; stroke:var(--text-soft); fill:none; stroke-width:1.8; transition:transform .2s; flex-shrink:0;}
+.ago-select.open .ago-select-trigger{border-color:var(--accent);}
+.ago-select.open .ago-select-trigger svg{transform:rotate(180deg);}
+.ago-select-value.placeholder{color:var(--text-soft);}
+.ago-select.err .ago-select-trigger{border-color:var(--danger);}
+
+.ago-select-panel{
+  display:none;
+  position:relative;
+  background:var(--surface);
+  border:1px solid var(--accent);
+  border-top:none;
+  max-height:260px;
+  z-index:20;
+}
+.ago-select.open .ago-select-panel{display:block;}
+.ago-select-search{padding:8px; border-bottom:1px solid var(--border); position:sticky; top:0; background:var(--surface); z-index:1;}
+.ago-select-search input{
+  width:100%; background:var(--bg); border:1px solid var(--border);
+  padding:9px 12px; font-size:.82rem; color:var(--text); outline:none;
+  font-family:'Newsreader',serif; border-radius:2px;
+}
+.ago-select-search input:focus{border-color:var(--accent);}
+.ago-select-list{max-height:200px; overflow-y:auto; -webkit-overflow-scrolling:touch;}
+.ago-select-item{
+  padding:11px 14px; font-size:.85rem; color:var(--text);
+  cursor:pointer; transition:background .15s; border-bottom:1px solid var(--border);
+}
+.ago-select-item:last-child{border-bottom:none;}
+.ago-select-item:hover, .ago-select-item.highlighted{background:var(--bg);}
+.ago-select-item.selected{color:var(--accent);}
+.ago-select-item.add-custom{color:var(--accent); font-style:italic;}
+.ago-select-empty{padding:16px 14px; font-size:.78rem; color:var(--text-soft); text-align:center;}
+.field input.err{border-color:var(--danger);}
+.field .hint{font-size:.68rem; color:var(--danger); margin-top:4px; display:none;}
+.field.show-err .hint{display:block;}
+.field-row{display:flex; gap:10px;}
+.field-row .field{flex:1;}
+.field select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%239A9A9A' fill='none' stroke-width='1.5'/%3E%3C/svg%3E"); background-repeat:no-repeat; background-position:right 14px center;}
+
+/* ============ DELIVERY METHOD TOGGLE ============ */
+.method-toggle{display:flex; gap:10px; margin-bottom:22px;}
+.method-btn{
+  flex:1; padding:16px 12px; border:1px solid var(--border); background:var(--surface);
+  text-align:left; transition:all .2s; position:relative;
+}
+.method-btn .m-title{font-family:'Gentium Plus',serif; font-size:.92rem; margin-bottom:3px; display:flex; align-items:center; gap:7px;}
+.method-btn .m-title svg{width:15px; height:15px; stroke:currentColor; fill:none; stroke-width:1.6; flex-shrink:0;}
+.method-btn .m-sub{font-size:.68rem; color:var(--text-soft); line-height:1.4;}
+.method-btn.active{border-color:var(--accent);}
+.method-btn.active::after{content:'✓'; position:absolute; top:8px; right:10px; color:var(--accent); font-size:.8rem; font-weight:700;}
+
+/* ============ PICKUP LOCATIONS ============ */
+.pickup-list{display:flex; flex-direction:column; gap:10px;}
+.pickup-opt{
+  display:flex; align-items:flex-start; gap:12px; padding:14px;
+  border:1px solid var(--border); background:var(--surface); cursor:pointer; transition:border-color .2s;
+}
+.pickup-opt.active{border-color:var(--accent);}
+.pickup-radio{width:16px; height:16px; border-radius:50%; border:1.5px solid var(--text-soft); margin-top:2px; flex-shrink:0; position:relative; transition:border-color .2s;}
+.pickup-opt.active .pickup-radio{border-color:var(--accent);}
+.pickup-opt.active .pickup-radio::after{content:''; position:absolute; inset:3px; border-radius:50%; background:var(--accent);}
+.pickup-info p{font-size:.85rem; font-family:'Gentium Plus',serif; margin-bottom:2px;}
+.pickup-info span{font-size:.72rem; color:var(--text-soft); line-height:1.45; display:block;}
+.pickup-info .p-hours{color:var(--accent); font-size:.66rem; margin-top:4px; letter-spacing:.04em;}
+
+/* ============ SUMMARY ============ */
+.summary-box{background:var(--surface); border:1px solid var(--border); padding:18px; margin-top:18px;}
+.summary-box h3{font-family:'Gentium Plus',serif; font-style:italic; font-size:.95rem; margin-bottom:14px;}
+.summary-row{display:flex; justify-content:space-between; font-size:.8rem; margin-bottom:9px;}
+.summary-row span:last-child{font-weight:600;}
+.summary-row .disc{color:var(--success);}
+.summary-row.total{font-size:.95rem; font-weight:700; border-top:1px solid var(--border); padding-top:11px; margin-top:4px;}
+
+/* ============ COUPON ============ */
+.coupon-wrap{margin:16px 0 4px; border:1px solid var(--border); display:flex;}
+.coupon-input{flex:1; background:none; border:none; outline:none; padding:12px 14px; font-size:.85rem; color:var(--text);}
+.coupon-input::placeholder{color:var(--text-soft);}
+.coupon-btn{padding:0 16px; background:var(--surface); font-size:.7rem; letter-spacing:.06em; text-transform:uppercase; font-weight:700; border-left:1px solid var(--border); transition:background .2s;}
+.coupon-btn:hover{background:var(--accent); color:#0A0A0A;}
+.coupon-msg{font-size:.74rem; margin-top:6px;}
+.coupon-msg.success{color:var(--success);}
+.coupon-msg.error{color:var(--danger);}
+
+/* ============ PAYMENT METHOD DISPLAY ============ */
+.pay-note{display:flex; align-items:center; gap:10px; padding:14px; border:1px solid var(--border); background:var(--surface); margin-top:16px;}
+.pay-note img{height:26px; background:#fff; padding:4px 8px;}
+.pay-note p{font-size:.72rem; color:var(--text-soft); line-height:1.5;}
+
+/* ============ CARD MOCKUP ============ */
+.card-mockup{
+  position:relative;
+  width:100%; max-width:340px; aspect-ratio:1.586/1;
+  margin:0 auto 22px;
+  border-radius:16px;
+  padding:22px 24px;
+  background:
+    radial-gradient(circle at 15% 15%, rgba(192,132,252,0.35), transparent 45%),
+    radial-gradient(circle at 85% 85%, rgba(139,92,246,0.3), transparent 50%),
+    linear-gradient(135deg, #1a1a1a 0%, #0A0A0A 60%, #141414 100%);
+  border:1px solid rgba(255,255,255,0.08);
+  box-shadow:0 20px 40px -12px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.06);
+  display:flex; flex-direction:column; justify-content:space-between;
+  overflow:hidden;
+  color:#F9F9F9;
+}
+.card-mockup::before{
+  content:'';
+  position:absolute; top:0; left:-60%; width:50%; height:100%;
+  background:linear-gradient(115deg, transparent, rgba(255,255,255,0.06), transparent);
+  animation:card-shine 5s ease-in-out infinite;
+}
+@keyframes card-shine{
+  0%   { left:-60%; }
+  45%  { left:130%; }
+  100% { left:130%; }
+}
+.card-top{display:flex; justify-content:space-between; align-items:flex-start;}
+.card-chip{
+  width:38px; height:28px; border-radius:6px;
+  background:linear-gradient(135deg,#e8d8a8,#c9b378);
+  position:relative;
+}
+.card-chip::before{
+  content:''; position:absolute; inset:5px;
+  border:1px solid rgba(0,0,0,0.25); border-radius:3px;
+}
+.card-brand{font-family:'Gentium Plus',serif; font-style:italic; font-size:.95rem; letter-spacing:.02em; opacity:.9;}
+.card-brand .mark{color:var(--accent);}
+.card-number{
+  font-family:'Newsreader',serif; font-size:1.15rem; letter-spacing:.14em;
+  font-weight:500; margin:6px 0; display:flex; gap:10px;
+}
+.card-number span{opacity:0; transition:opacity .4s ease;}
+.card-number span.show{opacity:1;}
+.card-bottom{display:flex; justify-content:space-between; align-items:flex-end;}
+.card-bottom .c-label{font-size:.56rem; letter-spacing:.1em; text-transform:uppercase; color:rgba(249,249,249,0.45); margin-bottom:3px;}
+.card-bottom .c-val{font-size:.78rem; letter-spacing:.04em;}
+.card-name{max-width:60%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
+
+/* ── PAYMENT METHOD ICONS ROW ── */
+.pay-methods{display:flex; gap:10px; margin:16px 0;}
+.wallet-balance-note{font-size:.72rem; padding:8px 12px; border-radius:6px; display:inline-block;}
+.wallet-balance-note.sufficient{background:rgba(111,207,151,.12); color:#6FCF97; font-weight:600;}
+.wallet-balance-note.insufficient{background:rgba(255,107,107,.12); color:#FF6B6B; font-weight:600;}
+
+.pay-method-chip{
+  flex:1; display:flex; flex-direction:column; align-items:center; gap:6px;
+  padding:12px 8px; border:1px solid var(--border); background:var(--surface);
+  font-size:.62rem; letter-spacing:.03em; color:var(--text-soft); text-transform:uppercase;
+}
+.pay-method-chip svg{width:20px; height:20px; stroke:var(--text); fill:none; stroke-width:1.5;}
+.pay-method-chip.highlight{border-color:var(--accent); color:var(--text);}
+.pay-method-chip.highlight svg{stroke:var(--accent);}
+.deliver-to{padding:14px; border:1px solid var(--border); background:var(--surface); margin-bottom:4px;}
+.deliver-to h4{font-size:.68rem; letter-spacing:.08em; text-transform:uppercase; color:var(--text-soft); margin-bottom:7px; display:flex; justify-content:space-between; align-items:center;}
+.deliver-to h4 button{color:var(--accent); font-size:.66rem; letter-spacing:.04em; text-transform:uppercase; border-bottom:1px solid var(--accent);}
+.deliver-to p{font-size:.82rem; line-height:1.55;}
+
+/* ============ BOTTOM ACTION BAR ============ */
+.action-bar{
+  position:fixed; bottom:0; left:0; right:0; z-index:60;
+  background:var(--bg); border-top:1px solid var(--border);
+  padding:12px 16px calc(12px + env(safe-area-inset-bottom));
+  display:flex; gap:10px; align-items:center;
+}
+.action-total{flex-shrink:0;}
+.action-total .t-label{font-size:.62rem; letter-spacing:.08em; text-transform:uppercase; color:var(--text-soft);}
+.action-total .t-val{font-size:1.05rem; font-weight:700; font-family:'Gentium Plus',serif;}
+.action-btn{
+  flex:1; padding:15px; background:var(--accent); color:#0A0A0A;
+  font-size:.78rem; font-weight:700; letter-spacing:.06em; text-transform:uppercase;
+  text-align:center; transition:background .2s, transform .15s;
+}
+.action-btn:active{transform:scale(.98);}
+.action-btn:disabled{opacity:.45; pointer-events:none;}
+.action-btn.paying{pointer-events:none; opacity:.7;}
+
+/* ============ SUCCESS SCREEN ============ */
+.success-wrap{text-align:center; padding:64px 24px;}
+
+/* ============ POST-PURCHASE REVIEW PROMPT ============ */
+.review-prompt-overlay{
+  position:fixed; inset:0; z-index:310;
+  background:rgba(10,10,10,.8); backdrop-filter:blur(4px);
+  display:flex; align-items:flex-end; justify-content:center;
+  opacity:0; pointer-events:none; transition:opacity .3s ease;
+}
+.review-prompt-overlay.open{opacity:1; pointer-events:all;}
+.review-prompt-sheet{
+  background:var(--bg); border-top:1px solid var(--border);
+  border-radius:16px 16px 0 0; padding:26px 22px calc(26px + env(safe-area-inset-bottom));
+  width:100%; max-width:480px;
+  transform:translateY(100%); transition:transform .35s cubic-bezier(0.25,0.46,0.45,0.94);
+  max-height:82vh; overflow-y:auto;
+}
+.review-prompt-overlay.open .review-prompt-sheet{transform:translateY(0);}
+.review-prompt-sheet h3{font-family:'Gentium Plus',serif; font-style:italic; font-size:1.15rem; text-align:center; margin-bottom:5px;}
+.review-prompt-sheet .rp-sub{font-size:.8rem; color:var(--text-soft); text-align:center; margin-bottom:22px;}
+.rp-item{display:flex; align-items:center; gap:12px; padding:14px 0; border-bottom:1px solid var(--border);}
+.rp-item:last-child{border-bottom:none;}
+.rp-item img{width:46px; height:58px; object-fit:cover; border-radius:3px; background:var(--surface); flex-shrink:0;}
+.rp-item-info{flex:1; min-width:0;}
+.rp-item-name{font-size:.84rem; margin-bottom:6px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
+.rp-stars{display:flex; gap:3px;}
+.rp-stars button{padding:1px;}
+.rp-stars svg{width:19px; height:19px; color:var(--text-soft); transition:color .15s;}
+.rp-stars button.selected svg{color:var(--accent);}
+.rp-item.submitted .rp-item-info::after{content:'✓ Thank you!'; display:block; font-size:.72rem; color:var(--success); margin-top:4px;}
+.rp-item.submitted .rp-stars{display:none;}
+.review-prompt-actions{margin-top:20px; text-align:center;}
+.review-prompt-actions button{font-size:.74rem; color:var(--text-soft); letter-spacing:.04em; text-transform:uppercase; border-bottom:1px solid var(--text-soft); padding-bottom:2px;}
+.success-icon{width:64px; height:64px; margin:0 auto 20px; border:1.5px solid var(--success); border-radius:50%; display:flex; align-items:center; justify-content:center;}
+.success-icon svg{width:28px; height:28px; stroke:var(--success); fill:none; stroke-width:2;}
+.success-wrap h2{font-size:1.4rem; font-style:italic; margin-bottom:8px;}
+.success-wrap .sub{font-size:.82rem; color:var(--text-soft); margin-bottom:6px;}
+.order-no{font-family:'Gentium Plus',serif; font-size:1.05rem; color:var(--accent); letter-spacing:.06em; margin:14px 0 26px;}
+.success-actions{display:flex; flex-direction:column; gap:10px; max-width:320px; margin:0 auto;}
+.success-actions a{padding:14px; font-size:.74rem; font-weight:700; letter-spacing:.06em; text-transform:uppercase;}
+.s-primary{background:var(--accent); color:#0A0A0A;}
+.s-ghost{border:1px solid var(--border); color:var(--text);}
+
+/* ============ EMPTY ============ */
+.empty-wrap{text-align:center; padding:80px 24px;}
+.empty-wrap h2{font-size:1.2rem; font-style:italic; margin-bottom:8px;}
+.empty-wrap p{font-size:.8rem; color:var(--text-soft); margin-bottom:22px;}
+.empty-wrap a{display:inline-block; padding:12px 28px; background:var(--accent); color:#0A0A0A; font-size:.74rem; font-weight:700; letter-spacing:.06em; text-transform:uppercase;}
+
+/* ============ TOAST ============ */
+.toast{position:fixed; bottom:100px; left:50%; transform:translateX(-50%) translateY(20px); background:var(--text); color:var(--bg); padding:10px 18px; border-radius:30px; font-size:.78rem; opacity:0; transition:all .3s ease; z-index:200; white-space:nowrap; pointer-events:none;}
+.toast.error{background:#B3261E; color:#fff;} /* red — used for real payment failures like insufficient wallet balance, distinct from neutral confirmations */
+.toast.show{opacity:1; transform:translateX(-50%) translateY(0);}
+
+/* ============ EXIT CONFIRM MODAL ============ */
+.confirm-overlay{
+  position:fixed; inset:0; z-index:300;
+  background:rgba(10,10,10,.75);
+  backdrop-filter:blur(4px);
+  display:flex; align-items:center; justify-content:center;
+  opacity:0; pointer-events:none;
+  transition:opacity .25s ease;
+  padding:24px;
+}
+.confirm-overlay.open{opacity:1; pointer-events:all;}
+.confirm-box{
+  background:var(--surface);
+  border:1px solid var(--border);
+  padding:28px 24px 22px;
+  max-width:340px; width:100%;
+  text-align:center;
+  transform:translateY(16px) scale(.97);
+  transition:transform .25s cubic-bezier(0.25,0.46,0.45,0.94);
+}
+.confirm-overlay.open .confirm-box{transform:translateY(0) scale(1);}
+.confirm-box .c-icon{
+  width:44px; height:44px; margin:0 auto 14px;
+  border:1px solid var(--border); border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+}
+.confirm-box .c-icon svg{width:20px; height:20px; stroke:var(--accent); fill:none; stroke-width:1.6;}
+.confirm-box h3{font-family:'Gentium Plus',serif; font-style:italic; font-size:1.05rem; margin-bottom:6px;}
+.confirm-box p{font-size:.8rem; color:var(--text-soft); line-height:1.5; margin-bottom:20px;}
+.confirm-actions{display:flex; gap:10px;}
+.confirm-actions button{
+  flex:1; padding:12px; font-size:.72rem; font-weight:700;
+  letter-spacing:.06em; text-transform:uppercase;
+  font-family:'Newsreader',serif; cursor:pointer;
+  transition:all .2s;
+}
+.c-cancel{background:var(--accent); border:1px solid var(--accent); color:#0A0A0A;}
+.c-cancel:hover{background:var(--accent-deep);}
+.c-confirm{background:none; border:1px solid var(--border); color:var(--text-soft);}
+.c-confirm:hover{border-color:var(--danger); color:var(--danger);}
+
+/* ============ DESKTOP ============ */
+@media(min-width:860px){
+  .navbar{padding:16px 40px;}
+  .panel{padding:28px 40px;}
+  .method-toggle{max-width:520px;}
+}
+</style>
+</head>
+<body>
+
+<!-- ============ NAVBAR ============ -->
+<header class="navbar">
+  <button class="back-btn" id="backBtn" aria-label="Back to cart">
+    <svg viewBox="0 0 24 24"><path d="M19 12H5M11 18l-6-6 6-6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </button>
+  <a href="index.html" class="logo"><span class="mark">ÀGÒ</span> LUXE</a>
+  <div class="nav-title">Checkout</div>
+  <div class="secure-tag">
+    <svg viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="10" rx="1"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
+    Secure
+  </div>
+</header>
+
+<!-- ============ STEP PROGRESS ============ -->
+<div class="steps" id="stepsBar">
+  <div class="step active" data-step="1"><div class="step-dot">1</div><div class="step-label">Review</div></div>
+  <div class="step-line" id="line1"></div>
+  <div class="step" data-step="2"><div class="step-dot">2</div><div class="step-label">Delivery</div></div>
+  <div class="step-line" id="line2"></div>
+  <div class="step" data-step="3"><div class="step-dot">3</div><div class="step-label">Payment</div></div>
+</div>
+
+<!-- ============ STEP 1 — REVIEW ============ -->
+<div class="panel active" id="panel1">
+  <h2>Review Your Order</h2>
+  <p class="sub" id="reviewCount"></p>
+  <div id="reviewItems"></div>
+
+  <div class="coupon-wrap">
+    <input class="coupon-input" id="couponInput" type="text" placeholder="Coupon code" maxlength="20">
+    <button class="coupon-btn" id="couponBtn">Apply</button>
+  </div>
+  <p class="coupon-msg" id="couponMsg"></p>
+
+  <div class="summary-box" id="summary1"></div>
+</div>
+
+<!-- ============ STEP 2 — DELIVERY ============ -->
+<div class="panel" id="panel2">
+  <h2>Delivery Details</h2>
+  <p class="sub">How should we get your order to you?</p>
+
+  <div class="method-toggle">
+    <button class="method-btn active" data-method="delivery" type="button">
+      <div class="m-title">
+        <svg viewBox="0 0 24 24"><rect x="1" y="6" width="14" height="11"/><path d="M15 9h4l3 4v4h-7"/><circle cx="6" cy="19" r="1.6"/><circle cx="18.5" cy="19" r="1.6"/></svg>
+        Home Delivery
+      </div>
+      <div class="m-sub">Delivered to your address in 2–5 working days</div>
+    </button>
+    <button class="method-btn" data-method="pickup" type="button">
+      <div class="m-title">
+        <svg viewBox="0 0 24 24"><path d="M12 21s-6-5.2-6-10a6 6 0 0 1 12 0c0 4.8-6 10-6 10z"/><circle cx="12" cy="11" r="2"/></svg>
+        Pickup
+      </div>
+      <div class="m-sub">Free — collect from a pickup point near you</div>
+    </button>
+  </div>
+
+  <!-- Contact — always required -->
+  <div class="field">
+    <label>Full Name</label>
+    <input type="text" id="fName" placeholder="e.g. Adaeze Okafor" autocomplete="name">
+    <p class="hint">Please enter your full name</p>
+  </div>
+  <div class="field-row">
+    <div class="field">
+      <label>Phone (WhatsApp)</label>
+      <input type="tel" id="fPhone" placeholder="0803 000 0000" autocomplete="tel">
+      <p class="hint">Enter a valid phone number</p>
+    </div>
+    <div class="field">
+      <label>Email</label>
+      <input type="email" id="fEmail" placeholder="you@email.com" autocomplete="email">
+      <p class="hint">Enter a valid email</p>
+    </div>
+  </div>
+
+  <!-- Delivery address (shown for home delivery) -->
+  <div id="deliveryFields">
+    <div class="ago-select" id="stateSelect">
+      <label>State</label>
+      <button type="button" class="ago-select-trigger" id="stateTrigger">
+        <span class="ago-select-value" id="stateValue">Select state</span>
+        <svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+      </button>
+      <div class="ago-select-panel" id="statePanel">
+        <div class="ago-select-search"><input type="text" placeholder="Search states…" id="stateSearch"></div>
+        <div class="ago-select-list" id="stateList"></div>
+      </div>
+      <p class="hint" id="stateHint">Select your state</p>
+    </div>
+
+    <div class="ago-select" id="lgaSelect">
+      <label>LGA (Local Government Area)</label>
+      <button type="button" class="ago-select-trigger" id="lgaTrigger" disabled>
+        <span class="ago-select-value" id="lgaValue">Select state first</span>
+        <svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+      </button>
+      <div class="ago-select-panel" id="lgaPanel">
+        <div class="ago-select-search"><input type="text" placeholder="Search LGAs…" id="lgaSearch"></div>
+        <div class="ago-select-list" id="lgaList"></div>
+      </div>
+      <p class="hint" id="lgaHint">Select your LGA</p>
+    </div>
+
+    <div class="ago-select" id="busStopSelect">
+      <label>Nearest Bus-Stop / Area</label>
+      <button type="button" class="ago-select-trigger" id="busStopTrigger" disabled>
+        <span class="ago-select-value" id="busStopValue">Select LGA first</span>
+        <svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+      </button>
+      <div class="ago-select-panel" id="busStopPanel">
+        <div class="ago-select-search"><input type="text" placeholder="Search or type your area…" id="busStopSearch"></div>
+        <div class="ago-select-list" id="busStopList"></div>
+      </div>
+      <p class="hint" id="busStopHint">Select or type your nearest bus-stop</p>
+    </div>
+
+    <div class="field">
+      <label>Street Address</label>
+      <input type="text" id="fAddress" placeholder="House number & street" autocomplete="street-address">
+      <p class="hint">Please enter your address</p>
+    </div>
+  </div>
+
+  <!-- Pickup locations (shown for pickup) -->
+  <div id="pickupFields" style="display:none;">
+    <div class="field"><label>Choose a pickup point</label></div>
+    <div class="pickup-list" id="pickupList"></div>
+  </div>
+</div>
+
+<!-- ============ STEP 3 — PAYMENT ============ -->
+<div class="panel" id="panel3">
+  <h2>Payment</h2>
+  <p class="sub">Confirm your details and pay securely.</p>
+
+  <div class="card-mockup" id="cardMockup">
+    <div class="card-top">
+      <div class="card-chip"></div>
+      <div class="card-brand">ÀGÒ <span class="mark">LUXE</span></div>
+    </div>
+    <div class="card-number" id="cardNumber">
+      <span>••••</span><span>••••</span><span>••••</span><span>••••</span>
+    </div>
+    <div class="card-bottom">
+      <div>
+        <div class="c-label">Card Holder</div>
+        <div class="c-val card-name" id="cardHolderName">—</div>
+      </div>
+      <div>
+        <div class="c-label">Expires</div>
+        <div class="c-val">••/••</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="pay-methods" id="payMethods">
+    <button type="button" class="pay-method-chip highlight" data-channel="card">
+      <svg viewBox="0 0 24 24"><rect x="1" y="5" width="22" height="14" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+      Card
+    </button>
+    <button type="button" class="pay-method-chip" data-channel="bank_transfer">
+      <svg viewBox="0 0 24 24"><path d="M4 10h16M4 14h16"/><rect x="2" y="4" width="20" height="16" rx="2"/></svg>
+      Transfer
+    </button>
+    <button type="button" class="pay-method-chip" data-channel="ussd">
+      <svg viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="9" y1="18" x2="15" y2="18"/></svg>
+      USSD
+    </button>
+    <button type="button" class="pay-method-chip" data-channel="wallet" id="walletChip" style="display:none;">
+      <svg viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="14" rx="2"/><path d="M2 10h20"/><circle cx="17" cy="15" r="1.4"/></svg>
+      Wallet
+    </button>
+  </div>
+
+  <p id="walletBalanceNote" class="wallet-balance-note" style="display:none; margin:-4px 0 16px; text-align:center;"></p>
+
+  <div class="deliver-to" id="deliverTo"></div>
+
+  <div class="summary-box" id="summary3"></div>
+
+  <div class="pay-note">
+    <img src="https://res.cloudinary.com/dikyzpmqi/image/upload/v1782905659/Paystack_idSL4BuSLF_1_ihbzpo.png" alt="Paystack">
+    <p>Payments are processed securely by Paystack. Card, bank transfer &amp; USSD accepted. We never see or store your card details.</p>
+  </div>
+</div>
+
+<!-- ============ SUCCESS ============ -->
+<div class="panel" id="panelSuccess">
+  <div class="success-wrap">
+    <div class="success-icon">
+      <svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>
+    </div>
+    <h2 data-content-key="success_heading">Order Confirmed</h2>
+    <p class="sub" data-content-key="success_subtext">Thank you for shopping with ÀGÒ LUXE.</p>
+    <p class="sub" id="successNote">A confirmation has been sent to your email.</p>
+    <p class="order-no" id="orderNo"></p>
+    <div class="success-actions">
+      <a href="shop.html" class="s-primary">Continue Shopping</a>
+      <a href="index.html" class="s-ghost">Back to Home</a>
+    </div>
+  </div>
+</div>
+
+<!-- ============ POST-PURCHASE REVIEW PROMPT ============ -->
+<div class="review-prompt-overlay" id="reviewPromptOverlay">
+  <div class="review-prompt-sheet">
+    <h3>Rate Your Purchase</h3>
+    <p class="rp-sub">Tap a star to rate — takes 2 seconds.</p>
+    <div id="reviewPromptItems"></div>
+    <div class="review-prompt-actions">
+      <button type="button" id="reviewPromptSkip">Maybe Later</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ EMPTY CART ============ -->
+<div class="panel" id="panelEmpty">
+  <div class="empty-wrap">
+    <h2>Your bag is empty</h2>
+    <p>Add something beautiful before checking out.</p>
+    <a href="shop.html">Browse Collection</a>
+  </div>
+</div>
+
+<!-- ============ ACTION BAR ============ -->
+<div class="action-bar" id="actionBar">
+  <div class="action-total">
+    <div class="t-label">Total</div>
+    <div class="t-val" id="actionTotal">₦0</div>
+  </div>
+  <button class="action-btn" id="actionBtn">Continue</button>
+</div>
+
+<!-- ============ EXIT CONFIRM MODAL ============ -->
+<div class="confirm-overlay" id="acctRequiredOverlay">
+  <div class="confirm-box">
+    <div class="c-icon">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-6 8-6s8 2 8 6"/></svg>
+    </div>
+    <h3>Sign In to Check Out</h3>
+    <p>You'll need a free ÀGÒ LUXE account to complete your order — it only takes a minute, and your cart comes with you.</p>
+    <div class="confirm-actions">
+      <button class="c-cancel" id="acctRequiredStay">Not Now</button>
+      <button class="c-confirm" id="acctRequiredGo" style="background:var(--accent); border-color:var(--accent); color:#0A0A0A;">Sign In / Sign Up</button>
+    </div>
+  </div>
+</div>
+
+<div class="confirm-overlay" id="exitOverlay">
+  <div class="confirm-box">
+    <div class="c-icon">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+    </div>
+    <h3>Leave Checkout?</h3>
+    <p>You're yet to complete your order. If you leave now, your cart will be saved but this order won't go through.</p>
+    <div class="confirm-actions">
+      <button class="c-cancel" id="exitStay">Stay &amp; Finish</button>
+      <button class="c-confirm" id="exitLeave">Leave Anyway</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ════════════════════════════════════════════════════════════
+   CONFIG — edit these two blocks freely
+   ════════════════════════════════════════════════════════════ */
+
+// Paste your Paystack PUBLIC key (pk_test_... or pk_live_...).
+// Leave empty '' for DEMO MODE — simulates a successful payment.
+const PAYSTACK_PK = 'pk_test_0eabc5cebeec77e956a37a40f29b9d11db13039f';
+
+// Pickup locations — edit names/addresses/hours as needed
+const PICKUP_LOCATIONS = [
+  { name: 'Ikeja City Mall Pickup Point',  address: 'Obafemi Awolowo Way, Alausa, Ikeja, Lagos',        hours: 'Mon–Sat · 10am–7pm', lat: 6.6140, lng: 3.3578 },
+  { name: 'Lekki Phase 1 Pickup Point',    address: 'Admiralty Way, Lekki Phase 1, Lagos',              hours: 'Mon–Sat · 10am–7pm', lat: 6.4500, lng: 3.4704 },
+  { name: 'Ago-Iwoye Studio',              address: 'Ago-Iwoye, Ijebu North, Ogun State',               hours: 'Mon–Fri · 9am–5pm',  lat: 6.9424, lng: 3.9216 },
+  { name: 'Abuja Pickup Point',            address: 'Adetokunbo Ademola Crescent, Wuse 2, Abuja',       hours: 'Mon–Sat · 10am–6pm', lat: 9.0730, lng: 7.4750 },
+];
+
+const SB_URL = 'https://drjebroujarpugwadido.supabase.co/rest/v1';
+const SB_AUTH_URL = 'https://drjebroujarpugwadido.supabase.co/auth/v1';
+const SB_KEY = 'sb_publishable_0mAkL4aIqXf1nm9zlQF8Fg_yPyt-F71';
+
+/* ── AUTH SESSION (shared shape with account.html) ───────────
+   Reads the same localStorage session account.html writes on
+   sign-in, so checkout can recognise a logged-in customer and
+   pull their saved default address automatically. */
+function getAuthSession(){
+  try { return JSON.parse(localStorage.getItem('ago_auth_session') || 'null'); }
+  catch { return null; }
+}
+function isLoggedIn(){
+  const s = getAuthSession();
+  return !!(s && s.access_token && s.user);
+}
+function authHeaders(){
+  const s = getAuthSession();
+  return {
+    'apikey': SB_KEY,
+    'Authorization': 'Bearer ' + (s?.access_token || SB_KEY),
+    'Content-Type': 'application/json',
+  };
+}
+
+/* Fetches the customer's default saved address (if any) and returns
+   it in the same shape checkout's form fields expect, so it can be
+   used to pre-fill Delivery Details for a logged-in returning
+   customer instead of them retyping everything every time. */
+async function fetchDefaultAddress(){
+  const session = getAuthSession();
+  if (!session?.user?.id) return null;
+  try {
+    const res = await fetch(
+      `${SB_URL}/addresses?user_id=eq.${session.user.id}&is_default=eq.true&select=*&limit=1`,
+      { headers: authHeaders() }
+    );
+    const rows = res.ok ? await res.json() : [];
+    return rows[0] || null;
+  } catch(e){
+    console.warn('Could not fetch default address:', e);
+    return null;
+  }
+}
+
+/* Fetches the logged-in customer's real wallet balance from
+   profiles.wallet_balance — the same audited value shown on their
+   Account page, never a locally-guessed number. */
+async function fetchWalletBalance(){
+  const session = getAuthSession();
+  if (!session?.user?.id) return 0;
+  try {
+    const res = await fetch(
+      `${SB_URL}/profiles?id=eq.${session.user.id}&select=wallet_balance&limit=1`,
+      { headers: authHeaders() }
+    );
+    const rows = res.ok ? await res.json() : [];
+    return parseFloat(rows[0]?.wallet_balance) || 0;
+  } catch(e){
+    console.warn('Could not fetch wallet balance:', e);
+    return 0;
+  }
+}
+const FREE_SHIP_MIN = 50000;
+const SHIP_FEE = 3500; // fallback flat fee — used until a real per-LGA fee loads, or for any LGA not explicitly priced in delivery_fees
+
+// Real per-LGA delivery pricing. Cached here (not fetched fresh
+// inside totals()) because totals() runs synchronously in many
+// places throughout this file — converting it to async would touch
+// every call site. Instead, the real fee is fetched once when LGA
+// selection changes, cached here, and totals() just reads whatever
+// is currently cached.
+let cachedDeliveryFee = null;       // real fee for the selected LGA, once loaded
+let cachedDeliveryFreeMin = null;   // LGA-specific free-delivery threshold, if one is set
+
+async function fetchDeliveryFeeForLga(state, lga){
+  if (!state || !lga) { cachedDeliveryFee = null; cachedDeliveryFreeMin = null; return; }
+  try {
+    const res = await fetch(
+      `${SB_URL}/delivery_fees?select=fee,free_delivery_min&state=eq.${encodeURIComponent(state)}&lga=eq.${encodeURIComponent(lga)}&limit=1`,
+      { headers: { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY } }
+    );
+    if (!res.ok) throw new Error('fee lookup failed');
+    const rows = await res.json();
+    if (rows.length) {
+      cachedDeliveryFee = parseFloat(rows[0].fee);
+      cachedDeliveryFreeMin = rows[0].free_delivery_min != null ? parseFloat(rows[0].free_delivery_min) : null;
+    } else {
+      // No specific row for this LGA — genuinely fall back to the
+      // flat default rather than pretend we have real pricing data
+      // for every one of Nigeria's ~774 LGAs.
+      cachedDeliveryFee = null;
+      cachedDeliveryFreeMin = null;
+    }
+  } catch(e){
+    console.warn('Could not fetch delivery fee, using flat default:', e);
+    cachedDeliveryFee = null;
+    cachedDeliveryFreeMin = null;
+  }
+  // Re-render whatever's currently showing totals, now that the
+  // real fee (or confirmed fallback) is known. summary1 is visible
+  // from step 1 onward, so it's always safe to refresh directly —
+  // renderReview() is specifically step 3's function and would be
+  // premature to call while still on step 2 selecting an LGA.
+  const summaryEl = $('summary1');
+  if (summaryEl) summaryEl.innerHTML = summaryHTML();
+  if (typeof updateActionBar === 'function') updateActionBar();
+}
+
+/* Nigeria States → LGAs. Full coverage for major commerce states;
+   remaining states include their real LGAs too (36 states + FCT). */
+const NG_LGAS = {
+  'Lagos': ['Agege','Ajeromi-Ifelodun','Alimosho','Amuwo-Odofin','Apapa','Badagry','Epe','Eti-Osa','Ibeju-Lekki','Ifako-Ijaiye','Ikeja','Ikorodu','Kosofe','Lagos Island','Lagos Mainland','Mushin','Ojo','Oshodi-Isolo','Shomolu','Surulere'],
+  'Ogun': ['Abeokuta North','Abeokuta South','Ado-Odo/Ota','Ewekoro','Ifo','Ijebu East','Ijebu North','Ijebu North East','Ijebu Ode','Ikenne','Imeko Afon','Ipokia','Obafemi Owode','Odeda','Odogbolu','Remo North','Sagamu','Yewa North','Yewa South'],
+  'Oyo': ['Akinyele','Atiba','Atisbo','Egbeda','Ibadan North','Ibadan North-East','Ibadan North-West','Ibadan South-East','Ibadan South-West','Ibarapa Central','Ibarapa East','Ibarapa North','Ido','Irepo','Iseyin','Itesiwaju','Iwajowa','Kajola','Lagelu','Ogbomosho North','Ogbomosho South','Ogo Oluwa','Olorunsogo','Oluyole','Ona Ara','Orelope','Ori Ire','Oyo East','Oyo West','Saki East','Saki West','Surulere'],
+  'Abuja (FCT)': ['Abaji','Bwari','Gwagwalada','Kuje','Kwali','Municipal Area Council (AMAC)'],
+  'Rivers': ['Port Harcourt','Obio-Akpor','Eleme','Ikwerre','Etche','Oyigbo','Okrika','Ogu-Bolo','Degema','Bonny','Andoni','Opobo-Nkoro','Ahoada East','Ahoada West','Emohua','Gokana','Khana','Tai','Asari-Toru','Akuku-Toru','Abua/Odual','Omuma'],
+  'Delta': ['Warri South','Warri North','Warri South West','Uvwie','Ughelli North','Ughelli South','Sapele','Ethiope East','Ethiope West','Oshimili North','Oshimili South','Aniocha North','Aniocha South','Ika North East','Ika South','Isoko North','Isoko South','Ndokwa East','Ndokwa West','Okpe','Patani','Bomadi','Burutu','Udu'],
+  'Edo': ['Benin City (Oredo)','Egor','Ikpoba-Okha','Ovia North-East','Ovia South-West','Orhionmwon','Uhunmwonde','Esan Central','Esan North-East','Esan South-East','Esan West','Etsako Central','Etsako East','Etsako West','Igueben','Owan East','Owan West'],
+  'Anambra': ['Awka North','Awka South','Onitsha North','Onitsha South','Nnewi North','Nnewi South','Idemili North','Idemili South','Aguata','Anambra East','Anambra West','Anaocha','Ayamelum','Dunukofia','Ekwusigo','Njikoka','Ogbaru','Orumba North','Orumba South','Oyi'],
+  'Enugu': ['Enugu East','Enugu North','Enugu South','Nsukka','Isi Uzo','Igbo Etiti','Igbo Eze North','Igbo Eze South','Nkanu East','Nkanu West','Udi','Ezeagu','Aninri','Awgu','Oji River','Udenu','Uzo-Uwani'],
+  'Kaduna': ['Kaduna North','Kaduna South','Chikun','Igabi','Zaria','Sabon Gari','Giwa','Ikara','Kachia','Kagarko','Kajuru','Kaura','Kauru','Kubau','Kudan','Lere','Makarfi','Sanga','Soba','Zangon Kataf','Jaba',"Jema'a"],
+  'Kano': ['Kano Municipal','Fagge','Dala','Gwale','Tarauni','Nassarawa','Ungogo','Kumbotso','Warawa','Gezawa','Dawakin Kudu','Dawakin Tofa','Rimin Gado','Wudil','Garko','Albasu','Sumaila','Bunkure','Rano','Kibiya','Bebeji','Kiru','Doguwa','Tofa','Kunchi','Bagwai','Gabasawa','Minjibir','Ajingi','Garun Mallam','Madobi','Karaye','Rogo','Gwarzo','Kabo','Bichi','Shanono','Ungogo','Takai','Sumaila'],
+  'Kwara': ['Ilorin East','Ilorin South','Ilorin West','Asa','Baruten','Edu','Ekiti','Ifelodun','Irepodun','Isin','Kaiama','Moro','Offa','Oke Ero','Oyun','Pategi'],
+  'Osun': ['Osogbo','Olorunda','Egbedore','Ede North','Ede South','Ejigbo','Ife Central','Ife East','Ife North','Ife South','Ifedayo','Ifelodun','Ila','Ilesa East','Ilesa West','Irepodun','Irewole','Isokan','Iwo','Obokun','Odo Otin','Ola Oluwa','Oriade','Orolu','Boluwaduro','Boripe','Atakunmosa East','Atakunmosa West','Aiyedaade','Aiyedire'],
+  'Ondo': ['Akure North','Akure South','Owo','Ondo East','Ondo West','Ose','Idanre','Ifedore','Ilaje','Ile Oluji/Okeigbo','Irele','Odigbo','Okitipupa','Ese Odo','Akoko North-East','Akoko North-West','Akoko South-East','Akoko South-West'],
+  'Ekiti': ['Ado Ekiti','Efon','Ekiti East','Ekiti South-West','Ekiti West','Emure','Gbonyin','Ido Osi','Ijero','Ikere','Ikole','Ilejemeje','Irepodun/Ifelodun','Ise/Orun','Moba','Oye'],
+  'Abia': ['Umuahia North','Umuahia South','Aba North','Aba South','Arochukwu','Bende','Ikwuano','Isiala Ngwa North','Isiala Ngwa South','Isuikwuato','Obi Ngwa','Ohafia','Osisioma','Ugwunagbo','Ukwa East','Ukwa West','Umu Nneochi'],
+  'Imo': ['Owerri Municipal','Owerri North','Owerri West','Aboh Mbaise','Ahiazu Mbaise','Ehime Mbano','Ezinihitte','Ideato North','Ideato South','Ihitte/Uboma','Ikeduru','Isiala Mbano','Isu','Mbaitoli','Ngor Okpala','Njaba','Nkwerre','Nwangele','Obowo','Oguta','Ohaji/Egbema','Okigwe','Onuimo','Orlu','Orsu','Oru East','Oru West'],
+  'Akwa Ibom': ['Uyo','Eket','Ikot Ekpene','Oron','Abak','Etinan','Ibiono Ibom','Ika','Ikono','Ikot Abasi','Ini','Itu','Mbo','Mkpat Enin','Nsit Atai','Nsit Ibom','Nsit Ubium','Obot Akara','Okobo','Onna','Oruk Anam','Udung Uko','Ukanafun','Uruan','Urue-Offong/Oruko','Esit Eket','Essien Udim','Etim Ekpo'],
+  'Cross River': ['Calabar Municipal','Calabar South','Akamkpa','Akpabuyo','Bakassi','Bekwarra','Biase','Boki','Etung','Ikom','Obanliku','Obubra','Obudu','Odukpani','Ogoja','Yakuur','Yala'],
+  'Bayelsa': ['Yenagoa','Brass','Ekeremor','Kolokuma/Opokuma','Nembe','Ogbia','Sagbama','Southern Ijaw'],
+  'Benue': ['Makurdi','Gboko','Katsina-Ala','Vandeikya','Ushongo','Ukum','Otukpo','Oju','Ohimini','Obi','Logo','Kwande','Konshisha','Guma','Gwer East','Gwer West','Buruku','Apa','Ado','Agatu','Okpokwu','Tarka'],
+  'Plateau': ['Jos North','Jos South','Jos East','Barkin Ladi','Bassa','Bokkos','Kanam','Kanke','Langtang North','Langtang South','Mangu','Mikang','Pankshin',"Qua'an Pan",'Riyom','Shendam','Wase'],
+  'Borno': ['Maiduguri','Jere','Konduga','Bama','Dikwa','Mafa','Ngala','Kala/Balge','Marte','Monguno','Nganzai','Kukawa','Abadam','Mobbar','Guzamala','Gubio','Magumeri','Chibok','Damboa','Gwoza','Askira/Uba','Hawul','Kwaya Kusar','Biu','Bayo','Shani','Kaga'],
+  'Adamawa': ['Yola North','Yola South','Girei','Song','Numan','Demsa','Fufure','Ganye','Gombi','Guyuk','Hong','Jada','Lamurde','Madagali','Maiha','Mayo-Belwa','Michika','Mubi North','Mubi South','Shelleng','Toungo'],
+  'Bauchi': ['Bauchi','Alkaleri','Bogoro','Dambam','Darazo','Dass','Gamawa','Ganjuwa','Giade','Itas/Gadau',"Jama'are",'Katagum','Kirfi','Misau','Ningi','Shira','Tafawa Balewa','Toro','Warji','Zaki'],
+  'Ebonyi': ['Abakaliki','Afikpo North','Afikpo South','Ebonyi','Ezza North','Ezza South','Ikwo','Ishielu','Ivo','Izzi','Ohaozara','Ohaukwu','Onicha'],
+  'Gombe': ['Gombe','Akko','Balanga','Billiri','Dukku','Funakaye','Kaltungo','Kwami','Nafada','Shongom','Yamaltu/Deba'],
+  'Jigawa': ['Dutse','Auyo','Babura','Biriniwa','Birnin Kudu','Buji','Gagarawa','Garki','Gumel','Guri','Gwaram','Gwiwa','Hadejia','Jahun','Kafin Hausa','Kaugama','Kazaure','Kiri Kasama','Kiyawa','Maigatari','Malam Madori','Miga','Ringim','Roni','Sule Tankarkar','Suri','Taura','Yankwashi'],
+  'Kebbi': ['Birnin Kebbi','Aleiro','Arewa Dandi','Argungu','Augie','Bagudo','Bunza','Dandi','Fakai','Gwandu','Jega','Kalgo','Koko/Besse','Maiyama','Ngaski','Sakaba','Shanga','Suru','Wasagu/Danko','Yauri','Zuru'],
+  'Katsina': ['Katsina','Bakori','Batagarawa','Batsari','Baure','Bindawa','Charanchi','Dan Musa','Dandume','Danja','Daura','Dutsi','Dutsin-Ma','Faskari','Funtua','Ingawa','Jibia','Kafur','Kaita','Kankara','Kankia','Kurfi','Kusada',"Mai'Adua",'Malumfashi','Mani','Mashi','Matazu','Musawa','Rimi','Sabuwa','Safana','Sandamu','Zango'],
+  'Niger': ['Minna','Agaie','Agwara','Bida','Borgu','Bosso','Chanchaga','Edati','Gbako','Gurara','Katcha','Kontagora','Lapai','Lavun','Magama','Mariga','Mashegu','Mokwa','Munya','Paikoro','Rafi','Rijau','Shiroro','Suleja','Tafa','Wushishi'],
+  'Sokoto': ['Sokoto North','Sokoto South','Binji','Bodinga','Dange Shuni','Gada','Goronyo','Gudu','Gwadabawa','Illela','Isa','Kebbe','Kware','Rabah','Sabon Birni','Shagari','Silame','Tambuwal','Tangaza','Tureta','Wamako','Wurno','Yabo'],
+  'Taraba': ['Jalingo','Ardo Kola','Bali','Donga','Gashaka','Gassol','Ibi','Karim Lamido','Kurmi','Lau','Sardauna','Takum','Ussa','Wukari','Yorro','Zing'],
+  'Yobe': ['Damaturu','Bade','Bursari','Fika','Fune','Geidam','Gujba','Gulani','Jakusko','Karasuwa','Machina','Nangere','Nguru','Potiskum','Tarmuwa','Yunusari','Yusufari'],
+  'Zamfara': ['Gusau','Anka','Bakura','Birnin Magaji/Kiyaw','Bukkuyum','Bungudu','Chafe','Gummi','Kaura Namoda','Maradun','Maru','Shinkafi','Talata Mafara','Tsafe','Zurmi'],
+  'Nasarawa': ['Lafia','Akwanga','Awe','Doma','Karu','Keana','Keffi','Kokona','Nasarawa','Nasarawa Egon','Obi','Toto','Wamba'],
+};
+const NG_STATES = Object.keys(NG_LGAS).concat(['Other']);
+
+/* Well-known bus-stops / areas per LGA — covers Lagos and Ogun fully
+   since that's the primary delivery zone. For LGAs not listed here,
+   the bus-stop field becomes free-text (still searchable/typeable,
+   just without a preset list) so nothing ever gets stuck. */
+const LGA_BUSSTOPS = {
+  'Ikeja': ['Allen Avenue','Opebi','Computer Village','Toyin Street','Ikeja Along','Oregun','Adeniyi Jones','Ogba','Ojodu Berger','Alausa','GRA Ikeja'],
+  'Alimosho': ['Ikotun','Egbeda','Idimu','Igando','Akowonjo','Ipaja','Command','Abesan','Ayobo','Baruwa','Iyana Ipaja'],
+  'Eti-Osa': ['Victoria Island','Lekki Phase 1','Ajah','Sangotedo','Chevron','Jakande','Ikate','Osapa London','Oniru'],
+  'Ibeju-Lekki': ['Awoyaya','Abraham Adesanya','Eputu','Ibeju','Lakowe'],
+  'Surulere': ['Bode Thomas','Adeniran Ogunsanya','Ojuelegba','Aguda','Ijesha','Masha','Coker'],
+  'Lagos Mainland': ['Yaba','Ebute Metta','Herbert Macaulay','Costain','Jibowu'],
+  'Lagos Island': ['CMS','Marina','Obalende','Idumota','Balogun'],
+  'Apapa': ['Apapa GRA','Tin Can Island','Liverpool Road','Warehouse Road'],
+  'Oshodi-Isolo': ['Oshodi','Isolo','Mafoluku','Ilasamaja','Bolade','Okota'],
+  'Mushin': ['Mushin Central','Idi Oro','Papa Ajao','Odi Olowo'],
+  'Shomolu': ['Bariga','Pedro','Onipanu','Fola Agoro'],
+  'Kosofe': ['Ogudu','Ketu','Mile 12','Alapere','Ojota','Anthony'],
+  'Ikorodu': ['Ikorodu Garage','Ojota-Ikorodu Road','Owutu','Agric','Ita-Oluwo','Igbogbo'],
+  'Ajeromi-Ifelodun': ['Ajegunle','Boundary','Amukoko','Tolu'],
+  'Ojo': ['Okokomaiko','Iyana Iba','Alaba','Trade Fair','Volkswagen'],
+  'Amuwo-Odofin': ['Festac Town','Satellite Town','Mile 2','FHA'],
+  'Ifako-Ijaiye': ['Ogba','Iju','Fagba','Agege Motor Road'],
+  'Badagry': ['Badagry Town','Ajara','Topo','Seme Border'],
+  'Epe': ['Epe Town','Poka','Ejinrin'],
+
+  // Ogun (Ago-Iwoye base)
+  'Ijebu North': ['Ago-Iwoye','Mamu','Oru','Awa','Ijebu Igbo Road'],
+  'Ijebu Ode': ['Ijebu Ode Town','Ibadan Garage','Folagbade','Isoya'],
+  'Abeokuta South': ['Ake','Ita Oshin','Oke Ilewo','Lafenwa'],
+  'Abeokuta North': ['Sagamu Road Abeokuta','Kuto','Ibara'],
+  'Ado-Odo/Ota': ['Ota Town','Sango Ota','Iyana Ilogbo','Atan'],
+  'Sagamu': ['Sagamu Town','Makun','Ogijo','Simawa'],
+
+  // FCT
+  'Municipal Area Council (AMAC)': ['Garki','Wuse','Maitama','Asokoro','Utako','Jabi','Gwarinpa','Wuye'],
+  'Gwagwalada': ['Gwagwalada Town','Zuba','Dobi'],
+};
+
+/* ════════════════════════════════════════════════════════════ */
+const fmt = n => '₦' + Number(n||0).toLocaleString('en-NG');
+const escAttr = (s) => String(s ?? '').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+const $ = id => document.getElementById(id);
+
+function showToast(msg, type){
+  const t = $('toast');
+  t.textContent = msg;
+  t.classList.remove('error'); // reset from any previous call before applying this one's style
+  if (type === 'error') t.classList.add('error');
+  t.classList.add('show');
+  clearTimeout(t._t); t._t = setTimeout(()=>t.classList.remove('show'), 2400);
+}
+
+/* ── STATE ── */
+let cart = JSON.parse(localStorage.getItem(agoCartKey()) || '[]');
+let step = 1;
+let method = 'delivery';        // 'delivery' | 'pickup'
+let payChannel = 'card';        // 'card' | 'bank_transfer' | 'ussd'
+let pickupIdx = 0;
+let appliedCoupon = null;       // { code, discount }
+const saved = JSON.parse(localStorage.getItem('ago_checkout') || '{}');
+
+/* ── TOTALS ── */
+function totals(){
+  const subtotal = cart.reduce((s,i)=> s + (parseFloat(i.price)||0) * (i.qty||1), 0);
+  const discount = appliedCoupon ? appliedCoupon.discount : 0;
+
+  let shipping = 0;
+  if (method !== 'pickup') {
+    // Real per-LGA fee if one was found for the selected LGA;
+    // otherwise the flat default. An LGA can also override the
+    // site-wide free-delivery threshold (e.g. a far LGA might
+    // reasonably require a higher spend to qualify for free
+    // delivery, or a close one might offer it at a lower spend).
+    const effectiveFee = cachedDeliveryFee != null ? cachedDeliveryFee : SHIP_FEE;
+    const effectiveFreeMin = cachedDeliveryFreeMin != null ? cachedDeliveryFreeMin : FREE_SHIP_MIN;
+    shipping = subtotal >= effectiveFreeMin ? 0 : effectiveFee;
+  }
+
+  return { subtotal, discount, shipping, total: Math.max(0, subtotal - discount + shipping) };
+}
+
+/* ── SUPABASE: enrich cart prices/images (fixes stale ₦0 items) ── */
+async function enrichCart(){
+  if (!cart.length) return;
+  try {
+    const cols = 'name,slug,price,sale_price,images';
+    const list = 'in.(' + cart.map(i => '"' + String(i.name).replace(/"/g,'\\"') + '"').join(',') + ')';
+    const res = await fetch(SB_URL + '/products?select=' + encodeURIComponent(cols) + '&name=' + encodeURIComponent(list), {
+      headers: { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY }
+    });
+    if (!res.ok) return;
+    const data = await res.json();
+    data.forEach(p => {
+      const item = cart.find(i => i.name === p.name);
+      if (item) {
+        const imgs = Array.isArray(p.images) ? p.images : [];
+        item.img   = imgs[0]?.url || item.img || '';
+        item.price = parseFloat(p.sale_price || p.price) || 0;
+        item.slug  = p.slug;
+      }
+    });
+    localStorage.setItem(agoCartKey(), JSON.stringify(cart));
+  } catch(e){ console.warn('enrich failed', e); }
+}
+
+/* ── SUPABASE: validate coupon against coupons table ── */
+async function validateCoupon(code, subtotal){
+  try {
+    const res = await fetch(SB_URL + '/coupons?select=*&code=eq.' + encodeURIComponent(code.toUpperCase()) + '&is_active=eq.true&limit=1', {
+      headers: { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY }
+    });
+    if (!res.ok) throw new Error('net');
+    const rows = await res.json();
+    if (!rows.length) return { valid:false, msg:'Invalid coupon code' };
+    const c = rows[0];
+    if (c.expires_at && new Date(c.expires_at) < new Date()) return { valid:false, msg:'Coupon has expired' };
+    if (c.max_uses && c.used_count >= c.max_uses) return { valid:false, msg:'Coupon limit reached' };
+    if (subtotal < parseFloat(c.min_order||0)) return { valid:false, msg:'Minimum order is ' + fmt(c.min_order) };
+    const discount = c.type === 'percent'
+      ? Math.round(subtotal * parseFloat(c.value) / 100)
+      : parseFloat(c.value);
+    return { valid:true, coupon:c, discount, msg: fmt(discount) + ' discount applied!' };
+  } catch(e){
+    return { valid:false, msg:'Could not verify coupon — check your connection' };
+  }
+}
+
+/* ── RENDER: summaries ── */
+function summaryHTML(){
+  const t = totals();
+  const count = cart.reduce((s,i)=>s+(i.qty||1),0);
+  return `
+    <h3>Order Summary</h3>
+    <div class="summary-row"><span>Subtotal (${count} item${count===1?'':'s'})</span><span data-ngn="${t.subtotal}">${fmt(t.subtotal)}</span></div>
+    ${t.discount ? `<div class="summary-row"><span>Discount${appliedCoupon?` (${appliedCoupon.code})`:''}</span><span class="disc" data-ngn="-${t.discount}">− ${fmt(t.discount)}</span></div>` : ''}
+    <div class="summary-row"><span>${method==='pickup'?'Pickup':'Shipping'}</span><span ${t.shipping>0?`data-ngn="${t.shipping}"`:''}>${t.shipping===0?'Free':fmt(t.shipping)}</span></div>
+    <div class="summary-row total"><span>Total</span><span data-ngn="${t.total}">${fmt(t.total)}</span></div>`;
+}
+
+function renderReview(){
+  const count = cart.reduce((s,i)=>s+(i.qty||1),0);
+  $('reviewCount').textContent = count + ' item' + (count===1?'':'s');
+  $('reviewItems').innerHTML = cart.map(i => `
+    <div class="rev-item">
+      <div class="rev-img">${i.img ? `<img src="${i.img}" alt="${i.name}" loading="lazy">` : ''}</div>
+      <div class="rev-info">
+        <p class="rev-name">${i.name}</p>
+        <p class="rev-meta">Qty: ${i.qty||1}</p>
+      </div>
+      <p class="rev-price" data-ngn="${(parseFloat(i.price)||0) * (i.qty||1)}">${fmt((parseFloat(i.price)||0) * (i.qty||1))}</p>
+    </div>`).join('');
+  $('summary1').innerHTML = summaryHTML();
+  updateActionBar();
+
+  // Real, explicit re-conversion — this real function is called from
+  // multiple, distinct points in the checkout flow (step changes,
+  // coupon application), so this keeps the genuinely selected
+  // currency correctly applied every time.
+  if (typeof agoApplyDisplayCurrency === 'function') agoApplyDisplayCurrency();
+}
+
+function renderPickups(){
+  $('pickupList').innerHTML = PICKUP_LOCATIONS.map((p,i)=>`
+    <div class="pickup-opt${i===pickupIdx?' active':''}" data-idx="${i}">
+      <div class="pickup-radio"></div>
+      <div class="pickup-info">
+        <p>${p.name}</p>
+        <span>${p.address}</span>
+        <span class="p-hours">${p.hours}</span>
+      </div>
+    </div>`).join('');
+}
+
+let walletBalance = 0; // populated by renderPayment() for logged-in users
+
+async function renderPayment(){
+  const t = totals();
+  const name  = $('fName').value.trim();
+  const phone = $('fPhone').value.trim();
+  const email = $('fEmail').value.trim();
+
+  // Card mockup — real name, masked digits with staggered reveal
+  $('cardHolderName').textContent = name ? name.toUpperCase() : 'YOUR NAME';
+  const spans = document.querySelectorAll('#cardNumber span');
+  spans.forEach(s => s.classList.remove('show'));
+  spans.forEach((s, i) => setTimeout(() => s.classList.add('show'), 150 + i * 120));
+
+  let destHTML;
+  if (method === 'pickup') {
+    const p = PICKUP_LOCATIONS[pickupIdx];
+    destHTML = `<h4>Pickup At <button type="button" onclick="goStep(2)">Edit</button></h4>
+      <p><strong>${p.name}</strong><br>${p.address}<br>${name} · ${phone}<br>${email}</p>`;
+  } else {
+    destHTML = `<h4>Deliver To <button type="button" onclick="goStep(2)">Edit</button></h4>
+      <p><strong>${name}</strong><br>${$('fAddress').value.trim()}, ${busStopSelect.getValue()}, ${lgaSelectC.getValue()} LGA, ${stateSelect.getValue()}<br>${phone} · ${email}</p>`;
+  }
+  $('deliverTo').innerHTML = destHTML;
+  $('summary3').innerHTML = summaryHTML();
+  if (typeof agoApplyDisplayCurrency === 'function') agoApplyDisplayCurrency();
+  updateActionBar();
+
+  // Wallet payment option — only shown to logged-in customers, and
+  // only enabled if their real balance covers the order total.
+  const walletChip = $('walletChip');
+  const walletNote = $('walletBalanceNote');
+  if (isLoggedIn()) {
+    walletBalance = await fetchWalletBalance();
+    walletChip.style.display = '';
+    const canAffordWallet = walletBalance >= t.total;
+    walletChip.style.opacity = canAffordWallet ? '1' : '.4';
+    walletChip.style.pointerEvents = canAffordWallet ? '' : 'none';
+    walletNote.style.display = 'block';
+    walletNote.classList.remove('sufficient', 'insufficient');
+    walletNote.classList.add(canAffordWallet ? 'sufficient' : 'insufficient');
+    walletNote.textContent = canAffordWallet
+      ? `Wallet balance: ${fmt(walletBalance)}`
+      : `Wallet balance: ${fmt(walletBalance)} — insufficient for this order`;
+    // If they'd already selected wallet on an earlier visit to this
+    // step but their balance no longer covers it, fall back to Card.
+    if (payChannel === 'wallet' && !canAffordWallet) {
+      payChannel = 'card';
+      document.querySelectorAll('.pay-method-chip').forEach(c => c.classList.toggle('highlight', c.dataset.channel === 'card'));
+    }
+  } else {
+    walletChip.style.display = 'none';
+    walletNote.style.display = 'none';
+  }
+}
+
+/* ── STEP NAVIGATION ── */
+function goStep(n){
+  step = n;
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  $('panel'+n).classList.add('active');
+  document.querySelectorAll('.step').forEach(s=>{
+    const sn = parseInt(s.dataset.step);
+    s.classList.toggle('active', sn===n);
+    s.classList.toggle('done', sn<n);
+  });
+  $('line1').classList.toggle('done', n>1);
+  $('line2').classList.toggle('done', n>2);
+  if (n===1) renderReview();
+  if (n===3) {
+    renderPayment();
+    // Create (or reuse, if refreshed) the pending order the instant
+    // the customer reaches Payment — before they've even tapped Pay.
+    // If their connection drops from here on, the order still exists.
+    ensurePendingOrder().then(order => {
+      if (order) logOrderEvent(order.id, 'reached_payment_step', null);
+    });
+  }
+  updateActionBar();
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+function updateActionBar(){
+  const t = totals();
+  $('actionTotal').textContent = fmt(t.total);
+  const btn = $('actionBtn');
+  if (step===1) btn.textContent = 'Continue to Delivery';
+  if (step===2) btn.textContent = 'Continue to Payment';
+  if (step===3) btn.textContent = PAYSTACK_PK ? 'Pay ' + fmt(t.total) : 'Pay ' + fmt(t.total) + ' (Demo)';
+}
+
+/* ── STATE → LGA CASCADE ── */
+/* Nearest / principal town for LGAs whose main city differs from the
+   LGA name itself. Used as a City fallback if we ever need it, and
+   as the default label shown before a bus-stop is chosen. */
+const LGA_CITY_HINTS = {
+  'Alimosho':'Ikotun', 'Ajeromi-Ifelodun':'Ajegunle', 'Amuwo-Odofin':'Festac',
+  'Ifako-Ijaiye':'Ogba', 'Kosofe':'Ogudu', 'Ojo':'Okokomaiko', 'Oshodi-Isolo':'Isolo',
+  'Ibeju-Lekki':'Lekki', 'Eti-Osa':'Victoria Island',
+  'Abeokuta North':'Abeokuta', 'Abeokuta South':'Abeokuta', 'Ado-Odo/Ota':'Ota',
+  'Ijebu North':'Ijebu Igbo', 'Yewa North':'Ayetoro', 'Yewa South':'Ilaro',
+  'Ibadan North':'Bodija', 'Ibadan North-East':'Iwo Road', 'Ibadan North-West':'Ring Road',
+  'Ibadan South-East':'Molete', 'Ibadan South-West':'Ring Road', 'Egbeda':'Egbeda',
+  'Municipal Area Council (AMAC)':'Garki', 'Bwari':'Bwari', 'Gwagwalada':'Gwagwalada',
+  'Port Harcourt':'Port Harcourt', 'Obio-Akpor':'Rumuokoro', 'Oyigbo':'Afam',
+  'Warri South':'Warri', 'Uvwie':'Effurun', 'Oshimili South':'Asaba',
+  'Onitsha North':'Onitsha', 'Onitsha South':'Onitsha', 'Awka South':'Awka',
+  'Enugu North':'Enugu', 'Enugu South':'Enugu', 'Enugu East':'Enugu',
+  'Kaduna North':'Kaduna', 'Kaduna South':'Kaduna', 'Chikun':'Kaduna',
+  'Kano Municipal':'Kano', 'Fagge':'Kano', 'Nassarawa':'Kano',
+  'Ilorin East':'Ilorin', 'Ilorin South':'Ilorin', 'Ilorin West':'Ilorin',
+  'Osogbo':'Osogbo', 'Ife Central':'Ile-Ife', 'Ilesa East':'Ilesa',
+  'Akure South':'Akure', 'Akure North':'Akure', 'Ado Ekiti':'Ado Ekiti',
+  'Umuahia North':'Umuahia', 'Aba North':'Aba', 'Aba South':'Aba',
+  'Owerri Municipal':'Owerri', 'Owerri North':'Owerri', 'Uyo':'Uyo',
+  'Calabar Municipal':'Calabar', 'Calabar South':'Calabar', 'Yenagoa':'Yenagoa',
+  'Makurdi':'Makurdi', 'Jos North':'Jos', 'Jos South':'Jos', 'Maiduguri':'Maiduguri',
+  'Yola North':'Yola', 'Yola South':'Yola', 'Bauchi':'Bauchi', 'Gombe':'Gombe',
+  'Dutse':'Dutse', 'Birnin Kebbi':'Birnin Kebbi', 'Katsina':'Katsina',
+  'Minna':'Minna', 'Sokoto North':'Sokoto', 'Sokoto South':'Sokoto',
+  'Jalingo':'Jalingo', 'Damaturu':'Damaturu', 'Gusau':'Gusau', 'Lafia':'Lafia',
+};
+
+/* ════════════════════════════════════════════════════════════
+   CUSTOM INLINE DROPDOWN COMPONENT (ago-select)
+   Powers State, LGA, and Bus-Stop pickers with live search,
+   keyboard-free tap selection, and graceful free-text fallback
+   when no preset list exists for a given LGA.
+   ════════════════════════════════════════════════════════════ */
+function makeAgoSelect({ wrapId, triggerId, valueId, panelId, searchId, listId, hintId }) {
+  const wrap    = $(wrapId), trigger = $(triggerId), valueEl = $(valueId);
+  const panel   = $(panelId), searchInput = $(searchId), list = $(listId);
+  let currentValue = '';
+  let options = [];
+  let onSelect = null;
+  let allowCustom = false;
+
+  function render(filterText){
+    const q = (filterText||'').toLowerCase().trim();
+    const filtered = q ? options.filter(o => o.toLowerCase().includes(q)) : options;
+    if (!filtered.length){
+      list.innerHTML = allowCustom && q
+        ? `<div class="ago-select-item add-custom" data-custom="${escAttr(q)}">Use "${q}"</div>`
+        : `<div class="ago-select-empty">No matches found</div>`;
+      return;
+    }
+    list.innerHTML = filtered.map(o =>
+      `<div class="ago-select-item${o===currentValue?' selected':''}" data-val="${escAttr(o)}">${o}</div>`
+    ).join('') + (allowCustom && q && !filtered.some(o=>o.toLowerCase()===q)
+      ? `<div class="ago-select-item add-custom" data-custom="${escAttr(q)}">Use "${q}" instead</div>` : '');
+  }
+
+  function open(){
+    document.querySelectorAll('.ago-select.open').forEach(o => { if (o!==wrap) o.classList.remove('open'); });
+    wrap.classList.add('open');
+    searchInput.value = '';
+    render('');
+    setTimeout(()=>searchInput.focus(), 50);
+  }
+  function close(){ wrap.classList.remove('open'); }
+
+  trigger.addEventListener('click', () => {
+    if (trigger.disabled) return;
+    wrap.classList.contains('open') ? close() : open();
+  });
+  searchInput.addEventListener('input', () => render(searchInput.value));
+  list.addEventListener('click', e => {
+    const item = e.target.closest('.ago-select-item');
+    if (!item) return;
+    const val = item.dataset.val || item.dataset.custom;
+    if (!val) return;
+    setValue(val);
+    close();
+    if (onSelect) onSelect(val);
+  });
+  document.addEventListener('click', e => {
+    if (!wrap.contains(e.target)) close();
+  });
+
+  function setValue(v){
+    currentValue = v;
+    valueEl.textContent = v || trigger.dataset.placeholder;
+    valueEl.classList.toggle('placeholder', !v);
+    wrap.classList.remove('err');
+    $(hintId).parentElement?.classList?.remove('show-err');
+  }
+  function setOptions(opts, custom){
+    options = opts; allowCustom = !!custom;
+  }
+  function enable(placeholder){
+    trigger.disabled = false;
+    trigger.dataset.placeholder = placeholder;
+    if (!currentValue) { valueEl.textContent = placeholder; valueEl.classList.add('placeholder'); }
+  }
+  function disable(placeholder){
+    trigger.disabled = true;
+    currentValue = '';
+    valueEl.textContent = placeholder;
+    valueEl.classList.add('placeholder');
+  }
+  function getValue(){ return currentValue; }
+
+  return { setOptions, enable, disable, setValue, getValue, onSelect: (fn)=>{ onSelect = fn; } };
+}
+
+const stateSelect = makeAgoSelect({
+  wrapId:'stateSelect', triggerId:'stateTrigger', valueId:'stateValue',
+  panelId:'statePanel', searchId:'stateSearch', listId:'stateList', hintId:'stateHint',
+});
+const lgaSelectC = makeAgoSelect({
+  wrapId:'lgaSelect', triggerId:'lgaTrigger', valueId:'lgaValue',
+  panelId:'lgaPanel', searchId:'lgaSearch', listId:'lgaList', hintId:'lgaHint',
+});
+const busStopSelect = makeAgoSelect({
+  wrapId:'busStopSelect', triggerId:'busStopTrigger', valueId:'busStopValue',
+  panelId:'busStopPanel', searchId:'busStopSearch', listId:'busStopList', hintId:'busStopHint',
+});
+
+stateSelect.setOptions(NG_STATES, false);
+
+stateSelect.onSelect(state => {
+  markErr2('stateSelect', false);
+  const lgas = NG_LGAS[state];
+  if (lgas){
+    lgaSelectC.setOptions(lgas, false);
+    lgaSelectC.enable('Select LGA');
+  } else {
+    lgaSelectC.setOptions([], true); // 'Other' state — free text
+    lgaSelectC.enable('Type your LGA');
+  }
+  lgaSelectC.setValue('');
+  busStopSelect.disable('Select LGA first');
+  busStopSelect.setValue('');
+  cachedDeliveryFee = null; // previous LGA's fee no longer applies until a new LGA is picked
+  cachedDeliveryFreeMin = null;
+});
+
+lgaSelectC.onSelect(lga => {
+  markErr2('lgaSelect', false);
+  const stops = LGA_BUSSTOPS[lga];
+  if (stops){
+    busStopSelect.setOptions(stops, true); // allow typing a custom area too
+    busStopSelect.enable('Select or type your area');
+  } else {
+    // No preset list for this LGA — pure free-text, still via the same UI
+    busStopSelect.setOptions([], true);
+    busStopSelect.enable(`Type your area near ${lga}`);
+  }
+  busStopSelect.setValue('');
+
+  // Real per-LGA delivery fee lookup — fires the moment a genuine
+  // LGA is selected, using the currently-selected state so it's
+  // never ambiguous between e.g. "Ikeja, Lagos" vs an "Ikeja" in a
+  // different state (this data model is keyed on state+LGA together).
+  fetchDeliveryFeeForLga(stateSelect.getValue(), lga);
+});
+
+busStopSelect.onSelect(() => markErr2('busStopSelect', false));
+
+function markErr2(wrapId, bad){
+  $(wrapId).classList.toggle('err', bad);
+}
+
+/* ── VALIDATION ── */
+function markErr(id, bad){
+  const f = $(id); const field = f.closest('.field');
+  f.classList.toggle('err', bad);
+  field.classList.toggle('show-err', bad);
+  return !bad;
+}
+function markErrSelect(wrapId, bad){
+  $(wrapId).classList.toggle('err', bad);
+  return !bad;
+}
+function validateStep2(){
+  let ok = true;
+  ok = markErr('fName',  $('fName').value.trim().length < 3) && ok;
+  ok = markErr('fPhone', $('fPhone').value.replace(/\D/g,'').length < 10) && ok;
+  ok = markErr('fEmail', !/^\S+@\S+\.\S+$/.test($('fEmail').value.trim())) && ok;
+  if (method === 'delivery') {
+    ok = markErrSelect('stateSelect', !stateSelect.getValue()) && ok;
+    ok = markErrSelect('lgaSelect',   !lgaSelectC.getValue()) && ok;
+    ok = markErrSelect('busStopSelect', !busStopSelect.getValue()) && ok;
+    ok = markErr('fAddress', $('fAddress').value.trim().length < 5) && ok;
+  }
+  return ok;
+}
+
+/* ── ORDER: write to Supabase ── */
+/* ── PENDING ORDER STATE ──────────────────────────────────────
+   The order row is created the moment the customer reaches Payment
+   (step 3) — BEFORE Paystack opens — so if their connection drops
+   mid-payment, the order still exists as 'pending' and can be
+   followed up on. A page refresh reuses the same pending order
+   (via its id saved in localStorage) instead of creating a new one
+   every time. Paystack success only PATCHes that same row to paid. */
+const PENDING_ORDER_KEY = 'ago_pending_order_id';
+let pendingOrderId = localStorage.getItem(PENDING_ORDER_KEY) || null;
+
+function buildOrderPayload(){
+  const t = totals();
+  const shipping_address = method === 'pickup'
+    ? { type:'pickup', location: PICKUP_LOCATIONS[pickupIdx].name, address: PICKUP_LOCATIONS[pickupIdx].address, lat: PICKUP_LOCATIONS[pickupIdx].lat, lng: PICKUP_LOCATIONS[pickupIdx].lng }
+    : { type:'delivery', line1: $('fAddress').value.trim(), busStop: busStopSelect.getValue(), lga: lgaSelectC.getValue(), state: stateSelect.getValue(), country:'Nigeria' };
+
+  const session = getAuthSession();
+
+  // Checkout requires sign-in before reaching Delivery Details (see
+  // the gate in goStep()) — so user_id should never genuinely be
+  // null here. If it somehow is (e.g. the session expired mid-
+  // checkout after passing that gate), the order would be created
+  // with no owner, and mark_own_order_paid()'s WHERE user_id =
+  // auth.uid() check could never match it later, since NULL never
+  // equals anything in SQL — not even another NULL. Surface this
+  // loudly rather than let it silently create an unrecoverable order.
+  if (!session?.user?.id) {
+    console.error('buildOrderPayload called with no valid session — this should be impossible past the checkout sign-in gate.');
+    if (window.__agoLogError) window.__agoLogError('buildOrderPayload: missing user_id despite passing sign-in gate', new Error('no session at order build time'));
+  }
+
+  return {
+    user_id:   session?.user?.id || null,
+    email:     $('fEmail').value.trim(),
+    full_name: $('fName').value.trim(),
+    phone:     $('fPhone').value.trim(),
+    shipping_address,
+    items: cart.map(i => ({ name:i.name, slug:i.slug||'', price:parseFloat(i.price)||0, qty:i.qty||1, image:i.img||'', size:i.size||null })),
+    subtotal:     t.subtotal,
+    discount:     t.discount,
+    shipping_fee: t.shipping,
+    total:        t.total,
+    coupon_code:  appliedCoupon ? appliedCoupon.code : null,
+  };
+}
+
+async function logOrderEvent(orderId, eventType, detail){
+  try {
+    await fetch(SB_URL + '/order_events', {
+      method: 'POST',
+      headers: { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ order_id: orderId, event_type: eventType, detail: detail || null }),
+    });
+  } catch(e){ console.warn('order_events log failed:', e); }
+}
+
+/* Creates the order as 'pending' the moment checkout reaches Payment.
+   If a pending order already exists (page was refreshed), that same
+   row is fetched and re-used instead of inserting a duplicate. */
+async function ensurePendingOrder(){
+  // Refresh case — a pending order already exists for this session
+  if (pendingOrderId){
+    try {
+      const res = await fetch(`${SB_URL}/orders?id=eq.${pendingOrderId}&select=*`, {
+        headers: authHeaders(), // FIXED: was the anon key, which RLS's SELECT policy (auth.uid() = user_id) always blocks — meaning this check could never actually find a real pending order, always fell through to creating a duplicate, which is the real root cause of the order_number collisions
+      });
+      if (res.ok) {
+        const rows = await res.json();
+        if (rows.length && rows[0].payment_status !== 'paid'){
+          return rows[0]; // reuse it, still pending
+        }
+        if (rows.length && rows[0].payment_status === 'paid'){
+          // Already paid somehow (e.g. double-tap race) — treat as done
+          return rows[0];
+        }
+      } else {
+        console.warn('Could not fetch existing pending order — status', res.status);
+      }
+    } catch(e){ console.warn('Could not fetch existing pending order:', e); }
+    // Row vanished, errored, or wasn't reusable — fall through and
+    // create a fresh one rather than risk reusing malformed data.
+    pendingOrderId = null;
+  }
+
+  // First time reaching Payment this checkout — create it now
+  const payload = { ...buildOrderPayload(), status:'pending', payment_status:'unpaid' };
+  try {
+    const res = await fetch(SB_URL + '/orders', {
+      method: 'POST',
+      headers: { ...authHeaders(), 'Prefer': 'return=representation' },
+      body: JSON.stringify(payload),
+    });
+    if (!res.ok) {
+      const errBody = await res.text().catch(() => '');
+      // REAL, HONEST HANDLING: this project's own real, tested rate
+      // limit trigger on orders (max 5 per email per 10 minutes)
+      // raises a genuine PostgreSQL exception, which PostgREST
+      // surfaces with this exact real message prefix — surface it
+      // honestly to the customer instead of a generic "something went
+      // wrong," since this is a real, legitimate, explainable state.
+      if (errBody.includes('RATE_LIMITED')) {
+        alert('Too many checkout attempts in a short time. Please wait a few minutes and try again.');
+        return null;
+      }
+      throw new Error('order insert ' + res.status);
+    }
+    const rows = await res.json();
+    const order = rows[0];
+    pendingOrderId = order.id;
+    localStorage.setItem(PENDING_ORDER_KEY, order.id);
+    return order;
+  } catch(e){
+    console.warn('Could not create pending order:', e);
+    return null; // payNow() falls back gracefully if this is null
+  }
+}
+
+/* PATCHes the existing pending order to paid — never inserts a new
+   row at this stage. Also updates it with the latest cart/details
+   in case anything changed between reaching Payment and paying
+   (e.g. a coupon applied after the pending order was first created). */
+async function markOrderPaid(orderId, paymentRef){
+  try {
+    // FIXED: orders can only be UPDATEd by admins per RLS (correctly
+    // — a customer shouldn't be able to PATCH their own order to
+    // "paid" directly). A direct PATCH here was ALWAYS going to fail
+    // with 42501 regardless of which key was used — that was the
+    // real root cause of the "payment succeeded but order creation
+    // failed" errors, not a key mixup. This now calls a narrow RPC
+    // function that's allowed to bypass RLS but only ever touches
+    // the calling user's own order, and only ever sets it to paid.
+    const res = await fetch(`${SB_URL}/rpc/mark_own_order_paid`, {
+      method: 'POST',
+      headers: authHeaders(),
+      body: JSON.stringify({ p_order_id: orderId, p_payment_ref: paymentRef }),
+    });
+    if (!res.ok) throw new Error('order update ' + res.status);
+    const rows = await res.json();
+    return rows[0];
+  } catch(e){
+    console.warn('Could not mark order paid:', e);
+    return null;
+  }
+}
+
+/* ── PAYMENT ── */
+async function finishOrder(ref){
+  orderPlaced = true; // disarm the exit guard — order is done
+  const btn = $('actionBtn');
+  btn.classList.add('paying'); btn.textContent = 'Confirming…';
+
+  let order = null;
+  if (pendingOrderId){
+    await logOrderEvent(pendingOrderId, 'payment_verified', 'Paystack reference: ' + ref);
+    order = await markOrderPaid(pendingOrderId, ref);
+  }
+  if (!order){
+    // Fallback — pending order creation failed earlier entirely;
+    // insert directly as paid so the sale is never silently lost
+    const payload = { ...buildOrderPayload(), status:'paid', payment_status:'paid', payment_ref: ref };
+    try {
+      const res = await fetch(SB_URL + '/orders', {
+        method: 'POST',
+        headers: { ...authHeaders(), 'Prefer': 'return=representation' }, // FIXED: was hardcoded to the anon key, not the real signed-in session — every other write in this file correctly uses authHeaders()
+        body: JSON.stringify(payload),
+      });
+      if (!res.ok) {
+        // This is the fallback for an already-failed primary order
+        // creation — if THIS also fails, a customer could complete
+        // payment with zero order record anywhere. Log it loudly via
+        // the remote debug bridge so it's actually traceable instead
+        // of silently falling through to a fake order number below.
+        const errBody = await res.text();
+        console.error('CRITICAL: fallback order creation also failed after successful payment.', res.status, errBody, 'Paystack ref:', ref);
+        if (window.__agoLogError) window.__agoLogError('CRITICAL: payment succeeded but order creation failed twice — ref: ' + ref, new Error(errBody));
+        order = { order_number: ref || ('AGO-' + Date.now().toString(36).toUpperCase()) };
+      } else {
+        const rows = await res.json();
+        order = rows[0] || { order_number: ref || ('AGO-' + Date.now().toString(36).toUpperCase()) };
+      }
+    } catch(e){
+      console.error('CRITICAL: fallback order creation threw after successful payment.', e, 'Paystack ref:', ref);
+      if (window.__agoLogError) window.__agoLogError('CRITICAL: payment succeeded but order creation threw — ref: ' + ref, e);
+      order = { order_number: ref || ('AGO-' + Date.now().toString(36).toUpperCase()) };
+    }
+  }
+
+  // CRITICAL FIX: clearing localStorage alone never told the CLOUD
+  // the cart was emptied — the cart_items rows stayed alive in
+  // Supabase, so the very next page's sync (agoSyncCartFromCloud, in
+  // ago-cart.js) would merge them right back in. Same bug class
+  // already fixed in cart.html's own removeItem/updateQty: tombstone
+  // every item locally (blocks a lagging cloud response from
+  // resurrecting it) AND explicitly push the delete to Supabase.
+  if (typeof cart !== 'undefined' && Array.isArray(cart)) {
+    cart.forEach(item => {
+      if (typeof agoAddTombstone === 'function') agoAddTombstone(item.name);
+      if (item.slug && typeof AgoCart !== 'undefined' && AgoCart._syncToCloud) {
+        // REAL, CONFIRMED FIX: this call never passed item.size,
+        // meaning the real cloud DELETE always filtered by
+        // size=is.null regardless of the item's actual, real size —
+        // the exact same, confirmed bug class fixed everywhere else
+        // this session, missed at this one, specific call site.
+        // Verified live: a real, paid order for a sized item
+        // (Mono Stripe Shirt, size XL) remained in cart_items after
+        // a genuinely successful checkout, because this delete
+        // silently matched zero rows.
+        AgoCart._syncToCloud(item.slug, 0, 0, 'delete', item.size || null);
+      }
+    });
+  }
+
+  localStorage.removeItem(agoCartKey());
+  localStorage.removeItem('ago_checkout');
+  localStorage.removeItem(PENDING_ORDER_KEY);
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  $('panelSuccess').classList.add('active');
+  $('stepsBar').style.display = 'none';
+  $('actionBar').style.display = 'none';
+  $('orderNo').textContent = 'Order ' + (order.order_number || '');
+  if (!PAYSTACK_PK) $('successNote').textContent = 'Demo payment — no card was charged.';
+
+  // Prompt for reviews shortly after confirmation registers visually —
+  // only for signed-in customers (reviews require an account, and
+  // checkout already mandates sign-in before payment, so this should
+  // always be true here) and only for real, resolvable products.
+  setTimeout(() => showReviewPrompt(cart), 1400);
+}
+
+/* ════════════════════════════════════════════════════════════
+   POST-PURCHASE REVIEW PROMPT
+   Shown right after order confirmation. Resolves each purchased
+   item's slug to its real product_id (reviews link by ID, not
+   name), then lets the customer tap a star rating inline — no
+   navigating away, no forms, just a quick tap. Silently does
+   nothing if the customer isn't signed in or nothing resolves,
+   rather than showing a broken/empty prompt.
+   ════════════════════════════════════════════════════════════ */
+async function showReviewPrompt(purchasedItems){
+  const session = getAuthSession();
+  if (!session?.user?.id || !purchasedItems?.length) return;
+
+  // Resolve each cart item's slug to its real database product —
+  // needed because orders store item names/slugs, not product_id.
+  const resolved = [];
+  for (const item of purchasedItems){
+    if (!item.slug) continue;
+    try {
+      const res = await fetch(`${SB_URL}/products?slug=eq.${encodeURIComponent(item.slug)}&select=id,name,images&limit=1`, {
+        headers: { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY },
+      });
+      const rows = res.ok ? await res.json() : [];
+      if (rows[0]) resolved.push({ ...rows[0], img: rows[0].images?.[0]?.url || item.img || '' });
+    } catch(e){ /* skip items that fail to resolve — never block the prompt over one bad lookup */ }
+  }
+  if (!resolved.length) return;
+
+  const overlay = $('reviewPromptOverlay');
+  const list = $('reviewPromptItems');
+  list.innerHTML = resolved.map(p => `
+    <div class="rp-item" data-product-id="${p.id}">
+      <img src="${p.img}" alt="" onerror="this.style.display='none'">
+      <div class="rp-item-info">
+        <p class="rp-item-name">${p.name}</p>
+        <div class="rp-stars">
+          ${[1,2,3,4,5].map(n => `<button type="button" data-star="${n}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M12 2l2.9 6.6 7.1.6-5.4 4.7 1.6 7-6.2-3.8L6 21l1.6-7L2.2 9.2l7.1-.6z"/></svg></button>`).join('')}
+        </div>
+      </div>
+    </div>`).join('');
+
+  overlay.classList.add('open');
+
+  list.addEventListener('click', async e => {
+    const starBtn = e.target.closest('[data-star]');
+    if (!starBtn) return;
+    const itemRow = starBtn.closest('.rp-item');
+    if (itemRow.classList.contains('submitted')) return; // already rated, ignore further taps
+    const rating = parseInt(starBtn.dataset.star);
+    const productId = itemRow.dataset.productId;
+
+    itemRow.querySelectorAll('[data-star]').forEach((b,i) => b.classList.toggle('selected', i < rating));
+
+    try {
+      const res = await fetch(`${SB_URL}/reviews`, {
+        method: 'POST',
+        headers: { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + session.access_token, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ product_id: productId, user_id: session.user.id, rating }),
+      });
+      if (res.ok){
+        itemRow.classList.add('submitted');
+        // If every item in the prompt has been rated, close it automatically
+        const remaining = list.querySelectorAll('.rp-item:not(.submitted)').length;
+        if (remaining === 0) setTimeout(() => overlay.classList.remove('open'), 900);
+      }
+      // Silently ignore failures (e.g. already reviewed this product
+      // from a past order) — this is a low-friction nudge, not a
+      // critical flow, so we don't want to show an alarming error
+      // over what's usually just a duplicate-review constraint.
+    } catch(e){
+      if (window.__agoLogError) window.__agoLogError('Post-purchase review submit failed', e);
+    }
+  }, { once: false });
+}
+
+$('reviewPromptSkip').addEventListener('click', () => $('reviewPromptOverlay').classList.remove('open'));
+$('reviewPromptOverlay').addEventListener('click', e => { if (e.target === $('reviewPromptOverlay')) $('reviewPromptOverlay').classList.remove('open'); });
+
+function payNow(){
+  const t = totals();
+  const email = $('fEmail').value.trim();
+  const btn = $('actionBtn');
+
+  // Disable immediately — no double-taps, no duplicate charges/orders
+  btn.disabled = true;
+  btn.classList.add('paying');
+  btn.textContent = 'Processing…';
+
+  if (pendingOrderId) logOrderEvent(pendingOrderId, 'payment_started', 'Channel: ' + payChannel);
+
+  // ── WALLET PAYMENT — skips Paystack entirely ──────────────────
+  // Debits the customer's real wallet_balance via the same
+  // SECURITY DEFINER function used for top-ups, which enforces the
+  // no-negative-balance rule server-side and writes an audited
+  // wallet_transactions row. Never trusts a client-side balance
+  // check alone — the database itself will reject an overdraft
+  // even if something upstream let it through.
+  if (payChannel === 'wallet') {
+    payWithWallet(t.total);
+    return;
+  }
+
+  if (!PAYSTACK_PK) {
+    // DEMO MODE — simulate the gateway
+    setTimeout(()=> finishOrder('DEMO-' + Date.now()), 1400);
+    return;
+  }
+
+  const handler = PaystackPop.setup({
+    key: PAYSTACK_PK,
+    email: email,
+    amount: Math.round(t.total * 100),   // kobo
+    currency: 'NGN',
+    channels: [payChannel],   // restrict popup to the chip the customer picked
+    metadata: {
+      custom_fields: [
+        { display_name:'Customer', variable_name:'customer', value: $('fName').value.trim() },
+        { display_name:'Phone',    variable_name:'phone',    value: $('fPhone').value.trim() },
+        { display_name:'Method',   variable_name:'method',   value: method },
+        { display_name:'Order',    variable_name:'order_id', value: pendingOrderId || '' },
+      ]
+    },
+    callback: function(response){ finishOrder(response.reference); },
+    onClose:  function(){
+      // Payment window closed without completing — re-enable so they can retry.
+      // The pending order stays in Supabase as 'pending' either way.
+      btn.disabled = false;
+      btn.classList.remove('paying');
+      updateActionBar();
+      if (pendingOrderId) logOrderEvent(pendingOrderId, 'payment_cancelled', 'Customer closed Paystack window');
+      showToast('Payment cancelled');
+    },
+  });
+  handler.openIframe();
+}
+
+/* Wallet payment — calls pay_order_with_wallet(), a single atomic
+   database transaction that debits the wallet AND marks the order
+   paid together. This replaces the old pattern of two separate
+   network calls (debit, then separately mark the order paid) —
+   THAT pattern is exactly what caused real wallet debits with no
+   matching order to ever exist: if the debit succeeded but the
+   second call failed for any reason, the money was gone with
+   nothing to show for it. An atomic database function makes that
+   failure mode structurally impossible — Postgres guarantees either
+   both happen or neither does. */
+async function payWithWallet(total){
+  const btn = $('actionBtn');
+  const session = getAuthSession();
+
+  if (!session?.user?.id) {
+    btn.disabled = false;
+    btn.classList.remove('paying');
+    updateActionBar();
+    showToast('Your session has expired — please sign in again', 'error');
+    return;
+  }
+
+  if (!pendingOrderId) {
+    // Honest fallback: the atomic function needs a real pending
+    // order to pay for, and pending-order creation can fail (see
+    // createPendingOrder() above). Rather than silently debit into
+    // a void, tell the customer clearly and let them retry —
+    // exactly the class of situation that used to lose money silently.
+    btn.disabled = false;
+    btn.classList.remove('paying');
+    updateActionBar();
+    showToast('Could not prepare your order — please try again', 'error');
+    if (window.__agoLogError) window.__agoLogError('payWithWallet called with no pendingOrderId', new Error('missing pendingOrderId'));
+    return;
+  }
+
+  try {
+    const res = await fetch(`${SB_URL}/rpc/pay_order_with_wallet`, {
+      method: 'POST',
+      headers: authHeaders(),
+      body: JSON.stringify({
+        p_order_id: pendingOrderId,
+        p_amount: total,
+      }),
+    });
+
+    if (!res.ok) {
+      const errBody = await res.text();
+      // The database itself enforces "no negative balance" — if this
+      // fails, the real reason (e.g. insufficient funds, race with
+      // another tab) is in errBody, not just a generic client guess.
+      throw new Error(errBody.includes('Insufficient') ? 'Insufficient wallet balance' : 'Could not complete wallet payment');
+    }
+
+    // The atomic function already marked the order paid and logged
+    // the order_event server-side — finishOrder() here is just the
+    // client-side success UI (clear cart, show confirmation), it's
+    // not what makes the payment "real" anymore.
+    await finishOrder('WALLET-' + Date.now());
+  } catch(err){
+    console.error('Wallet payment failed:', err);
+    if (window.__agoLogError) window.__agoLogError('Wallet payment failed', err);
+    btn.disabled = false;
+    btn.classList.remove('paying');
+    updateActionBar();
+    showToast(err.message || 'Wallet payment failed — please try another method', 'error');
+  }
+}
+
+/* ── PAYMENT METHOD CHIPS ── */
+$('payMethods').addEventListener('click', e => {
+  const chip = e.target.closest('.pay-method-chip');
+  if (!chip) return;
+  payChannel = chip.dataset.channel;
+  document.querySelectorAll('.pay-method-chip').forEach(c => c.classList.toggle('highlight', c === chip));
+  updateCardMockup();
+});
+
+function updateCardMockup(){
+  const mockup = $('cardMockup');
+  const numberRow = $('cardNumber');
+  if (payChannel === 'card') {
+    mockup.style.opacity = '1';
+    numberRow.style.display = 'flex';
+  } else {
+    // Transfer/USSD don't use card numbers — dim the digits, keep the card shell for brand consistency
+    mockup.style.opacity = '1';
+    numberRow.style.display = payChannel === 'card' ? 'flex' : 'none';
+  }
+}
+
+/* ── EVENTS ── */
+$('actionBtn').addEventListener('click', ()=>{
+  if (step===1){
+    if (!cart.length) return;
+
+    // An account is required to proceed with checkout. Guest
+    // browsing/cart stays completely free — this is the one
+    // checkpoint where we require sign-in, right before Delivery
+    // Details, not before they've even seen their cart.
+    //
+    // FIXED: this used to redirect INSTANTLY with zero explanation
+    // — someone would tap Proceed and just get yanked to a different
+    // page with no idea why. A real modal now explains what's
+    // happening and gives them an actual choice before navigating
+    // anywhere, matching the same confirm-overlay pattern already
+    // used on this page for the exit-intent warning.
+    if (!isLoggedIn()){
+      $('acctRequiredOverlay').classList.add('open');
+      return;
+    }
+
+    goStep(2);
+  } else if (step===2){
+    if (!validateStep2()){ showToast('Please complete the highlighted fields'); return; }
+    // persist form
+    localStorage.setItem('ago_checkout', JSON.stringify({
+      name:$('fName').value, phone:$('fPhone').value, email:$('fEmail').value,
+      address:$('fAddress').value, busStop:busStopSelect.getValue(), state:stateSelect.getValue(), lga:lgaSelectC.getValue(),
+      method, pickupIdx,
+    }));
+    goStep(3);
+  } else if (step===3){
+    payNow();
+  }
+});
+
+// Method toggle
+document.querySelectorAll('.method-btn').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    method = btn.dataset.method;
+    document.querySelectorAll('.method-btn').forEach(b=>b.classList.toggle('active', b===btn));
+    $('deliveryFields').style.display = method==='delivery' ? '' : 'none';
+    $('pickupFields').style.display   = method==='pickup'   ? '' : 'none';
+    updateActionBar();
+  });
+});
+
+// Pickup selection
+$('pickupList').addEventListener('click', e=>{
+  const opt = e.target.closest('.pickup-opt');
+  if (!opt) return;
+  pickupIdx = parseInt(opt.dataset.idx);
+  document.querySelectorAll('.pickup-opt').forEach(o=>o.classList.toggle('active', o===opt));
+});
+
+// Coupon
+$('couponBtn').addEventListener('click', async ()=>{
+  const code = $('couponInput').value.trim();
+  if (!code) return;
+  const t = totals();
+  $('couponMsg').textContent = 'Checking…'; $('couponMsg').className = 'coupon-msg';
+  const result = await validateCoupon(code, t.subtotal + (appliedCoupon?appliedCoupon.discount:0));
+  $('couponMsg').textContent = result.msg;
+  $('couponMsg').className = 'coupon-msg ' + (result.valid ? 'success' : 'error');
+  if (result.valid){
+    appliedCoupon = { code: code.toUpperCase(), discount: result.discount };
+    $('summary1').innerHTML = summaryHTML();
+    updateActionBar();
+    if (typeof agoApplyDisplayCurrency === 'function') agoApplyDisplayCurrency();
+  }
+});
+$('couponInput').addEventListener('keydown', e=>{ if(e.key==='Enter') $('couponBtn').click(); });
+
+/* ── EXIT GUARD ──────────────────────────────────────────────
+   Warns before leaving checkout via: in-app back arrow, phone's
+   back gesture/button, or closing the tab. Skipped once the order
+   is actually placed (orderPlaced = true) or cart was already empty. */
+let orderPlaced = false;
+let exitIntent = null; // 'back' (go to cart.html) | 'history' (let native back proceed)
+let exitIntentWasHistory = false;
+
+function openExitModal(intent){
+  exitIntent = intent;
+  $('exitOverlay').classList.add('open');
+}
+function closeExitModal(){
+  $('exitOverlay').classList.remove('open');
+  exitIntent = null;
+}
+
+$('exitStay').addEventListener('click', () => {
+  closeExitModal();
+  // REAL FIX: no longer re-pushes a new history entry here. The one
+  // real guard state pushed on initial load is still genuinely
+  // there — re-pushing on every "Stay" tap was the second real
+  // source of the history-stacking bug described by the external
+  // review. Nothing further is needed; the existing guard already
+  // does its job for the next back-gesture too.
+});
+
+$('exitLeave').addEventListener('click', () => {
+  const intent = exitIntent;
+  closeExitModal();
+  // Note: we deliberately do NOT clear pendingOrderId here. The order
+  // stays 'pending' in Supabase — if they come back later (or via
+  // "My Orders"), it's still there rather than silently discarded.
+  if (pendingOrderId) logOrderEvent(pendingOrderId, 'checkout_abandoned', 'Customer left before completing payment');
+
+  // Navigate directly rather than history.back() — the popstate
+  // handler below pushes a fresh state on every back-gesture press
+  // specifically to intercept it, which meant history.back() was
+  // just unwinding that same self-pushed state and never actually
+  // leaving the page. Going straight to cart.html works regardless
+  // of how many states got stacked up by repeated back-gesture taps.
+  // FIXED: was location.href, which creates a NEW history entry —
+  // meaning checkout.html stayed in history as the "previous page,"
+  // so cart.html's own back button (which uses real browser history,
+  // not a hardcoded link) would loop right back into checkout. Since
+  // "Leave Anyway" is an explicit choice to exit checkout, checkout
+  // shouldn't still be sitting in history afterward for a back-button
+  // tap to return to. location.replace() swaps the current entry
+  // instead of adding a new one, so checkout.html is removed from
+  // history entirely — cart's back button now correctly falls
+  // through to its real fallback (index.html) instead of looping.
+  window.removeEventListener('popstate', onPopState);
+  if (window.__agoShowSplash) window.__agoShowSplash();
+  // Real, explicit signal (not relying solely on document.referrer/
+  // history state, which has proven hard to verify with certainty)
+  // — tells cart.html it was reached via a checkout exit
+  // specifically, so its own back button can skip history entirely
+  // for this one case and guarantee no loop back into checkout,
+  // regardless of the exact browser history state.
+  location.replace('cart.html?from=checkout_exit');
+});
+
+$('acctRequiredStay').addEventListener('click', () => {
+  $('acctRequiredOverlay').classList.remove('open');
+});
+$('acctRequiredOverlay').addEventListener('click', (e) => {
+  if (e.target === $('acctRequiredOverlay')) $('acctRequiredOverlay').classList.remove('open');
+});
+$('acctRequiredGo').addEventListener('click', () => {
+  // Cart is already in localStorage and survives the trip to
+  // account.html and back untouched — same guarantee as before,
+  // just now reached via an actual informed choice instead of an
+  // instant, unexplained redirect.
+  if (window.__agoShowSplash) window.__agoShowSplash();
+  location.href = 'account.html?redirect=checkout.html';
+});
+
+// In-app back arrow
+$('backBtn').addEventListener('click', () => {
+  if (orderPlaced || !cart.length) {
+    if (window.__agoShowSplash) window.__agoShowSplash();
+    location.href = 'cart.html';
+    return;
+  }
+  openExitModal('back');
+});
+
+// Phone's native back gesture / hardware back button
+//
+// REAL FIX per external review, confirmed correct against the
+// actual code: the previous version called history.pushState() on
+// EVERY intercepted back-gesture AND every "Stay & Finish" tap —
+// meaning a real back-and-forth sequence (phone back → Stay → phone
+// back → Stay...) kept stacking a fresh fake "Checkout" entry on top
+// of history each time. location.replace() on "Leave Anyway" can
+// only ever swap the CURRENT entry — it has no way to also remove
+// however many older stacked entries had already piled up beneath
+// it. That's the actual, confirmed mechanism behind "back from cart
+// sometimes needs several presses / lands back in checkout."
+//
+// The real fix: push the guard state exactly ONCE, on initial load.
+// Every subsequent back-gesture just re-shows the exit modal without
+// pushing anything new — there's nothing to re-push, since the one
+// real guard entry is already sitting there doing its job.
+function onPopState(e){
+  if (orderPlaced || !cart.length) return; // let it navigate freely
+  exitIntentWasHistory = true;
+  openExitModal('history');
+}
+history.pushState({ agoCheckout:true }, '', location.href); // pushed exactly once, never again
+window.addEventListener('popstate', onPopState);
+
+// Real, styled exit modal (above) handles all in-app navigation —
+// back button, clicking away to another page, etc. The native
+// browser beforeunload prompt (unstylable, browser-controlled) that
+// used to also fire on tab-close/hard-refresh has been deliberately
+// removed, so the custom modal is the only exit-confirmation
+// experience going forward. Honest tradeoff: closing the tab or
+// refreshing mid-checkout now shows no warning at all, since that's
+// specifically the one exit path the custom modal can't reach.
+
+/* ── INIT ── */
+(async function init(){
+  if (!cart.length){
+    document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+    $('panelEmpty').classList.add('active');
+    $('stepsBar').style.display = 'none';
+    $('actionBar').style.display = 'none';
+    return;
+  }
+
+  // Decide what should fill the delivery form:
+  //  1. A genuinely in-progress checkout (a pending order already
+  //     exists for THIS session) — restore exactly what they typed.
+  //  2. Otherwise, for a logged-in customer, their saved default
+  //     address — every time, not just "first visit ever". A stale
+  //     draft object left over from a much earlier visit should
+  //     never permanently block this from working again.
+  //  3. Otherwise, blank form.
+  const hasGenuineInProgressCheckout = !!pendingOrderId && !!(saved.name || saved.email);
+
+  if (hasGenuineInProgressCheckout) {
+    if (saved.name)  $('fName').value  = saved.name;
+    if (saved.phone) $('fPhone').value = saved.phone;
+    if (saved.email) $('fEmail').value = saved.email;
+    if (saved.address) $('fAddress').value = saved.address;
+    if (saved.state) {
+      stateSelect.setValue(saved.state);
+      const lgas = NG_LGAS[saved.state];
+      if (lgas) { lgaSelectC.setOptions(lgas, false); lgaSelectC.enable('Select LGA'); }
+      else      { lgaSelectC.setOptions([], true);    lgaSelectC.enable('Type your LGA'); }
+      if (saved.lga) {
+        lgaSelectC.setValue(saved.lga);
+        const stops = LGA_BUSSTOPS[saved.lga];
+        if (stops) { busStopSelect.setOptions(stops, true); busStopSelect.enable('Select or type your area'); }
+        else       { busStopSelect.setOptions([], true);    busStopSelect.enable(`Type your area near ${saved.lga}`); }
+        if (saved.busStop) busStopSelect.setValue(saved.busStop);
+      }
+    }
+  } else if (isLoggedIn()) {
+    // No genuine in-progress checkout — always pull the live default
+    // address for a returning logged-in customer, so editing/changing
+    // their default in Account actually reflects here every time.
+    const defaultAddr = await fetchDefaultAddress();
+    if (defaultAddr){
+      $('fName').value    = defaultAddr.full_name  || '';
+      $('fPhone').value   = defaultAddr.phone      || '';
+      $('fAddress').value = defaultAddr.line1      || '';
+      const session = getAuthSession();
+      if (session?.user?.email) $('fEmail').value = session.user.email;
+
+      if (defaultAddr.state && NG_LGAS[defaultAddr.state]){
+        stateSelect.setValue(defaultAddr.state);
+        lgaSelectC.setOptions(NG_LGAS[defaultAddr.state], false);
+        lgaSelectC.enable('Select LGA');
+      }
+      // Note: the addresses table stores city, not LGA/bus-stop
+      // separately — city is used as a best-effort bus-stop hint
+      // here since that's the closest match available.
+      if (defaultAddr.city) {
+        busStopSelect.setOptions([defaultAddr.city], true);
+        busStopSelect.enable('Select or type your area');
+        busStopSelect.setValue(defaultAddr.city);
+      }
+      showToast('Filled in your saved default address');
+    }
+  }
+  if (saved.method === 'pickup'){
+    method = 'pickup'; pickupIdx = saved.pickupIdx || 0;
+    document.querySelectorAll('.method-btn').forEach(b=>b.classList.toggle('active', b.dataset.method==='pickup'));
+    $('deliveryFields').style.display = 'none';
+    $('pickupFields').style.display = '';
+  }
+
+  renderPickups();
+  renderReview();
+  await enrichCart();
+  cart = JSON.parse(localStorage.getItem(agoCartKey()) || '[]');
+  renderReview();
+
+  // If they refreshed while already on Payment (a pending order and
+  // their delivery details both exist), take them straight back to
+  // step 3 instead of making them redo steps 1-2. goStep(3) itself
+  // will detect and reuse the existing pending order — never a
+  // duplicate — via ensurePendingOrder().
+  //
+  // REAL FIX: this used to trust pendingOrderId indefinitely, with
+  // zero check that it still matches the CURRENT cart — meaning an
+  // old, abandoned checkout's leftover pendingOrderId (from days
+  // earlier, a completely different cart) would incorrectly fire
+  // this same shortcut on a fresh cart, making checkout appear to
+  // "jump straight to payment," skipping Review and Delivery
+  // entirely. This is the confirmed real mechanism behind that bug.
+  //
+  // Now genuinely verifies the pending order's actual items match
+  // what's really in the cart right now (same product names, same
+  // real quantities) before trusting the shortcut — a mismatch means
+  // this is stale, abandoned state, and it's discarded rather than
+  // silently reused.
+  async function pendingOrderGenuinelyMatchesCurrentCart(){
+    if (!pendingOrderId) return false;
+    try {
+      const res = await fetch(`${SB_URL}/orders?id=eq.${pendingOrderId}&select=items`, { headers: authHeaders() });
+      if (!res.ok) return false;
+      const rows = await res.json();
+      if (!rows.length) return false;
+
+      const orderItems = Array.isArray(rows[0].items) ? rows[0].items : [];
+      if (orderItems.length !== cart.length) return false;
+
+      // Real, order-independent comparison — build a genuine
+      // "name+qty" signature for both sides and compare sets, so
+      // this doesn't false-negative just because array order differs.
+      const signature = items => items.map(i => `${i.name}::${i.qty || 1}`).sort().join('|');
+      return signature(orderItems) === signature(cart);
+    } catch(e){
+      console.warn('Could not verify pending order against current cart:', e);
+      return false; // any real uncertainty — don't risk reusing stale/mismatched state
+    }
+  }
+
+  if (pendingOrderId && saved.name && saved.email) {
+    const genuinelyMatches = await pendingOrderGenuinelyMatchesCurrentCart();
+    if (genuinelyMatches) {
+      goStep(3);
+    } else {
+      // Stale, abandoned state from an earlier, different checkout
+      // attempt — discard it rather than let it keep firing
+      // incorrectly on every future fresh cart.
+      pendingOrderId = null;
+      localStorage.removeItem(PENDING_ORDER_KEY);
+    }
+  }
+
+  if (window.__agoContentReady) window.__agoContentReady();
+})();
+</script>
+</body>
+</html>

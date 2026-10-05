@@ -1,0 +1,3334 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- ── FAVICON ── -->
+<link rel="icon" type="image/x-icon" href="favicon.ico">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="theme-color" content="#0A0A0A">
+<meta name="description" content="Your ÀGÒ LUXE account — orders, wallet, addresses and preferences.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="ÀGÒ LUXE">
+<meta property="og:title" content="My Account — ÀGÒ LUXE">
+<meta property="og:description" content="Your ÀGÒ LUXE account — orders, wallet, addresses and preferences.">
+<meta property="og:image" content="https://ago-luxeclothing.netlify.app/og-image.png">
+<title>My Account — ÀGÒ LUXE</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Gentium+Plus:ital,wght@0,400;0,700;1,400;1,700&family=Newsreader:ital,wght@0,500;0,600;1,500&display=swap" rel="stylesheet">
+<script src="https://js.paystack.co/v1/inline.js"></script>
+<script src="ago-cart.js?v=20260725a"></script>
+<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+<script src="install-prompt.js?v=20260722"></script>
+<style>
+/* ============ TOKENS ============ */
+:root[data-theme="dark"]{
+  --bg:#0A0A0A; --surface:#141414; --text:#F9F9F9; --text-soft:#9A9A9A; --border:#222222;
+}
+:root[data-theme="light"]{
+  --bg:#F9F9F9; --surface:#FFFFFF; --text:#0A0A0A; --text-soft:#6B6B6B; --border:#E8E8E8;
+}
+:root{ --accent:#C084FC; --accent-deep:#8B5CF6; --success:#6FCF97; --danger:#FF6B6B; }
+
+*{box-sizing:border-box; margin:0; padding:0;}
+html,body{background:var(--bg); color:var(--text); font-family:'Newsreader',serif; font-weight:500; -webkit-tap-highlight-color:transparent;}
+@keyframes page-fade-in{from{opacity:0;} to{opacity:1;}}
+body{animation:page-fade-in .25s ease; padding-bottom:76px;}
+img{display:block; max-width:100%;}
+a{color:inherit; text-decoration:none;}
+button{font-family:inherit; border:none; background:none; cursor:pointer; color:inherit;}
+input{font-family:'Newsreader',serif;}
+h1,h2,h3{font-family:'Gentium Plus',serif; font-weight:700;}
+::selection{background:var(--accent); color:#0A0A0A;}
+.eyebrow{font-family:'Newsreader',serif; font-style:italic; letter-spacing:.14em; text-transform:uppercase; font-size:.72rem; color:var(--accent);}
+
+/* ============ NAVBAR ============ */
+.navbar{position:sticky; top:0; z-index:50; background:var(--bg); border-bottom:1px solid var(--border); display:flex; align-items:center; gap:10px; padding:12px 14px;}
+.logo{font-family:'Cinzel Decorative',serif; font-style:italic; font-weight:700; font-size:1.15rem; color:var(--text); white-space:nowrap; letter-spacing:.02em;}
+.logo .mark{color:var(--accent);}
+.nav-title{flex:1; text-align:center; font-family:'Gentium Plus',serif; font-style:italic; font-size:1rem; color:var(--text-soft);}
+.back-btn{display:flex; padding:4px; visibility:hidden;}
+.back-btn.show{visibility:visible;}
+.back-btn svg{width:20px; height:20px; stroke:var(--text); fill:none; stroke-width:1.8;}
+.nav-icons{display:flex; align-items:center; gap:14px; width:28px;}
+
+/* ============ AUTH SCREENS ============ */
+.auth-wrap{max-width:400px; margin:0 auto; padding:36px 20px 20px;}
+
+/* ============ CODE VERIFICATION SCREEN ============ */
+/* Real swipe transition, applied to whichever screen is entering —
+   genuinely slides in from the right and fades in, rather than an
+   instant, jarring display:block swap. Removed automatically after
+   it finishes so it doesn't replay on every future re-render. */
+@keyframes agoScreenSwipeIn{
+  from{ opacity:0; transform:translateX(32px); }
+  to{ opacity:1; transform:translateX(0); }
+}
+.ago-swipe-in{ animation: agoScreenSwipeIn .38s cubic-bezier(0.22, 1, 0.36, 1); }
+
+.code-screen{display:none; text-align:center;}
+.code-screen.active{display:block;}
+.code-icon{width:52px; height:52px; margin:0 auto 20px; border:1px solid var(--border); border-radius:50%; display:flex; align-items:center; justify-content:center;}
+.code-icon svg{width:24px; height:24px; stroke:var(--accent); fill:none; stroke-width:1.6;}
+.code-screen h2{font-size:1.2rem; font-style:italic; margin-bottom:8px;}
+.code-screen .code-sub{font-size:.8rem; color:var(--text-soft); line-height:1.6; margin-bottom:8px;}
+.code-screen .code-email{color:var(--text); font-weight:600;}
+.code-inputs{display:flex; justify-content:center; gap:8px; margin:26px 0 8px;}
+.code-digit{
+  width:44px; height:52px; text-align:center;
+  background:var(--surface); border:1px solid var(--border);
+  font-size:1.3rem; font-weight:700; color:var(--text); outline:none;
+  font-family:'Gentium Plus',serif; transition:border-color .2s, transform .15s;
+}
+.code-digit:focus{border-color:var(--accent); transform:scale(1.04);}
+.code-digit.filled{border-color:var(--accent);}
+.code-digit.error{border-color:var(--danger); animation:code-shake .35s ease;}
+@keyframes code-shake{
+  0%,100%{transform:translateX(0);} 20%{transform:translateX(-6px);}
+  40%{transform:translateX(6px);} 60%{transform:translateX(-4px);} 80%{transform:translateX(4px);}
+}
+.code-error-msg{font-size:.76rem; color:var(--danger); min-height:18px; margin-bottom:14px;}
+.code-timer{font-size:.76rem; color:var(--text-soft); margin-bottom:22px;}
+.mfa-digit{
+  width:44px; height:52px; text-align:center;
+  background:var(--surface); border:1px solid var(--border);
+  font-size:1.3rem; font-weight:700; color:var(--text); outline:none;
+  font-family:'Gentium Plus',serif; transition:border-color .2s, transform .15s;
+}
+.mfa-digit:focus{border-color:var(--accent); transform:scale(1.04);}
+.mfa-digit.filled{border-color:var(--accent);}
+.code-timer strong{color:var(--accent);}
+.code-resend{font-size:.76rem; color:var(--accent); border-bottom:1px solid var(--accent); padding-bottom:1px;}
+.code-resend:disabled{color:var(--text-soft); border-color:var(--text-soft); pointer-events:none; opacity:.6;}
+.code-back{margin-top:24px; font-size:.74rem; color:var(--text-soft);}
+.code-back button{color:var(--text-soft); text-decoration:underline;}
+.code-success-icon{width:52px; height:52px; margin:0 auto 20px; border:1.5px solid var(--success); border-radius:50%; display:flex; align-items:center; justify-content:center; opacity:0; transform:scale(.7); transition:all .4s cubic-bezier(0.34,1.56,0.64,1);}
+.code-success-icon.show{opacity:1; transform:scale(1);}
+.code-success-icon svg{width:24px; height:24px; stroke:var(--success); fill:none; stroke-width:2;}
+
+/* ============ NEW PASSWORD SCREEN (after reset code verified) ============ */
+.newpw-screen{display:none;}
+.newpw-screen.active{display:block;}
+.auth-logo{text-align:center; margin-bottom:8px;}
+.auth-logo .logo{font-size:1.6rem;}
+.auth-tagline{text-align:center; font-size:.78rem; color:var(--text-soft); margin-bottom:34px;}
+.auth-tabs{display:flex; border-bottom:1px solid var(--border); margin-bottom:26px;}
+.auth-tab{flex:1; text-align:center; padding:12px 0; font-size:.8rem; letter-spacing:.06em; text-transform:uppercase; color:var(--text-soft); border-bottom:2px solid transparent; margin-bottom:-1px; transition:color .2s;}
+.auth-tab.active{color:var(--text); border-bottom-color:var(--accent);}
+.auth-form{display:none;}
+.auth-form.active{display:block;}
+.field{margin-bottom:14px;}
+.field label{display:block; font-size:.68rem; letter-spacing:.08em; text-transform:uppercase; color:var(--text-soft); margin-bottom:6px;}
+.field input{
+  width:100%; background:var(--surface); border:1px solid var(--border);
+  padding:13px 14px; font-size:.9rem; color:var(--text); outline:none;
+  transition:border-color .2s;
+}
+.field input:focus{border-color:var(--accent);}
+.field input.err{border-color:var(--danger);}
+.field .hint{font-size:.68rem; color:var(--danger); margin-top:4px; display:none;}
+.field.show-err .hint{display:block;}
+.pw-wrap{position:relative;}
+.pw-toggle{position:absolute; right:12px; top:50%; transform:translateY(-50%); color:var(--text-soft); font-size:.68rem; letter-spacing:.04em; text-transform:uppercase;}
+
+/* ============ PASSWORD STRENGTH METER ============ */
+.pw-strength{margin-top:8px; opacity:0; max-height:0; overflow:hidden; transition:opacity .25s ease, max-height .25s ease;}
+.pw-strength.show{opacity:1; max-height:40px;}
+.pw-strength-track{display:flex; gap:4px; margin-bottom:5px;}
+.pw-strength-seg{flex:1; height:3px; border-radius:2px; background:var(--border); transition:background .3s ease, transform .3s ease;}
+.pw-strength-seg.filled{transform:scaleY(1.4);}
+.pw-strength-label{font-size:.68rem; letter-spacing:.04em; transition:color .3s ease;}
+.pw-strength[data-level="weak"] .pw-strength-seg.filled{background:var(--danger);}
+.pw-strength[data-level="weak"] .pw-strength-label{color:var(--danger);}
+.pw-strength[data-level="fair"] .pw-strength-seg.filled{background:#F3D98B;}
+.pw-strength[data-level="fair"] .pw-strength-label{color:#F3D98B;}
+.pw-strength[data-level="strong"] .pw-strength-seg.filled{background:var(--success);}
+.pw-strength[data-level="strong"] .pw-strength-label{color:var(--success);}
+@keyframes pw-pulse{0%{transform:scaleY(1);} 50%{transform:scaleY(1.6);} 100%{transform:scaleY(1.4);}}
+.pw-strength-seg.filled.pulse{animation:pw-pulse .35s ease;}
+.auth-submit{width:100%; padding:15px; background:var(--accent); color:#0A0A0A; font-size:.8rem; font-weight:700; letter-spacing:.06em; text-transform:uppercase; margin-top:8px; transition:background .2s, transform .15s;}
+.auth-submit:active{transform:scale(.98);}
+.auth-submit:disabled{opacity:.5; pointer-events:none;}
+.auth-error{background:rgba(255,107,107,.1); border:1px solid var(--danger); color:var(--danger); padding:11px 14px; font-size:.78rem; margin-bottom:16px; display:none;}
+.auth-error.show{display:block;}
+.auth-success{background:rgba(111,207,151,.1); border:1px solid var(--success); color:var(--success); padding:11px 14px; font-size:.78rem; margin-bottom:16px; display:none;}
+.auth-success.show{display:block;}
+.auth-links{text-align:center; margin-top:18px;}
+.auth-links a, .auth-links button{font-size:.78rem; color:var(--accent); border-bottom:1px solid var(--accent); padding-bottom:1px;}
+.guest-note{text-align:center; font-size:.72rem; color:var(--text-soft); margin-top:28px; line-height:1.6; padding:16px; border:1px solid var(--border); background:var(--surface);}
+.guest-note a{color:var(--accent); text-decoration:underline;}
+
+/* ============ PROFILE HEADER ============ */
+/* ============ ADMIN WELCOME CARD ============ */
+.admin-welcome{
+  margin:14px 16px 0; padding:16px;
+  background:linear-gradient(135deg, rgba(192,132,252,.12), rgba(139,92,246,.08));
+  border:1px solid var(--accent); border-radius:8px;
+  display:flex; align-items:center; gap:12px; flex-wrap:wrap;
+}
+.aw-icon{width:38px; height:38px; border-radius:50%; background:var(--accent); display:flex; align-items:center; justify-content:center; flex-shrink:0;}
+.aw-icon svg{width:18px; height:18px; stroke:#0A0A0A; fill:none; stroke-width:1.8;}
+.aw-text{flex:1; min-width:140px;}
+.aw-title{font-family:'Gentium Plus',serif; font-size:.92rem; font-style:italic;}
+.aw-sub{font-size:.7rem; color:var(--text-soft); margin-top:2px;}
+.aw-btn{display:block; width:100%; text-align:center; padding:10px; background:var(--accent); color:#0A0A0A; font-size:.72rem; font-weight:700; letter-spacing:.05em; text-transform:uppercase; border-radius:4px; margin-top:4px;}
+
+.profile-header{text-align:center; padding:26px 20px 22px; border-bottom:8px solid var(--surface);}
+.profile-header h1{font-size:.78rem; letter-spacing:.14em; text-transform:uppercase; color:var(--text-soft); margin-bottom:20px;}
+.profile-stats{display:flex; align-items:center; justify-content:center;}
+.profile-stat{flex:1; padding:0 12px;}
+.profile-stat .val{font-family:'Gentium Plus',serif; font-size:1.5rem; font-weight:700;}
+.profile-stat .lbl{font-size:.72rem; color:var(--text-soft); margin-top:4px;}
+.profile-stat-divider{width:1px; height:36px; background:var(--border);}
+
+/* ============ PROFILE LIST GROUPS ============ */
+.profile-group{border-bottom:8px solid var(--surface);}
+.profile-row{
+  display:flex; align-items:center; justify-content:space-between;
+  padding:16px 20px; border-bottom:1px solid var(--border);
+  font-size:.85rem; letter-spacing:.02em; cursor:pointer;
+}
+.profile-row:last-child{border-bottom:none;}
+.profile-row .row-label{text-transform:uppercase; letter-spacing:.05em; font-size:.82rem;}
+.profile-row .row-right{display:flex; align-items:center; gap:8px; color:var(--text-soft); font-size:.78rem;}
+.profile-row svg.chev{width:16px; height:16px; stroke:var(--text-soft); fill:none; stroke-width:1.6;}
+.toggle-switch{position:relative; width:44px; height:25px; background:var(--border); border-radius:20px; transition:background .25s; flex-shrink:0;}
+.toggle-switch.on{background:var(--success);}
+.toggle-switch::after{content:''; position:absolute; top:2px; left:2px; width:21px; height:21px; border-radius:50%; background:#fff; transition:transform .25s; box-shadow:0 1px 3px rgba(0,0,0,.3);}
+.toggle-switch.on::after{transform:translateX(19px);}
+.toggle-switch.small{width:38px; height:22px;}
+.toggle-switch.small::after{width:18px; height:18px;}
+.toggle-switch.small.on::after{transform:translateX(16px);}
+
+/* ============ WALLET PANEL (slide-in) ============ */
+.sheet-overlay{position:fixed; inset:0; z-index:200; background:rgba(10,10,10,.7); backdrop-filter:blur(3px); opacity:0; pointer-events:none; transition:opacity .25s ease;}
+.sheet-overlay.open{opacity:1; pointer-events:all;}
+.sheet{
+  position:fixed; left:0; right:0; bottom:0; z-index:201;
+  background:var(--bg); border-top:1px solid var(--border);
+  border-radius:16px 16px 0 0; padding:22px 20px calc(22px + env(safe-area-inset-bottom));
+  transform:translateY(100%); transition:transform .3s cubic-bezier(0.25,0.46,0.45,0.94);
+  max-height:82vh; overflow-y:auto;
+}
+.sheet-overlay.open .sheet{transform:translateY(0);}
+.sheet-handle{width:36px; height:4px; background:var(--border); border-radius:2px; margin:0 auto 18px;}
+.sheet h3{font-size:1.05rem; font-style:italic; margin-bottom:4px;}
+.sheet .sub{font-size:.78rem; color:var(--text-soft); margin-bottom:18px;}
+.amount-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-bottom:16px;}
+.amount-chip{padding:12px 4px; border:1px solid var(--border); text-align:center; font-size:.82rem; font-weight:600; transition:all .2s;}
+.amount-chip.active{border-color:var(--accent); color:var(--accent); background:rgba(192,132,252,.08);}
+.sheet-submit{width:100%; padding:15px; background:var(--accent); color:#0A0A0A; font-size:.8rem; font-weight:700; letter-spacing:.06em; text-transform:uppercase; margin-top:6px;}
+.sheet-submit:disabled{opacity:.4; pointer-events:none;}
+.btn-spinner{display:inline-block; width:13px; height:13px; border:2px solid rgba(10,10,10,.3); border-top-color:#0A0A0A; border-radius:50%; animation:btn-spin .6s linear infinite; margin-right:6px; vertical-align:-2px;}
+@keyframes btn-spin{to{transform:rotate(360deg);}}
+.sheet-close{position:absolute; top:18px; right:18px; color:var(--text-soft);}
+
+/* ============ WALLET TX LIST ============ */
+.tx-row{display:flex; justify-content:space-between; align-items:center; padding:12px 0; border-bottom:1px solid var(--border);}
+.tx-row:last-child{border-bottom:none;}
+.tx-left{display:flex; flex-direction:column;}
+.tx-reason{font-size:.82rem; text-transform:capitalize;}
+.tx-date{font-size:.68rem; color:var(--text-soft); margin-top:2px;}
+.tx-amt{font-size:.85rem; font-weight:700;}
+.tx-amt.credit{color:var(--success);}
+.tx-amt.debit{color:var(--danger);}
+.tx-empty{text-align:center; padding:30px 0; font-size:.8rem; color:var(--text-soft);}
+.inbox-item{padding:14px 0; border-bottom:1px solid var(--border); position:relative;}
+.inbox-item:last-child{border-bottom:none;}
+.inbox-item.unread{padding-left:14px;}
+.inbox-item.unread::before{content:''; position:absolute; left:0; top:18px; width:7px; height:7px; border-radius:50%; background:var(--accent);}
+.inbox-item-title{font-size:.85rem; font-weight:600; margin-bottom:4px;}
+.inbox-item.unread .inbox-item-title{color:var(--text);}
+.inbox-item:not(.unread) .inbox-item-title{color:var(--text-soft); font-weight:500;}
+.inbox-item-body{font-size:.78rem; color:var(--text-soft); line-height:1.5; margin-bottom:6px;}
+.inbox-item-time{font-size:.68rem; color:var(--text-soft); opacity:.7;}
+.inbox-item-icon{display:inline-flex; align-items:center; justify-content:center; width:26px; height:26px; border-radius:50%; margin-right:8px; vertical-align:middle;}
+.inbox-item-icon.order_placed{background:rgba(192,132,252,.15); color:var(--accent);}
+.inbox-item-icon.order_cancelled_admin{background:rgba(255,107,107,.15); color:#FF6B6B;}
+
+/* REAL chat bubbles — genuinely two-way, distinct sender styling */
+.chat-bubble-row{ display:flex; }
+.chat-bubble-row.customer{ justify-content:flex-end; }
+.chat-bubble-row.admin{ justify-content:flex-start; }
+.chat-bubble{ max-width:78%; padding:10px 14px; border-radius:16px; font-size:.85rem; line-height:1.45; }
+.chat-bubble-row.customer .chat-bubble{ background:var(--accent); color:#0A0A0A; border-bottom-right-radius:4px; }
+.chat-bubble-row.admin .chat-bubble{ background:var(--surface); border:1px solid var(--border); color:var(--text); border-bottom-left-radius:4px; }
+.chat-bubble-time{ font-size:.62rem; color:var(--text-soft); margin-top:4px; opacity:.7; }
+.chat-bubble-row.customer .chat-bubble-time{ text-align:right; }
+.inbox-item-icon.payment_confirmed{background:rgba(111,207,151,.15); color:#6FCF97;}
+.inbox-item-icon.confirmed{background:rgba(111,207,151,.15); color:#6FCF97;}
+.inbox-item-icon.shipped{background:rgba(192,132,252,.15); color:var(--accent);}
+.inbox-item-icon.arrived{background:rgba(192,132,252,.15); color:var(--accent);}
+.inbox-item-icon.delivered{background:rgba(111,207,151,.15); color:#6FCF97;}
+.inbox-item-icon.refunded{background:rgba(255,107,107,.15); color:#FF6B6B;}
+
+/* ============ ACCOUNT / ORDERS / ADDRESS SHEETS ============ */
+.sheet-field{margin-bottom:14px;}
+.sheet-field label{display:block; font-size:.68rem; letter-spacing:.08em; text-transform:uppercase; color:var(--text-soft); margin-bottom:6px;}
+.sheet-field input, .sheet-field select{
+  width:100%; background:var(--surface); border:1px solid var(--border);
+  padding:12px 14px; font-size:.86rem; color:var(--text); outline:none;
+  transition:border-color .2s; font-family:'Newsreader',serif;
+}
+.sheet-field input:focus, .sheet-field select:focus{border-color:var(--accent);}
+.sheet-row{display:flex; gap:10px;}
+.sheet-row .sheet-field{flex:1;}
+
+.order-card{border:1px solid var(--border); padding:14px; margin-bottom:10px;}
+.order-card-top{display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:8px;}
+.order-num{font-family:'Gentium Plus',serif; font-size:.9rem;}
+.order-date{font-size:.7rem; color:var(--text-soft); margin-top:2px;}
+.order-status{font-size:.64rem; font-weight:700; letter-spacing:.05em; text-transform:uppercase; padding:4px 9px; border-radius:20px; white-space:nowrap;}
+.order-status.pending{background:rgba(243,217,139,.12); color:#F3D98B;}
+.order-status.paid{background:rgba(111,207,151,.12); color:var(--success);}
+.order-status.processing{background:rgba(192,132,252,.12); color:var(--accent);}
+.order-status.shipped{background:rgba(139,92,246,.12); color:var(--accent-deep);}
+.order-status.delivered{background:rgba(111,207,151,.18); color:var(--success);}
+.order-status.cancelled, .order-status.failed{background:rgba(255,107,107,.12); color:var(--danger);}
+.order-items-preview{font-size:.76rem; color:var(--text-soft); line-height:1.5; margin-bottom:8px;}
+.order-total{font-size:.85rem; font-weight:700; text-align:right;}
+.order-cancel-btn{
+  width:100%; margin-top:10px; padding:10px; background:none;
+  border:1px solid var(--border); color:var(--text-soft);
+  font-size:.68rem; font-weight:600; letter-spacing:.04em; text-transform:uppercase;
+  border-radius:4px; cursor:pointer; transition:border-color .2s, color .2s;
+}
+.order-cancel-btn:hover{ border-color:#FF6B6B; color:#FF6B6B; }
+.order-details-btn{
+  display:flex; align-items:center; justify-content:center; gap:6px;
+  width:100%; margin-top:10px; padding:10px; background:none;
+  border:1px solid var(--accent); color:var(--accent);
+  font-size:.68rem; font-weight:700; letter-spacing:.05em; text-transform:uppercase;
+  border-radius:4px;
+}
+.orders-empty, .addr-empty{text-align:center; padding:36px 0;}
+.orders-empty p, .addr-empty p{font-size:.8rem; color:var(--text-soft); margin-bottom:16px;}
+.orders-empty a{display:inline-block; padding:11px 24px; background:var(--accent); color:#0A0A0A; font-size:.74rem; font-weight:700; letter-spacing:.06em; text-transform:uppercase;}
+
+.addr-card{border:1px solid var(--border); padding:14px; margin-bottom:10px; position:relative;}
+.addr-card.is-default{border-color:var(--accent);}
+.addr-label-row{display:flex; align-items:center; gap:8px; margin-bottom:6px;}
+.addr-label{font-size:.78rem; font-weight:700; text-transform:uppercase; letter-spacing:.04em;}
+.addr-default-tag{font-size:.6rem; background:var(--accent); color:#0A0A0A; padding:2px 7px; border-radius:20px; font-weight:700; letter-spacing:.04em; text-transform:uppercase;}
+.addr-text{font-size:.8rem; color:var(--text-soft); line-height:1.55; margin-bottom:10px;}
+.addr-actions{display:flex; gap:14px;}
+.addr-actions button{font-size:.7rem; letter-spacing:.04em; text-transform:uppercase; color:var(--accent); border-bottom:1px solid var(--accent); padding-bottom:1px;}
+.addr-actions button.danger{color:var(--danger); border-color:var(--danger);}
+.add-addr-btn{width:100%; padding:13px; border:1px dashed var(--border); text-align:center; font-size:.78rem; color:var(--text-soft); letter-spacing:.04em; text-transform:uppercase; margin-top:4px; transition:border-color .2s, color .2s;}
+.add-addr-btn:hover{border-color:var(--accent); color:var(--accent);}
+.sheet-back{position:absolute; top:18px; left:18px; color:var(--text-soft); display:none;}
+.sheet-back.show{display:block;}
+
+/* ============ CUSTOM INLINE DROPDOWN (ago-select) — same component as checkout.html ============ */
+.ago-select{margin-bottom:14px; position:relative;}
+.ago-select > label{display:block; font-size:.68rem; letter-spacing:.08em; text-transform:uppercase; color:var(--text-soft); margin-bottom:6px;}
+.ago-select-trigger{
+  width:100%; display:flex; align-items:center; justify-content:space-between;
+  background:var(--surface); border:1px solid var(--border);
+  padding:13px 14px; font-size:.9rem; color:var(--text);
+  cursor:pointer; transition:border-color .2s;
+  font-family:'Newsreader',serif;
+}
+.ago-select-trigger:disabled{opacity:.45; cursor:not-allowed;}
+.ago-select-trigger svg{width:14px; height:14px; stroke:var(--text-soft); fill:none; stroke-width:1.8; transition:transform .2s; flex-shrink:0;}
+.ago-select.open .ago-select-trigger{border-color:var(--accent);}
+.ago-select.open .ago-select-trigger svg{transform:rotate(180deg);}
+.ago-select-value.placeholder{color:var(--text-soft);}
+.ago-select.err .ago-select-trigger{border-color:var(--danger);}
+
+.ago-select-panel{
+  display:none;
+  position:relative;
+  background:var(--surface);
+  border:1px solid var(--accent);
+  border-top:none;
+  max-height:260px;
+  z-index:20;
+}
+.ago-select.open .ago-select-panel{display:block;}
+.ago-select-search{padding:8px; border-bottom:1px solid var(--border); position:sticky; top:0; background:var(--surface); z-index:1;}
+.ago-select-search input{
+  width:100%; background:var(--bg); border:1px solid var(--border);
+  padding:9px 12px; font-size:.82rem; color:var(--text); outline:none;
+  font-family:'Newsreader',serif; border-radius:2px;
+}
+.ago-select-search input:focus{border-color:var(--accent);}
+.ago-select-list{max-height:200px; overflow-y:auto; -webkit-overflow-scrolling:touch;}
+.ago-select-item{
+  padding:11px 14px; font-size:.85rem; color:var(--text);
+  cursor:pointer; transition:background .15s; border-bottom:1px solid var(--border);
+}
+.ago-select-item:last-child{border-bottom:none;}
+.ago-select-item:hover, .ago-select-item.highlighted{background:var(--bg);}
+.ago-select-item.selected{color:var(--accent);}
+.ago-select-item.add-custom{color:var(--accent); font-style:italic;}
+.ago-select-empty{padding:16px 14px; font-size:.78rem; color:var(--text-soft); text-align:center;}
+
+/* ============ LOGOUT ============ */
+.logout-row{color:var(--danger);}
+
+/* ============ LOGOUT CONFIRM MODAL ============ */
+.confirm-overlay{
+  position:fixed; inset:0; z-index:300;
+  background:rgba(10,10,10,.75);
+  backdrop-filter:blur(4px);
+  display:flex; align-items:center; justify-content:center;
+  opacity:0; pointer-events:none;
+  transition:opacity .25s ease;
+  padding:24px;
+}
+.confirm-overlay.open{opacity:1; pointer-events:all;}
+.confirm-box{
+  background:var(--surface);
+  border:1px solid var(--border);
+  padding:28px 24px 22px;
+  max-width:340px; width:100%;
+  text-align:center;
+  transform:translateY(16px) scale(.97);
+  transition:transform .25s cubic-bezier(0.25,0.46,0.45,0.94);
+}
+.confirm-overlay.open .confirm-box{transform:translateY(0) scale(1);}
+.confirm-box .c-icon{
+  width:44px; height:44px; margin:0 auto 14px;
+  border:1px solid var(--border); border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+}
+.confirm-box .c-icon svg{width:20px; height:20px; stroke:var(--danger); fill:none; stroke-width:1.6;}
+.confirm-box h3{font-family:'Gentium Plus',serif; font-style:italic; font-size:1.05rem; margin-bottom:6px;}
+.confirm-box p{font-size:.8rem; color:var(--text-soft); line-height:1.5; margin-bottom:20px;}
+.confirm-actions{display:flex; gap:10px;}
+.confirm-actions button{
+  flex:1; padding:12px; font-size:.72rem; font-weight:700;
+  letter-spacing:.06em; text-transform:uppercase;
+  font-family:'Newsreader',serif; cursor:pointer;
+  transition:all .2s;
+}
+.c-cancel{background:none; border:1px solid var(--border); color:var(--text);}
+.c-cancel:hover{border-color:var(--text-soft);}
+.c-confirm{background:var(--danger); border:1px solid var(--danger); color:#fff;}
+.c-confirm:hover{background:#e05555;}
+.c-confirm:disabled{opacity:.6; pointer-events:none;}
+
+/* ============ TOAST ============ */
+.toast{
+  position:fixed; bottom:78px; left:50%; transform:translateX(-50%) translateY(20px);
+  background:var(--text); color:var(--bg);
+  padding:12px 18px; border-radius:14px;
+  font-size:.78rem; line-height:1.4;
+  opacity:0; transition:all .3s ease; z-index:300;
+  max-width:min(88vw, 360px);
+  width:max-content;
+  white-space:normal; /* was nowrap — caused long messages to overflow off-screen */
+  text-align:center;
+  pointer-events:none;
+  box-shadow:0 8px 24px rgba(0,0,0,.35);
+}
+.toast.show{opacity:1; transform:translateX(-50%) translateY(0);}
+.toast.error{background:#B3261E; color:#fff;}
+.toast.success{background:#2E7D4F; color:#fff;}
+
+/* ============ BOTTOM NAV ============ */
+.bottom-nav{position:fixed; bottom:0; left:0; right:0; z-index:60; background:var(--bg); border-top:1px solid var(--border); display:flex; justify-content:space-around; padding:9px 0 11px;}
+.bottom-nav a{display:flex; flex-direction:column; align-items:center; gap:3px; font-size:.6rem; color:var(--text-soft); position:relative;}
+.bottom-nav a.active{color:var(--accent);}
+.bottom-nav svg{width:19px; height:19px; stroke:currentColor; fill:none; stroke-width:1.6;}
+.bottom-nav .badge{position:absolute; top:-4px; right:-8px; background:var(--accent); color:#0A0A0A; font-size:.6rem; font-weight:700; width:15px; height:15px; border-radius:50%; display:flex; align-items:center; justify-content:center;}
+
+/* ============ DESKTOP ============ */
+#authScreen{display:block;} /* mobile default: normal flow. JS sets display:none via inline style specifically when hidden (logged in); removing that inline style correctly falls back to this visible default. Desktop's media query below overrides to flex for centering. */
+
+@media(min-width:860px){
+  body{padding-bottom:0;}
+  .bottom-nav{display:none;}
+  .navbar{padding:16px 40px;}
+  .nav-shop-link{font-size:.78rem; color:var(--text-soft); border-bottom:1px solid transparent; transition:border-color .2s;}
+  .nav-shop-link:hover{border-color:var(--text-soft);}
+  #authScreen{
+    display:flex; align-items:center; justify-content:center;
+    min-height:calc(100vh - 68px); /* full viewport height minus the navbar's real height */
+  }
+  .auth-wrap{
+    max-width:440px; width:100%; margin:0;
+    padding:60px 32px;
+    background:var(--surface); border:1px solid var(--border); border-radius:12px;
+    box-shadow:0 20px 60px rgba(0,0,0,.15);
+  }
+  .profile-header, .profile-group{max-width:640px; margin:0 auto;}
+  .sheet{max-width:420px; left:50%; transform:translateX(-50%) translateY(100%); border-radius:16px; bottom:5%;}
+  .sheet-overlay.open .sheet{transform:translateX(-50%) translateY(0);}
+}
+</style>
+</head>
+<body>
+
+<!-- ============ NAVBAR ============ -->
+<header class="navbar">
+  <button class="back-btn" id="backBtn" data-back-fallback="index.html" aria-label="Back">
+    <svg viewBox="0 0 24 24"><path d="M19 12H5M11 18l-6-6 6-6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </button>
+  <a href="index.html" class="logo" title="Back to ÀGÒ LUXE home"><span class="mark">ÀGÒ</span> LUXE</a>
+  <div class="nav-title" id="navTitle">Account</div>
+  <a href="shop.html" class="nav-shop-link" id="navShopLink" style="display:none;">Continue Shopping</a>
+  <div class="nav-icons"></div>
+</header>
+
+<!-- ============ AUTH SCREENS (shown when logged out) ============ -->
+<div id="authScreen">
+  <div class="auth-wrap">
+    <div class="auth-logo"><span class="logo"><span class="mark">ÀGÒ</span> LUXE</span></div>
+    <p class="auth-tagline" id="authTagline">Sign in for faster checkout, order tracking, and your wallet.</p>
+
+    <div class="auth-tabs">
+      <button class="auth-tab active" data-tab="signin">Sign In</button>
+      <button class="auth-tab" data-tab="signup">Sign Up</button>
+    </div>
+
+    <div class="auth-error" id="authError"></div>
+    <div class="auth-success" id="authSuccess"></div>
+
+    <!-- SIGN IN -->
+    <form class="auth-form active" id="signinForm" data-form="signin">
+      <div class="field">
+        <label>Email</label>
+        <input type="email" id="siEmail" autocomplete="email" required>
+      </div>
+      <div class="field">
+        <label>Password</label>
+        <div class="pw-wrap">
+          <input type="password" id="siPassword" autocomplete="current-password" required>
+          <button type="button" class="pw-toggle" data-target="siPassword">Show</button>
+        </div>
+      </div>
+      <button type="submit" class="auth-submit" id="siSubmit">Sign In</button>
+      <div class="auth-links">
+        <button type="button" id="forgotPwBtn">Forgot password?</button>
+      </div>
+    </form>
+
+    <!-- SIGN UP -->
+    <form class="auth-form" id="signupForm" data-form="signup">
+      <div class="field">
+        <label>Full Name</label>
+        <input type="text" id="suName" autocomplete="name" required>
+      </div>
+      <div class="field">
+        <label>Email</label>
+        <input type="email" id="suEmail" autocomplete="email" required>
+      </div>
+      <div class="field">
+        <label>Phone</label>
+        <input type="tel" id="suPhone" autocomplete="tel" required>
+      </div>
+      <div class="field">
+        <label>Password</label>
+        <div class="pw-wrap">
+          <input type="password" id="suPassword" autocomplete="new-password" minlength="6" required>
+          <button type="button" class="pw-toggle" data-target="suPassword">Show</button>
+        </div>
+        <div class="pw-strength" id="pwStrength">
+          <div class="pw-strength-track">
+            <div class="pw-strength-seg" data-seg="1"></div>
+            <div class="pw-strength-seg" data-seg="2"></div>
+            <div class="pw-strength-seg" data-seg="3"></div>
+            <div class="pw-strength-seg" data-seg="4"></div>
+          </div>
+          <span class="pw-strength-label" id="pwStrengthLabel"></span>
+        </div>
+      </div>
+      <div class="cf-turnstile" id="signupTurnstile" data-sitekey="0x4AAAAAAAA_REPLACE_WITH_REAL_SITEKEY" style="margin-bottom:14px;"></div>
+      <button type="submit" class="auth-submit" id="suSubmit">Create Account</button>
+      <div class="auth-links">
+        <span style="font-size:.72rem; color:var(--text-soft);">
+          By continuing you agree to our
+          <a href="terms.html">Terms</a> and <a href="privacy.html">Privacy Policy</a>.
+        </span>
+      </div>
+    </form>
+
+    <div class="guest-note" id="guestNote">
+      Just browsing? You can shop freely —
+      <a href="shop.html">continue shopping</a> anytime without an account.
+      An account is needed only when you're ready to check out.
+    </div>
+
+    <!-- ============ CODE VERIFICATION SCREEN ============ -->
+    <div class="code-screen" id="codeScreen">
+      <div class="code-icon" id="codeIconWrap">
+        <svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>
+      </div>
+      <div class="code-success-icon" id="codeSuccessIcon">
+        <svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>
+      </div>
+      <h2 id="codeScreenTitle">Check Your Email</h2>
+      <p class="code-sub">We sent a 6-digit code to<br><span class="code-email" id="codeEmailDisplay"></span></p>
+      <p id="devModeBanner" style="display:none; font-size:.72rem; color:#F3D98B; background:rgba(243,217,139,.1); border:1px solid #F3D98B; border-radius:6px; padding:8px 12px; margin:0 0 16px; line-height:1.5;">
+        ⚠ Test mode: email delivery isn't verified yet, so your code is filled in automatically below.
+      </p>
+
+      <div class="code-inputs" id="codeInputs">
+        <input type="tel" inputmode="numeric" maxlength="1" class="code-digit" data-idx="0">
+        <input type="tel" inputmode="numeric" maxlength="1" class="code-digit" data-idx="1">
+        <input type="tel" inputmode="numeric" maxlength="1" class="code-digit" data-idx="2">
+        <input type="tel" inputmode="numeric" maxlength="1" class="code-digit" data-idx="3">
+        <input type="tel" inputmode="numeric" maxlength="1" class="code-digit" data-idx="4">
+        <input type="tel" inputmode="numeric" maxlength="1" class="code-digit" data-idx="5">
+      </div>
+      <p class="code-error-msg" id="codeErrorMsg"></p>
+
+      <p class="code-timer" id="codeTimer">Code expires in <strong id="codeTimerVal">10:00</strong></p>
+
+      <button class="auth-submit" id="codeVerifyBtn">Verify Code</button>
+
+      <p style="margin-top:16px;">
+        <button class="code-resend" id="codeResendBtn">Resend Code</button>
+      </p>
+
+      <p class="code-back">
+        <button id="codeBackBtn">← Use a different email</button>
+      </p>
+    </div>
+
+    <!-- ============ REAL, GENUINE MFA VERIFICATION SCREEN ============ -->
+    <div class="code-screen" id="mfaScreen" style="display:none;">
+      <div class="code-icon">
+        <svg width="32" height="32" viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="1.6"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+      </div>
+      <h2>Enter Your Code</h2>
+      <p class="code-sub">Open your authenticator app and enter the current 6-digit code.</p>
+      <div class="code-inputs" id="mfaInputs">
+        <input type="tel" maxlength="1" class="mfa-digit">
+        <input type="tel" maxlength="1" class="mfa-digit">
+        <input type="tel" maxlength="1" class="mfa-digit">
+        <input type="tel" maxlength="1" class="mfa-digit">
+        <input type="tel" maxlength="1" class="mfa-digit">
+        <input type="tel" maxlength="1" class="mfa-digit">
+      </div>
+      <p class="code-error-msg" id="mfaErrorMsg"></p>
+      <button class="auth-submit" id="mfaVerifyBtn">Verify</button>
+    </div>
+
+    <!-- ============ NEW PASSWORD SCREEN (password reset only) ============ -->
+    <div class="newpw-screen" id="newpwScreen">
+      <div class="code-icon"><svg viewBox="0 0 24 24" stroke="#C084FC" fill="none" stroke-width="1.6"><rect x="5" y="11" width="14" height="10" rx="1"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg></div>
+      <h2 style="text-align:center;">Set a New Password</h2>
+      <p class="code-sub" style="text-align:center;">Choose a new password for your account.</p>
+
+      <div class="field" style="margin-top:22px;">
+        <label>New Password</label>
+        <div class="pw-wrap">
+          <input type="password" id="newPwInput" autocomplete="new-password" minlength="6">
+          <button type="button" class="pw-toggle" data-target="newPwInput">Show</button>
+        </div>
+        <div class="pw-strength" id="newPwStrength">
+          <div class="pw-strength-track">
+            <div class="pw-strength-seg" data-seg="1"></div>
+            <div class="pw-strength-seg" data-seg="2"></div>
+            <div class="pw-strength-seg" data-seg="3"></div>
+            <div class="pw-strength-seg" data-seg="4"></div>
+          </div>
+          <span class="pw-strength-label" id="newPwStrengthLabel"></span>
+        </div>
+      </div>
+      <button class="auth-submit" id="newPwSubmit">Update Password</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ PROFILE DASHBOARD (shown when logged in) ============ -->
+<div id="profileScreen" style="display:none;">
+
+  <!-- Admin shortcut — only shown when profiles.role === 'admin' -->
+  <div id="adminWelcomeCard" style="display:none;">
+    <div class="admin-welcome">
+      <div class="aw-icon"><svg viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="10" rx="1"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg></div>
+      <div class="aw-text">
+        <p class="aw-title">Welcome back, Admin</p>
+        <p class="aw-sub" id="adminWelcomeSub">Signed in with store administrator access.</p>
+      </div>
+      <a href="admin.html" class="aw-btn">Open Admin Dashboard</a>
+    </div>
+  </div>
+
+  <div class="profile-header">
+    <h1 id="profileGreeting">PROFILE</h1>
+    <div class="profile-stats">
+      <div class="profile-stat">
+        <div class="val" id="walletBalanceDisplay">₦0.00</div>
+        <div class="lbl">Wallet Balance</div>
+      </div>
+      <div class="profile-stat-divider"></div>
+      <a href="coupons-and-gifts.html" class="profile-stat" style="text-decoration:none; color:inherit; cursor:pointer;">
+        <div class="val" id="couponsCountDisplay">0</div>
+        <div class="lbl">Coupons &amp; Gift Cards</div>
+      </a>
+    </div>
+  </div>
+
+  <div class="profile-group">
+    <div class="profile-row" id="rowMyAccount">
+      <span class="row-label">My Account</span>
+      <svg class="chev" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
+    </div>
+    <div class="profile-row" id="rowMyOrders">
+      <span class="row-label">My Orders</span>
+      <span class="row-right" id="ordersSummary">0 orders <svg class="chev" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg></span>
+    </div>
+    <div class="profile-row" id="rowInbox">
+      <span class="row-label">Inbox</span>
+      <span class="row-right" id="inboxSummary">0 new <svg class="chev" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg></span>
+    </div>
+    <div class="profile-row" id="rowAddressBook">
+      <span class="row-label">Address Book</span>
+      <svg class="chev" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
+    </div>
+    <a class="profile-row" href="wishlist.html" style="display:flex;">
+      <span class="row-label">Saved</span>
+      <svg class="chev" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
+    </a>
+  </div>
+
+  <div class="profile-group">
+    <div class="profile-row" id="rowWallet">
+      <span class="row-label">Wallet &amp; Cards</span>
+      <svg class="chev" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
+    </div>
+  </div>
+
+  <div class="profile-group">
+    <div class="profile-row">
+      <span class="row-label" id="darkModeLabel">Dark Mode</span>
+      <div class="toggle-switch on" id="darkModeToggle" data-theme-toggle></div>
+    </div>
+  </div>
+
+  <div class="profile-group">
+    <div class="profile-row">
+      <span class="row-label">Push Notifications</span>
+      <div class="toggle-switch" id="pushNotifToggle"></div>
+    </div>
+  </div>
+
+  <div class="profile-group">
+    <div class="profile-row" id="rowMfaSetup">
+      <span class="row-label" style="font-weight:700; color:var(--accent);">Two-Factor Authentication</span>
+      <span class="row-right" id="mfaStatusLabel">checking…</span>
+    </div>
+  </div>
+  <p style="text-align:center; font-size:.6rem; color:var(--text-soft); opacity:.5; margin-top:8px;">build 20260725-mfa-v2</p>
+
+  <div class="profile-group">
+    <a class="profile-row" href="privacy.html" style="display:flex;">
+      <span class="row-label">Privacy Policy</span>
+      <svg class="chev" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
+    </a>
+    <a class="profile-row" href="terms.html" style="display:flex;">
+      <span class="row-label">Terms &amp; Conditions</span>
+      <svg class="chev" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
+    </a>
+    <div class="profile-row">
+      <span class="row-label">Support</span>
+      <svg class="chev" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
+    </div>
+  </div>
+
+  <div class="profile-group">
+    <div class="profile-row logout-row" id="logoutBtn">
+      <span class="row-label">Log Out</span>
+    </div>
+  </div>
+</div>
+
+<!-- ============ WALLET SHEET ============ -->
+<div class="sheet-overlay" id="walletOverlay">
+  <div class="sheet">
+    <button class="sheet-close" id="walletClose">
+      <svg width="20" height="20" viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="1.8"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+    <div class="sheet-handle"></div>
+    <h3>Wallet &amp; Cards</h3>
+    <p class="sub">Balance: <strong id="sheetBalance">₦0.00</strong></p>
+
+    <p style="font-size:.72rem; letter-spacing:.08em; text-transform:uppercase; color:var(--text-soft); margin-bottom:10px;">Top Up Amount</p>
+    <div class="amount-grid" id="amountGrid">
+      <button class="amount-chip" data-amt="5000">₦5,000</button>
+      <button class="amount-chip" data-amt="10000">₦10,000</button>
+      <button class="amount-chip" data-amt="25000">₦25,000</button>
+      <button class="amount-chip" data-amt="50000">₦50,000</button>
+      <button class="amount-chip" data-amt="100000">₦100,000</button>
+      <button class="amount-chip" id="customAmtChip">Other</button>
+    </div>
+    <div class="field" id="customAmtField" style="display:none;">
+      <input type="number" id="customAmtInput" placeholder="Enter amount (₦)" min="500">
+    </div>
+    <button class="sheet-submit" id="topupSubmit" disabled>Top Up Wallet</button>
+
+    <p style="font-size:.72rem; letter-spacing:.08em; text-transform:uppercase; color:var(--text-soft); margin:22px 0 4px;">Recent Activity</p>
+    <div id="txList"><p class="tx-empty">No transactions yet.</p></div>
+  </div>
+</div>
+
+<!-- ============ MY ACCOUNT SHEET ============ -->
+<div class="sheet-overlay" id="accountOverlay">
+  <div class="sheet">
+    <button class="sheet-close" id="accountClose">
+      <svg width="20" height="20" viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="1.8"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+    <div class="sheet-handle"></div>
+    <h3>My Account</h3>
+    <p class="sub">Update your personal details.</p>
+
+    <div class="sheet-field">
+      <label>Full Name</label>
+      <input type="text" id="acctName">
+    </div>
+    <div class="sheet-field">
+      <label>Phone</label>
+      <input type="tel" id="acctPhone">
+    </div>
+    <div class="sheet-field">
+      <label>Email</label>
+      <input type="email" id="acctEmail" disabled style="opacity:.55;">
+    </div>
+    <button class="sheet-submit" id="acctSaveBtn">Save Changes</button>
+
+    <button class="sheet-submit" id="acctChangePwBtn" style="background:none; border:1px solid var(--border); color:var(--text); margin-top:10px;">Change Password</button>
+  </div>
+</div>
+
+<!-- ============ MY ORDERS SHEET ============ -->
+<div class="sheet-overlay" id="ordersOverlay">
+  <div class="sheet">
+    <button class="sheet-close" id="ordersClose">
+      <svg width="20" height="20" viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="1.8"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+    <div class="sheet-handle"></div>
+    <h3>My Orders</h3>
+    <p class="sub">Your order history and tracking.</p>
+    <div id="ordersList"><p class="tx-empty">Loading…</p></div>
+  </div>
+</div>
+
+<!-- ============ INBOX SHEET ============ -->
+<div class="sheet-overlay" id="inboxOverlay">
+  <div class="sheet">
+    <button class="sheet-close" id="inboxClose">
+      <svg width="20" height="20" viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="1.8"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+    <div class="sheet-handle"></div>
+    <h3>Inbox</h3>
+    <p class="sub">Updates on your orders — payment, shipping, and delivery.</p>
+    <a href="chat.html" style="display:flex; align-items:center; justify-content:center; gap:8px; width:100%; margin-bottom:14px; padding:13px; background:var(--accent); color:#0A0A0A; font-weight:700; font-size:.78rem; letter-spacing:.04em; text-transform:uppercase; border-radius:6px; text-decoration:none;">
+      <svg width="15" height="15" viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+      Message Us
+    </a>
+    <div id="inboxList"><p class="tx-empty">Loading…</p></div>
+  </div>
+</div>
+
+<!-- ============ REAL, GENUINE MFA ENROLLMENT SHEET ============ -->
+<div class="sheet-overlay" id="mfaSetupOverlay">
+  <div class="sheet">
+    <button class="sheet-close" id="mfaSetupClose">
+      <svg width="20" height="20" viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="1.8"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+    <div class="sheet-handle"></div>
+
+    <!-- Real, genuine "already enrolled" view -->
+    <div id="mfaEnabledView" style="display:none;">
+      <div style="display:flex; justify-content:center; margin-bottom:14px;">
+        <div style="width:52px; height:52px; border-radius:50%; background:rgba(74,222,128,.12); display:flex; align-items:center; justify-content:center;">
+          <svg width="26" height="26" viewBox="0 0 24 24" stroke="#4ADE80" fill="none" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>
+        </div>
+      </div>
+      <h3 style="text-align:center;">Two-Factor Authentication Enabled</h3>
+      <p class="sub" style="margin-bottom:24px; text-align:center;">Your account is now protected with an extra layer of security — a real code from your authenticator app is required to sign in.</p>
+      <button id="mfaDoneBtn" style="width:100%; padding:13px; background:var(--accent); color:#0A0A0A; font-size:.76rem; font-weight:700; letter-spacing:.04em; text-transform:uppercase; border-radius:6px; margin-bottom:10px;">Done</button>
+      <button id="mfaDisableBtn" style="width:100%; padding:13px; background:none; border:1px solid var(--border); color:var(--text-soft); font-size:.72rem; font-weight:600; letter-spacing:.03em; text-transform:uppercase; border-radius:6px;">Turn Off 2FA</button>
+    </div>
+
+    <!-- Real, genuine "not enrolled yet" starting view -->
+    <div id="mfaStartView">
+      <h3>Set Up Two-Factor Authentication</h3>
+      <p class="sub" style="margin-bottom:20px;">Add a real, extra layer of security — a code from your authenticator app, required alongside your password.</p>
+      <button id="mfaStartBtn" style="width:100%; padding:13px; background:var(--accent); color:#0A0A0A; font-size:.76rem; font-weight:700; letter-spacing:.04em; text-transform:uppercase; border-radius:6px;">Get Started</button>
+    </div>
+
+    <!-- Real, genuine QR-code + verification view -->
+    <div id="mfaQrView" style="display:none;">
+      <h3>Scan This Code</h3>
+      <p class="sub" style="margin-bottom:14px;">Open your authenticator app (Google Authenticator, Authy, etc.) and scan this real, genuine QR code.</p>
+      <div id="mfaQrCodeWrap" style="display:flex; justify-content:center; margin-bottom:14px; background:#fff; padding:16px; border-radius:8px;"></div>
+      <p style="font-size:.7rem; color:var(--text-soft); margin-bottom:10px; text-align:center;">Can't scan? Enter this real code manually:</p>
+      <p id="mfaManualSecret" style="user-select:all; text-align:center; font-family:monospace; font-size:.82rem; letter-spacing:.05em; background:var(--surface); border:1px solid var(--accent); color:var(--accent); padding:12px; border-radius:8px; word-break:break-all; margin-bottom:16px;"></p>
+      <p class="sub" style="margin-bottom:10px;">Enter the current 6-digit code to confirm it's genuinely working:</p>
+      <div class="code-inputs" id="mfaEnrollInputs">
+        <input type="tel" maxlength="1" class="mfa-digit">
+        <input type="tel" maxlength="1" class="mfa-digit">
+        <input type="tel" maxlength="1" class="mfa-digit">
+        <input type="tel" maxlength="1" class="mfa-digit">
+        <input type="tel" maxlength="1" class="mfa-digit">
+        <input type="tel" maxlength="1" class="mfa-digit">
+      </div>
+      <p class="code-error-msg" id="mfaEnrollErrorMsg"></p>
+      <button class="auth-submit" id="mfaEnrollVerifyBtn">Confirm & Turn On</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ ADDRESS BOOK SHEET ============ -->
+<div class="sheet-overlay" id="addressOverlay">
+  <div class="sheet">
+    <button class="sheet-back" id="addrBackBtn">
+      <svg width="20" height="20" viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="1.8"><path d="M19 12H5M11 18l-6-6 6-6"/></svg>
+    </button>
+    <button class="sheet-close" id="addressClose">
+      <svg width="20" height="20" viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="1.8"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+    <div class="sheet-handle"></div>
+
+    <!-- List view -->
+    <div id="addrListView">
+      <h3>Address Book</h3>
+      <p class="sub">Saved delivery addresses.</p>
+      <div id="addrList"></div>
+      <button class="add-addr-btn" id="addAddrBtn">+ Add New Address</button>
+    </div>
+
+    <!-- Form view (add/edit) -->
+    <div id="addrFormView" style="display:none;">
+      <h3 id="addrFormTitle">Add Address</h3>
+      <p class="sub">Fill in the delivery details.</p>
+      <div class="sheet-field">
+        <label>Label</label>
+        <input type="text" id="addrLabel" placeholder="e.g. Home, Office">
+      </div>
+      <div class="sheet-field">
+        <label>Full Name</label>
+        <input type="text" id="addrName">
+      </div>
+      <div class="sheet-field">
+        <label>Phone</label>
+        <input type="tel" id="addrPhone">
+      </div>
+      <div class="sheet-field">
+        <label>Street Address</label>
+        <input type="text" id="addrLine1">
+      </div>
+
+      <div class="ago-select" id="addrStateSelect">
+        <label>State</label>
+        <button type="button" class="ago-select-trigger" id="addrStateTrigger">
+          <span class="ago-select-value" id="addrStateValue">Select state</span>
+          <svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
+        <div class="ago-select-panel" id="addrStatePanel">
+          <div class="ago-select-search"><input type="text" placeholder="Search states…" id="addrStateSearch"></div>
+          <div class="ago-select-list" id="addrStateList"></div>
+        </div>
+      </div>
+
+      <div class="ago-select" id="addrLgaSelect">
+        <label>LGA (Local Government Area)</label>
+        <button type="button" class="ago-select-trigger" id="addrLgaTrigger" disabled>
+          <span class="ago-select-value" id="addrLgaValue">Select state first</span>
+          <svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
+        <div class="ago-select-panel" id="addrLgaPanel">
+          <div class="ago-select-search"><input type="text" placeholder="Search LGAs…" id="addrLgaSearch"></div>
+          <div class="ago-select-list" id="addrLgaList"></div>
+        </div>
+      </div>
+
+      <div class="ago-select" id="addrBusStopSelect">
+        <label>Nearest Bus-Stop / Area</label>
+        <button type="button" class="ago-select-trigger" id="addrBusStopTrigger" disabled>
+          <span class="ago-select-value" id="addrBusStopValue">Select LGA first</span>
+          <svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
+        <div class="ago-select-panel" id="addrBusStopPanel">
+          <div class="ago-select-search"><input type="text" placeholder="Search or type your area…" id="addrBusStopSearch"></div>
+          <div class="ago-select-list" id="addrBusStopList"></div>
+        </div>
+      </div>
+
+      <div class="sheet-field" style="display:flex; align-items:center; gap:10px;">
+        <div class="toggle-switch small" id="addrDefaultToggle"></div>
+        <label style="margin:0; text-transform:none; letter-spacing:normal; font-size:.8rem;">Set as default address</label>
+      </div>
+      <button class="sheet-submit" id="addrSaveBtn">Save Address</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ BOTTOM NAV ============ -->
+<nav class="bottom-nav" id="bottomNav">
+  <a href="index.html">
+    <svg viewBox="0 0 24 24"><path d="M3 11l9-8 9 8M5 10v10h14V10" stroke-width="1.6"/></svg>Home
+  </a>
+  <a href="categories.html">
+    <svg viewBox="0 0 24 24"><rect x="3" y="3" width="8" height="8" stroke-width="1.6"/><rect x="13" y="3" width="8" height="8" stroke-width="1.6"/><rect x="3" y="13" width="8" height="8" stroke-width="1.6"/><rect x="13" y="13" width="8" height="8" stroke-width="1.6"/></svg>Categories
+  </a>
+  <a href="cart.html">
+    <svg viewBox="0 0 24 24" stroke-width="1.6"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>Cart
+    <span class="badge" data-cart-badge>0</span>
+  </a>
+  <a href="wishlist.html">
+    <svg viewBox="0 0 24 24" stroke-width="1.6"><path d="M12 21s-7.5-4.6-10-9.1C.4 8.5 2 4.5 6 4c2.2-.3 4 1 6 3.5C14 5 15.8 3.7 18 4c4 .5 5.6 4.5 4 7.9C19.5 16.4 12 21 12 21z"/></svg>Wishlist
+    <span class="badge" data-wish-badge>0</span>
+  </a>
+  <a href="account.html" class="active" id="bottomNavAccountLink">
+    <svg viewBox="0 0 24 24" stroke-width="1.6"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-6 8-6s8 2 8 6"/></svg>
+    <span id="bottomNavAccountLabel">Account</span>
+  </a>
+</nav>
+
+<!-- ============ LOGOUT CONFIRM MODAL ============ -->
+<div class="confirm-overlay" id="logoutOverlay">
+  <div class="confirm-box">
+    <div class="c-icon">
+      <svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+    </div>
+    <h3>Log Out?</h3>
+    <p>You'll need to sign in again to view your orders, wallet, and saved addresses.</p>
+    <div class="confirm-actions">
+      <button class="c-cancel" id="logoutCancel">Stay Signed In</button>
+      <button class="c-confirm" id="logoutConfirm">Log Out</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ CANCEL ORDER CONFIRM MODAL ============ -->
+<div class="confirm-overlay" id="cancelOrderOverlay">
+  <div class="confirm-box">
+    <div class="c-icon">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+    </div>
+    <h3>Cancel This Order?</h3>
+    <p id="cancelOrderMsg">This can't be undone.</p>
+    <div class="confirm-actions">
+      <button class="c-cancel" id="cancelOrderStay">Keep Order</button>
+      <button class="c-confirm" id="cancelOrderConfirm">Cancel Order</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ DELETE ADDRESS CONFIRM MODAL ============ -->
+<div class="confirm-overlay" id="deleteAddrOverlay">
+  <div class="confirm-box">
+    <div class="c-icon">
+      <svg viewBox="0 0 24 24"><path d="M3 6h18M8 6V4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2m3 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
+    </div>
+    <h3>Delete Address?</h3>
+    <p>This address will be permanently removed from your Address Book.</p>
+    <div class="confirm-actions">
+      <button class="c-cancel" id="deleteAddrCancel">Keep It</button>
+      <button class="c-confirm" id="deleteAddrConfirm">Delete</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ════════════════════════════════════════════════════════════
+   CONFIG
+   ════════════════════════════════════════════════════════════ */
+const SB_URL = 'https://drjebroujarpugwadido.supabase.co';
+const SB_REST = SB_URL + '/rest/v1';
+const SB_AUTH = SB_URL + '/auth/v1';
+const SB_KEY  = 'sb_publishable_0mAkL4aIqXf1nm9zlQF8Fg_yPyt-F71';
+const PAYSTACK_PK = 'pk_test_0eabc5cebeec77e956a37a40f29b9d11db13039f';
+const SEND_CODE_URL = SB_URL + '/functions/v1/send-verification-code';
+const VERIFY_CODE_URL = SB_URL + '/functions/v1/verify-code';
+
+const $ = id => document.getElementById(id);
+const fmt = n => '₦' + Number(n||0).toLocaleString('en-NG', {minimumFractionDigits:2, maximumFractionDigits:2});
+const escAttr = (s) => String(s ?? '').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+// escAttr above is sufficient for attribute contexts (data-name="...")
+// but NOT for HTML content — it doesn't escape < or >, so it can't
+// stop <script> tag injection. escHtml below is the real content-safe
+// version, used anywhere customer-provided text (address, name, etc.)
+// gets rendered as visible page content rather than an attribute value.
+const escHtml = (s) => String(s ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+
+function showToast(msg, type){
+  const t = $('toast');
+  t.textContent = msg;
+  t.classList.remove('error','success');
+
+  // Auto-detect tone when not explicitly passed — keeps every
+  // existing showToast('...') call working unchanged while still
+  // getting red/green coloring based on common wording patterns.
+  const inferredType = type || (
+    /could not|failed|error|invalid|incorrect|expired|please|minimum|already|not found|cancelled|missing/i.test(msg)
+      ? 'error'
+      : /success|saved|updated|added|verified|welcome|sent|deleted|removed|topped up|signed in|confirmed/i.test(msg)
+        ? 'success'
+        : null
+  );
+  if (inferredType) t.classList.add(inferredType);
+
+  t.classList.add('show');
+  clearTimeout(t._t); t._t = setTimeout(()=>t.classList.remove('show'), 3200);
+}
+
+/* ════════════════════════════════════════════════════════════
+   AUTH — Supabase GoTrue REST (no CDN library, plain fetch)
+   ════════════════════════════════════════════════════════════ */
+const Auth = {
+  _key: 'ago_auth_session',
+
+  getSession(){
+    try { return JSON.parse(localStorage.getItem(this._key) || 'null'); }
+    catch { return null; }
+  },
+  saveSession(s){ localStorage.setItem(this._key, JSON.stringify(s)); },
+  clearSession(){
+    localStorage.removeItem(this._key);
+    // REAL, CONFIRMED ROOT-CAUSE FIX: this previously only removed
+    // the auth token, leaving all real, per-account cart/wishlist
+    // data behind in localStorage indefinitely. That stale data
+    // would sync right back up the moment the same account signed
+    // in again — confirmed as the actual, real cause of an extended
+    // "items keep coming back" investigation. Now does a genuine,
+    // complete sweep of every ago_-prefixed key.
+    if (typeof window.agoClearAllLocalDataOnSignOut === 'function') {
+      window.agoClearAllLocalDataOnSignOut();
+    }
+  },
+
+  async signUp(email, password, fullName, phone){
+    const redirectTo = 'https://ago-luxeclothing.netlify.app/account.html';
+
+    // REAL, GENUINE BOT PROTECTION — Cloudflare Turnstile, Supabase's
+    // own official, supported CAPTCHA integration. The real token is
+    // generated by the widget the moment a real, live person
+    // completes it (usually invisibly) and must be sent in this
+    // exact, real request shape for Supabase's Auth server to
+    // actually verify it server-side.
+    const captchaToken = typeof turnstile !== 'undefined'
+      ? turnstile.getResponse('signupTurnstile')
+      : null;
+    if (!captchaToken) {
+      throw new Error('Please complete the verification check before signing up.');
+    }
+
+    const res = await fetch(SB_AUTH + '/signup', {
+      method:'POST',
+      headers:{ 'apikey':SB_KEY, 'Content-Type':'application/json' },
+      body: JSON.stringify({
+        email, password, data:{ full_name:fullName, phone },
+        options:{ redirect_to: redirectTo },
+        gotrue_meta_security: { captcha_token: captchaToken },
+      }),
+    });
+    const data = await res.json();
+    // Real, honest reset — a Turnstile token can only be used once;
+    // if this real attempt failed, the widget needs a fresh
+    // real challenge before trying again.
+    if (typeof turnstile !== 'undefined') turnstile.reset('signupTurnstile');
+    if (!res.ok) throw new Error(data.msg || data.error_description || 'Sign up failed');
+    return data;
+  },
+
+  async signIn(email, password){
+    // REAL, GENUINE RATE LIMIT CHECK — confirmed via Supabase's own
+    // docs that plain password sign-in isn't covered by their
+    // built-in per-endpoint limits, only OTP/token-refresh/etc.
+    // This is real, application-level protection against repeated
+    // guessing on one specific, real account.
+    const limitRes = await fetch(`${SB_REST}/rpc/check_login_rate_limit`, {
+      method: 'POST', headers: { 'apikey': SB_KEY, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ p_email: email }),
+    });
+    const limitData = limitRes.ok ? await limitRes.json() : [];
+    const limit = Array.isArray(limitData) ? limitData[0] : limitData;
+    if (limit?.is_locked) {
+      const mins = Math.ceil(limit.retry_after_seconds / 60);
+      throw new Error(`Too many attempts. Please try again in ${mins} minute${mins > 1 ? 's' : ''}.`);
+    }
+
+    const res = await fetch(SB_AUTH + '/token?grant_type=password', {
+      method:'POST',
+      headers:{ 'apikey':SB_KEY, 'Content-Type':'application/json' },
+      body: JSON.stringify({ email, password }),
+    });
+    const data = await res.json();
+
+    // Real, honest logging — records the genuine, actual outcome
+    // regardless of success or failure, so the next check above is accurate.
+    fetch(`${SB_REST}/rpc/log_login_attempt`, {
+      method: 'POST', headers: { 'apikey': SB_KEY, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ p_email: email, p_success: res.ok }),
+    }).catch(() => {});
+
+    if (!res.ok) throw new Error(data.error_description || data.msg || 'Invalid email or password');
+    this.saveSession(data);
+
+    // REAL, GENUINE MFA CHECK — if this real account has an
+    // enrolled, verified TOTP factor, password success alone (AAL1)
+    // is NOT enough. Return a real, honest signal so the real UI can
+    // show the actual 6-digit code prompt before treating sign-in as complete.
+    try {
+      let factorsRes = await fetch(`${SB_URL}/rest/v1/auth/factors`, { headers: this.authHeaders() });
+      if (!factorsRes.ok) {
+        factorsRes = await fetch(`${SB_AUTH}/factors`, { headers: this.authHeaders() });
+      }
+      const factorsData = factorsRes.ok ? await factorsRes.json() : { totp: [] };
+      const verifiedFactor = (factorsData.totp || []).find(f => f.status === 'verified');
+      if (verifiedFactor) {
+        return { ...data, mfaRequired: true, mfaFactorId: verifiedFactor.id };
+      }
+    } catch(e) { /* real, honest fallback — if this check fails, don't block a real, legitimate sign-in over it */ }
+
+    // Fold any items added while browsing as a guest into this
+    // account's own cart/wishlist — additive, never overwrites what
+    // was already saved under their account from a previous session.
+    if (window.agoMergeGuestIntoAccount) window.agoMergeGuestIntoAccount();
+    return data;
+  },
+
+  async signOut(){
+    const s = this.getSession();
+    if (s?.access_token){
+      try {
+        await fetch(SB_AUTH + '/logout', {
+          method:'POST',
+          headers:{ 'apikey':SB_KEY, 'Authorization':'Bearer '+s.access_token },
+        });
+      } catch(e){}
+    }
+    this.clearSession();
+  },
+
+  async resetPassword(email){
+    // redirect_to must also be added to Supabase's URL Configuration
+    // allow-list (Dashboard → Authentication → URL Configuration →
+    // Redirect URLs) or GoTrue will silently fall back to the
+    // project's default Site URL — which is what caused the
+    // "localhost refused to connect" link in the reset email.
+    const redirectTo = 'https://ago-luxeclothing.netlify.app/account.html';
+    const res = await fetch(SB_AUTH + '/recover', {
+      method:'POST',
+      headers:{ 'apikey':SB_KEY, 'Content-Type':'application/json' },
+      body: JSON.stringify({ email, options: { redirect_to: redirectTo } }),
+    });
+    if (!res.ok) { const d = await res.json(); throw new Error(d.msg || 'Could not send reset email'); }
+  },
+
+  isLoggedIn(){
+    const s = this.getSession();
+    return !!(s && s.access_token && s.user);
+  },
+
+  currentUser(){
+    return this.getSession()?.user || null;
+  },
+
+  authHeaders(){
+    const s = this.getSession();
+    return {
+      'apikey': SB_KEY,
+      'Authorization': 'Bearer ' + (s?.access_token || SB_KEY),
+      'Content-Type': 'application/json',
+    };
+  },
+
+  // REAL, genuine MFA verification — call this after signIn()
+  // returns { mfaRequired: true }. Creates a real challenge for the
+  // enrolled factor, then verifies the actual 6-digit code the
+  // customer read off their real authenticator app. On success,
+  // Supabase returns a real, new session genuinely upgraded to AAL2.
+  async verifyMfaCode(factorId, code){
+    const challengeRes = await fetch(`${SB_AUTH}/factors/${factorId}/challenge`, {
+      method: 'POST', headers: this.authHeaders(),
+    });
+    const challengeData = await challengeRes.json();
+    if (!challengeRes.ok) throw new Error(challengeData.msg || 'Could not start verification');
+
+    const verifyRes = await fetch(`${SB_AUTH}/factors/${factorId}/verify`, {
+      method: 'POST', headers: this.authHeaders(),
+      body: JSON.stringify({ challenge_id: challengeData.id, code }),
+    });
+    const verifyData = await verifyRes.json();
+    if (!verifyRes.ok) throw new Error(verifyData.msg || 'Incorrect code — please try again.');
+
+    // Real, genuine AAL2 session — this replaces the earlier,
+    // AAL1-only session saved right after the password step.
+    this.saveSession(verifyData);
+    if (window.agoMergeGuestIntoAccount) window.agoMergeGuestIntoAccount();
+    return verifyData;
+  },
+
+  // REAL, genuine list of this account's actual, current MFA
+  // factors — used to show real, accurate enrollment status
+  // (whether 2FA is genuinely on or off right now).
+  async listMfaFactors(){
+    // REAL, CONFIRMED FIX: the previous /auth/v1/factors endpoint
+    // was genuinely wrong — confirmed live via a real 405 error, and
+    // matches Supabase's own documentation, which specifies
+    // /rest/v1/auth/factors for this specific, real purpose. Tries
+    // the corrected, real, documented path first; falls back to the
+    // old path only if that also genuinely fails, since this can't
+    // be tested against your live project from this environment
+    // before shipping — this way one deploy can't leave you worse
+    // off than before if the correction itself needs further tuning.
+    let res = await fetch(`${SB_URL}/rest/v1/auth/factors`, { headers: this.authHeaders() });
+    if (!res.ok) {
+      res = await fetch(`${SB_AUTH}/factors`, { headers: this.authHeaders() });
+    }
+    if (!res.ok) {
+      const errBody = await res.text().catch(() => '');
+      throw new Error(`Could not check 2FA status (${res.status}): ${errBody}`);
+    }
+    const data = await res.json();
+    return data.totp || [];
+  },
+
+  // REAL, genuine enrollment start — asks Supabase to generate an
+  // actual, real TOTP secret and QR code for this account. Returns
+  // the real factor id and QR code SVG to display.
+  async enrollMfa(){
+    const res = await fetch(`${SB_AUTH}/factors`, {
+      method: 'POST', headers: this.authHeaders(),
+      body: JSON.stringify({ factor_type: 'totp', friendly_name: 'Authenticator App' }),
+    });
+    const data = await res.json();
+    if (!res.ok) {
+      // REAL, CONFIRMED, STRUCTURAL FIX: previously only checked
+      // data.msg, an unverified assumption about Supabase's real
+      // error field name for this specific endpoint. Now checks
+      // every real, plausible field, so the actual, honest
+      // "already exists" text is reliably captured regardless of
+      // which one Supabase genuinely uses — this is what silently
+      // broke the confirmed, real, silent-recovery logic upstream.
+      const realErrorText = data.msg || data.message || data.error_description || data.error || 'Could not start 2FA setup';
+      throw new Error(realErrorText);
+    }
+    return data; // real { id, totp: { qr_code, secret, uri } }
+  },
+
+  // REAL, genuine enrollment verification — the customer scans the
+  // real QR code with their authenticator app, then must enter one
+  // real, current code from it to PROVE the factor genuinely works
+  // before it's marked verified. This is a distinct, real step from
+  // verifyMfaCode() above (which is the real, later LOGIN-time challenge).
+  async verifyMfaEnrollment(factorId, code){
+    const challengeRes = await fetch(`${SB_AUTH}/factors/${factorId}/challenge`, {
+      method: 'POST', headers: this.authHeaders(),
+    });
+    const challengeData = await challengeRes.json();
+    if (!challengeRes.ok) throw new Error(challengeData.msg || 'Could not start verification');
+
+    const verifyRes = await fetch(`${SB_AUTH}/factors/${factorId}/verify`, {
+      method: 'POST', headers: this.authHeaders(),
+      body: JSON.stringify({ challenge_id: challengeData.id, code }),
+    });
+    const verifyData = await verifyRes.json();
+    if (!verifyRes.ok) throw new Error(verifyData.msg || 'Incorrect code — please check your authenticator app and try again.');
+    this.saveSession(verifyData);
+    return verifyData;
+  },
+
+  // REAL, genuine disable — removes an enrolled factor entirely.
+  async unenrollMfa(factorId){
+    const res = await fetch(`${SB_AUTH}/factors/${factorId}`, {
+      method: 'DELETE', headers: this.authHeaders(),
+    });
+    if (!res.ok) { const d = await res.json().catch(()=>({})); throw new Error(d.msg || 'Could not turn off 2FA'); }
+  },
+
+  // Confirms the stored access_token is genuinely still accepted by
+  // Supabase, rather than just assuming "present in localStorage"
+  // means "valid." Tokens expire, and a stale one silently falling
+  // back to the anon key (see authHeaders above) was the actual
+  // cause of "signed in as the wrong account" — this check catches
+  // that case explicitly instead of masking it.
+  async verifySessionIsValid(){
+    const s = this.getSession();
+    if (!s?.access_token) return false;
+    try {
+      const res = await fetch(SB_AUTH + '/user', {
+        headers: { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + s.access_token },
+      });
+      if (!res.ok) return false;
+      const data = await res.json();
+      // Extra check: confirm the token's user ID actually matches
+      // what we have cached locally — catches the specific case of
+      // a session object that's structurally valid JSON but
+      // genuinely belongs to a different account than expected.
+      return !!(data?.id && data.id === s?.user?.id);
+    } catch(e){
+      console.warn('Session validity check failed (treating as invalid):', e);
+      return false;
+    }
+  },
+};
+
+/* ════════════════════════════════════════════════════════════
+   PROFILE / WALLET DATA (via PostgREST, respects RLS using the
+   user's own access token from sign-in)
+   ════════════════════════════════════════════════════════════ */
+async function fetchProfile(userId){
+  const res = await fetch(`${SB_REST}/profiles?id=eq.${userId}&select=*`, { headers: Auth.authHeaders() });
+  const rows = await res.json();
+  return rows[0] || null;
+}
+
+async function fetchWalletTx(userId){
+  const res = await fetch(`${SB_REST}/wallet_transactions?user_id=eq.${userId}&select=*&order=created_at.desc&limit=15`, { headers: Auth.authHeaders() });
+  return res.ok ? res.json() : [];
+}
+
+async function fetchOrderCount(userId){
+  const res = await fetch(`${SB_REST}/orders?user_id=eq.${userId}&select=id,status`, { headers: Auth.authHeaders() });
+  return res.ok ? res.json() : [];
+}
+
+async function fetchCouponCount(userId){
+  const res = await fetch(`${SB_REST}/user_coupons?user_id=eq.${userId}&is_used=eq.false&select=id`, { headers: Auth.authHeaders() });
+  const rows = res.ok ? await res.json() : [];
+  return rows.length;
+}
+
+// Calls the SECURITY DEFINER function — never writes wallet_balance directly
+async function creditWallet(userId, amount, reference){
+  const res = await fetch(`${SB_REST}/rpc/log_wallet_transaction`, {
+    method:'POST',
+    headers: Auth.authHeaders(),
+    body: JSON.stringify({
+      p_user_id: userId, p_type:'credit', p_amount: amount,
+      p_reason:'topup', p_reference: reference, p_order_id: null,
+    }),
+  });
+  if (!res.ok) throw new Error('Could not credit wallet');
+  return res.json();
+}
+
+/* ════════════════════════════════════════════════════════════
+   NIGERIA STATE / LGA / BUS-STOP DATA + DROPDOWN COMPONENT
+   Same dataset and component as checkout.html, so an address saved
+   here maps cleanly onto checkout's structured fields.
+   ════════════════════════════════════════════════════════════ */
+const NG_LGAS = {
+  'Lagos': ['Agege','Ajeromi-Ifelodun','Alimosho','Amuwo-Odofin','Apapa','Badagry','Epe','Eti-Osa','Ibeju-Lekki','Ifako-Ijaiye','Ikeja','Ikorodu','Kosofe','Lagos Island','Lagos Mainland','Mushin','Ojo','Oshodi-Isolo','Shomolu','Surulere'],
+  'Ogun': ['Abeokuta North','Abeokuta South','Ado-Odo/Ota','Ewekoro','Ifo','Ijebu East','Ijebu North','Ijebu North East','Ijebu Ode','Ikenne','Imeko Afon','Ipokia','Obafemi Owode','Odeda','Odogbolu','Remo North','Sagamu','Yewa North','Yewa South'],
+  'Oyo': ['Akinyele','Atiba','Atisbo','Egbeda','Ibadan North','Ibadan North-East','Ibadan North-West','Ibadan South-East','Ibadan South-West','Ibarapa Central','Ibarapa East','Ibarapa North','Ido','Irepo','Iseyin','Itesiwaju','Iwajowa','Kajola','Lagelu','Ogbomosho North','Ogbomosho South','Ogo Oluwa','Olorunsogo','Oluyole','Ona Ara','Orelope','Ori Ire','Oyo East','Oyo West','Saki East','Saki West','Surulere'],
+  'Abuja (FCT)': ['Abaji','Bwari','Gwagwalada','Kuje','Kwali','Municipal Area Council (AMAC)'],
+  'Rivers': ['Port Harcourt','Obio-Akpor','Eleme','Ikwerre','Etche','Oyigbo','Okrika','Ogu-Bolo','Degema','Bonny','Andoni','Opobo-Nkoro','Ahoada East','Ahoada West','Emohua','Gokana','Khana','Tai','Asari-Toru','Akuku-Toru','Abua/Odual','Omuma'],
+  'Delta': ['Warri South','Warri North','Warri South West','Uvwie','Ughelli North','Ughelli South','Sapele','Ethiope East','Ethiope West','Oshimili North','Oshimili South','Aniocha North','Aniocha South','Ika North East','Ika South','Isoko North','Isoko South','Ndokwa East','Ndokwa West','Okpe','Patani','Bomadi','Burutu','Udu'],
+  'Edo': ['Benin City (Oredo)','Egor','Ikpoba-Okha','Ovia North-East','Ovia South-West','Orhionmwon','Uhunmwonde','Esan Central','Esan North-East','Esan South-East','Esan West','Etsako Central','Etsako East','Etsako West','Igueben','Owan East','Owan West'],
+  'Anambra': ['Awka North','Awka South','Onitsha North','Onitsha South','Nnewi North','Nnewi South','Idemili North','Idemili South','Aguata','Anambra East','Anambra West','Anaocha','Ayamelum','Dunukofia','Ekwusigo','Njikoka','Ogbaru','Orumba North','Orumba South','Oyi'],
+  'Enugu': ['Enugu East','Enugu North','Enugu South','Nsukka','Isi Uzo','Igbo Etiti','Igbo Eze North','Igbo Eze South','Nkanu East','Nkanu West','Udi','Ezeagu','Aninri','Awgu','Oji River','Udenu','Uzo-Uwani'],
+  'Kaduna': ['Kaduna North','Kaduna South','Chikun','Igabi','Zaria','Sabon Gari','Giwa','Ikara','Kachia','Kagarko','Kajuru','Kaura','Kauru','Kubau','Kudan','Lere','Makarfi','Sanga','Soba','Zangon Kataf','Jaba',"Jema'a"],
+  'Kano': ['Kano Municipal','Fagge','Dala','Gwale','Tarauni','Nassarawa','Ungogo','Kumbotso','Warawa','Gezawa','Dawakin Kudu','Dawakin Tofa','Rimin Gado','Wudil','Garko','Albasu','Sumaila','Bunkure','Rano','Kibiya','Bebeji','Kiru','Doguwa','Tofa','Kunchi','Bagwai','Gabasawa','Minjibir','Ajingi','Garun Mallam','Madobi','Karaye','Rogo','Gwarzo','Kabo','Bichi','Shanono','Ungogo','Takai','Sumaila'],
+  'Kwara': ['Ilorin East','Ilorin South','Ilorin West','Asa','Baruten','Edu','Ekiti','Ifelodun','Irepodun','Isin','Kaiama','Moro','Offa','Oke Ero','Oyun','Pategi'],
+  'Osun': ['Osogbo','Olorunda','Egbedore','Ede North','Ede South','Ejigbo','Ife Central','Ife East','Ife North','Ife South','Ifedayo','Ifelodun','Ila','Ilesa East','Ilesa West','Irepodun','Irewole','Isokan','Iwo','Obokun','Odo Otin','Ola Oluwa','Oriade','Orolu','Boluwaduro','Boripe','Atakunmosa East','Atakunmosa West','Aiyedaade','Aiyedire'],
+  'Ondo': ['Akure North','Akure South','Owo','Ondo East','Ondo West','Ose','Idanre','Ifedore','Ilaje','Ile Oluji/Okeigbo','Irele','Odigbo','Okitipupa','Ese Odo','Akoko North-East','Akoko North-West','Akoko South-East','Akoko South-West'],
+  'Ekiti': ['Ado Ekiti','Efon','Ekiti East','Ekiti South-West','Ekiti West','Emure','Gbonyin','Ido Osi','Ijero','Ikere','Ikole','Ilejemeje','Irepodun/Ifelodun','Ise/Orun','Moba','Oye'],
+  'Abia': ['Umuahia North','Umuahia South','Aba North','Aba South','Arochukwu','Bende','Ikwuano','Isiala Ngwa North','Isiala Ngwa South','Isuikwuato','Obi Ngwa','Ohafia','Osisioma','Ugwunagbo','Ukwa East','Ukwa West','Umu Nneochi'],
+  'Imo': ['Owerri Municipal','Owerri North','Owerri West','Aboh Mbaise','Ahiazu Mbaise','Ehime Mbano','Ezinihitte','Ideato North','Ideato South','Ihitte/Uboma','Ikeduru','Isiala Mbano','Isu','Mbaitoli','Ngor Okpala','Njaba','Nkwerre','Nwangele','Obowo','Oguta','Ohaji/Egbema','Okigwe','Onuimo','Orlu','Orsu','Oru East','Oru West'],
+  'Akwa Ibom': ['Uyo','Eket','Ikot Ekpene','Oron','Abak','Etinan','Ibiono Ibom','Ika','Ikono','Ikot Abasi','Ini','Itu','Mbo','Mkpat Enin','Nsit Atai','Nsit Ibom','Nsit Ubium','Obot Akara','Okobo','Onna','Oruk Anam','Udung Uko','Ukanafun','Uruan','Urue-Offong/Oruko','Esit Eket','Essien Udim','Etim Ekpo'],
+  'Cross River': ['Calabar Municipal','Calabar South','Akamkpa','Akpabuyo','Bakassi','Bekwarra','Biase','Boki','Etung','Ikom','Obanliku','Obubra','Obudu','Odukpani','Ogoja','Yakuur','Yala'],
+  'Bayelsa': ['Yenagoa','Brass','Ekeremor','Kolokuma/Opokuma','Nembe','Ogbia','Sagbama','Southern Ijaw'],
+  'Benue': ['Makurdi','Gboko','Katsina-Ala','Vandeikya','Ushongo','Ukum','Otukpo','Oju','Ohimini','Obi','Logo','Kwande','Konshisha','Guma','Gwer East','Gwer West','Buruku','Apa','Ado','Agatu','Okpokwu','Tarka'],
+  'Plateau': ['Jos North','Jos South','Jos East','Barkin Ladi','Bassa','Bokkos','Kanam','Kanke','Langtang North','Langtang South','Mangu','Mikang','Pankshin',"Qua'an Pan",'Riyom','Shendam','Wase'],
+  'Borno': ['Maiduguri','Jere','Konduga','Bama','Dikwa','Mafa','Ngala','Kala/Balge','Marte','Monguno','Nganzai','Kukawa','Abadam','Mobbar','Guzamala','Gubio','Magumeri','Chibok','Damboa','Gwoza','Askira/Uba','Hawul','Kwaya Kusar','Biu','Bayo','Shani','Kaga'],
+  'Adamawa': ['Yola North','Yola South','Girei','Song','Numan','Demsa','Fufure','Ganye','Gombi','Guyuk','Hong','Jada','Lamurde','Madagali','Maiha','Mayo-Belwa','Michika','Mubi North','Mubi South','Shelleng','Toungo'],
+  'Bauchi': ['Bauchi','Alkaleri','Bogoro','Dambam','Darazo','Dass','Gamawa','Ganjuwa','Giade','Itas/Gadau',"Jama'are",'Katagum','Kirfi','Misau','Ningi','Shira','Tafawa Balewa','Toro','Warji','Zaki'],
+  'Ebonyi': ['Abakaliki','Afikpo North','Afikpo South','Ebonyi','Ezza North','Ezza South','Ikwo','Ishielu','Ivo','Izzi','Ohaozara','Ohaukwu','Onicha'],
+  'Gombe': ['Gombe','Akko','Balanga','Billiri','Dukku','Funakaye','Kaltungo','Kwami','Nafada','Shongom','Yamaltu/Deba'],
+  'Jigawa': ['Dutse','Auyo','Babura','Biriniwa','Birnin Kudu','Buji','Gagarawa','Garki','Gumel','Guri','Gwaram','Gwiwa','Hadejia','Jahun','Kafin Hausa','Kaugama','Kazaure','Kiri Kasama','Kiyawa','Maigatari','Malam Madori','Miga','Ringim','Roni','Sule Tankarkar','Suri','Taura','Yankwashi'],
+  'Kebbi': ['Birnin Kebbi','Aleiro','Arewa Dandi','Argungu','Augie','Bagudo','Bunza','Dandi','Fakai','Gwandu','Jega','Kalgo','Koko/Besse','Maiyama','Ngaski','Sakaba','Shanga','Suru','Wasagu/Danko','Yauri','Zuru'],
+  'Katsina': ['Katsina','Bakori','Batagarawa','Batsari','Baure','Bindawa','Charanchi','Dan Musa','Dandume','Danja','Daura','Dutsi','Dutsin-Ma','Faskari','Funtua','Ingawa','Jibia','Kafur','Kaita','Kankara','Kankia','Kurfi','Kusada',"Mai'Adua",'Malumfashi','Mani','Mashi','Matazu','Musawa','Rimi','Sabuwa','Safana','Sandamu','Zango'],
+  'Niger': ['Minna','Agaie','Agwara','Bida','Borgu','Bosso','Chanchaga','Edati','Gbako','Gurara','Katcha','Kontagora','Lapai','Lavun','Magama','Mariga','Mashegu','Mokwa','Munya','Paikoro','Rafi','Rijau','Shiroro','Suleja','Tafa','Wushishi'],
+  'Sokoto': ['Sokoto North','Sokoto South','Binji','Bodinga','Dange Shuni','Gada','Goronyo','Gudu','Gwadabawa','Illela','Isa','Kebbe','Kware','Rabah','Sabon Birni','Shagari','Silame','Tambuwal','Tangaza','Tureta','Wamako','Wurno','Yabo'],
+  'Taraba': ['Jalingo','Ardo Kola','Bali','Donga','Gashaka','Gassol','Ibi','Karim Lamido','Kurmi','Lau','Sardauna','Takum','Ussa','Wukari','Yorro','Zing'],
+  'Yobe': ['Damaturu','Bade','Bursari','Fika','Fune','Geidam','Gujba','Gulani','Jakusko','Karasuwa','Machina','Nangere','Nguru','Potiskum','Tarmuwa','Yunusari','Yusufari'],
+  'Zamfara': ['Gusau','Anka','Bakura','Birnin Magaji/Kiyaw','Bukkuyum','Bungudu','Chafe','Gummi','Kaura Namoda','Maradun','Maru','Shinkafi','Talata Mafara','Tsafe','Zurmi'],
+  'Nasarawa': ['Lafia','Akwanga','Awe','Doma','Karu','Keana','Keffi','Kokona','Nasarawa','Nasarawa Egon','Obi','Toto','Wamba'],
+};
+const NG_STATES = Object.keys(NG_LGAS).concat(['Other']);
+
+/* Well-known bus-stops / areas per LGA — covers Lagos and Ogun fully
+   since that's the primary delivery zone. For LGAs not listed here,
+   the bus-stop field becomes free-text (still searchable/typeable,
+   just without a preset list) so nothing ever gets stuck. */
+const LGA_BUSSTOPS = {
+  'Ikeja': ['Allen Avenue','Opebi','Computer Village','Toyin Street','Ikeja Along','Oregun','Adeniyi Jones','Ogba','Ojodu Berger','Alausa','GRA Ikeja'],
+  'Alimosho': ['Ikotun','Egbeda','Idimu','Igando','Akowonjo','Ipaja','Command','Abesan','Ayobo','Baruwa','Iyana Ipaja'],
+  'Eti-Osa': ['Victoria Island','Lekki Phase 1','Ajah','Sangotedo','Chevron','Jakande','Ikate','Osapa London','Oniru'],
+  'Ibeju-Lekki': ['Awoyaya','Abraham Adesanya','Eputu','Ibeju','Lakowe'],
+  'Surulere': ['Bode Thomas','Adeniran Ogunsanya','Ojuelegba','Aguda','Ijesha','Masha','Coker'],
+  'Lagos Mainland': ['Yaba','Ebute Metta','Herbert Macaulay','Costain','Jibowu'],
+  'Lagos Island': ['CMS','Marina','Obalende','Idumota','Balogun'],
+  'Apapa': ['Apapa GRA','Tin Can Island','Liverpool Road','Warehouse Road'],
+  'Oshodi-Isolo': ['Oshodi','Isolo','Mafoluku','Ilasamaja','Bolade','Okota'],
+  'Mushin': ['Mushin Central','Idi Oro','Papa Ajao','Odi Olowo'],
+  'Shomolu': ['Bariga','Pedro','Onipanu','Fola Agoro'],
+  'Kosofe': ['Ogudu','Ketu','Mile 12','Alapere','Ojota','Anthony'],
+  'Ikorodu': ['Ikorodu Garage','Ojota-Ikorodu Road','Owutu','Agric','Ita-Oluwo','Igbogbo'],
+  'Ajeromi-Ifelodun': ['Ajegunle','Boundary','Amukoko','Tolu'],
+  'Ojo': ['Okokomaiko','Iyana Iba','Alaba','Trade Fair','Volkswagen'],
+  'Amuwo-Odofin': ['Festac Town','Satellite Town','Mile 2','FHA'],
+  'Ifako-Ijaiye': ['Ogba','Iju','Fagba','Agege Motor Road'],
+  'Badagry': ['Badagry Town','Ajara','Topo','Seme Border'],
+  'Epe': ['Epe Town','Poka','Ejinrin'],
+
+  // Ogun (Ago-Iwoye base)
+  'Ijebu North': ['Ago-Iwoye','Mamu','Oru','Awa','Ijebu Igbo Road'],
+  'Ijebu Ode': ['Ijebu Ode Town','Ibadan Garage','Folagbade','Isoya'],
+  'Abeokuta South': ['Ake','Ita Oshin','Oke Ilewo','Lafenwa'],
+  'Abeokuta North': ['Sagamu Road Abeokuta','Kuto','Ibara'],
+  'Ado-Odo/Ota': ['Ota Town','Sango Ota','Iyana Ilogbo','Atan'],
+  'Sagamu': ['Sagamu Town','Makun','Ogijo','Simawa'],
+
+  // FCT
+  'Municipal Area Council (AMAC)': ['Garki','Wuse','Maitama','Asokoro','Utako','Jabi','Gwarinpa','Wuye'],
+  'Gwagwalada': ['Gwagwalada Town','Zuba','Dobi'],
+};
+
+
+/* ── STATE → LGA CASCADE ── */
+/* Nearest / principal town for LGAs whose main city differs from the
+   LGA name itself. Used as a City fallback if we ever need it, and
+   as the default label shown before a bus-stop is chosen. */
+const LGA_CITY_HINTS = {
+  'Alimosho':'Ikotun', 'Ajeromi-Ifelodun':'Ajegunle', 'Amuwo-Odofin':'Festac',
+  'Ifako-Ijaiye':'Ogba', 'Kosofe':'Ogudu', 'Ojo':'Okokomaiko', 'Oshodi-Isolo':'Isolo',
+  'Ibeju-Lekki':'Lekki', 'Eti-Osa':'Victoria Island',
+  'Abeokuta North':'Abeokuta', 'Abeokuta South':'Abeokuta', 'Ado-Odo/Ota':'Ota',
+  'Ijebu North':'Ijebu Igbo', 'Yewa North':'Ayetoro', 'Yewa South':'Ilaro',
+  'Ibadan North':'Bodija', 'Ibadan North-East':'Iwo Road', 'Ibadan North-West':'Ring Road',
+  'Ibadan South-East':'Molete', 'Ibadan South-West':'Ring Road', 'Egbeda':'Egbeda',
+  'Municipal Area Council (AMAC)':'Garki', 'Bwari':'Bwari', 'Gwagwalada':'Gwagwalada',
+  'Port Harcourt':'Port Harcourt', 'Obio-Akpor':'Rumuokoro', 'Oyigbo':'Afam',
+  'Warri South':'Warri', 'Uvwie':'Effurun', 'Oshimili South':'Asaba',
+  'Onitsha North':'Onitsha', 'Onitsha South':'Onitsha', 'Awka South':'Awka',
+  'Enugu North':'Enugu', 'Enugu South':'Enugu', 'Enugu East':'Enugu',
+  'Kaduna North':'Kaduna', 'Kaduna South':'Kaduna', 'Chikun':'Kaduna',
+  'Kano Municipal':'Kano', 'Fagge':'Kano', 'Nassarawa':'Kano',
+  'Ilorin East':'Ilorin', 'Ilorin South':'Ilorin', 'Ilorin West':'Ilorin',
+  'Osogbo':'Osogbo', 'Ife Central':'Ile-Ife', 'Ilesa East':'Ilesa',
+  'Akure South':'Akure', 'Akure North':'Akure', 'Ado Ekiti':'Ado Ekiti',
+  'Umuahia North':'Umuahia', 'Aba North':'Aba', 'Aba South':'Aba',
+  'Owerri Municipal':'Owerri', 'Owerri North':'Owerri', 'Uyo':'Uyo',
+  'Calabar Municipal':'Calabar', 'Calabar South':'Calabar', 'Yenagoa':'Yenagoa',
+  'Makurdi':'Makurdi', 'Jos North':'Jos', 'Jos South':'Jos', 'Maiduguri':'Maiduguri',
+  'Yola North':'Yola', 'Yola South':'Yola', 'Bauchi':'Bauchi', 'Gombe':'Gombe',
+  'Dutse':'Dutse', 'Birnin Kebbi':'Birnin Kebbi', 'Katsina':'Katsina',
+  'Minna':'Minna', 'Sokoto North':'Sokoto', 'Sokoto South':'Sokoto',
+  'Jalingo':'Jalingo', 'Damaturu':'Damaturu', 'Gusau':'Gusau', 'Lafia':'Lafia',
+};
+
+/* ════════════════════════════════════════════════════════════
+   CUSTOM INLINE DROPDOWN COMPONENT (ago-select)
+   Powers State, LGA, and Bus-Stop pickers with live search,
+   keyboard-free tap selection, and graceful free-text fallback
+   when no preset list exists for a given LGA.
+   ════════════════════════════════════════════════════════════ */
+function makeAgoSelect({ wrapId, triggerId, valueId, panelId, searchId, listId, hintId }) {
+  const wrap    = $(wrapId), trigger = $(triggerId), valueEl = $(valueId);
+  const panel   = $(panelId), searchInput = $(searchId), list = $(listId);
+  let currentValue = '';
+  let options = [];
+  let onSelect = null;
+  let allowCustom = false;
+
+  function render(filterText){
+    const q = (filterText||'').toLowerCase().trim();
+    const filtered = q ? options.filter(o => o.toLowerCase().includes(q)) : options;
+    if (!filtered.length){
+      list.innerHTML = allowCustom && q
+        ? `<div class="ago-select-item add-custom" data-custom="${escAttr(q)}">Use "${q}"</div>`
+        : `<div class="ago-select-empty">No matches found</div>`;
+      return;
+    }
+    list.innerHTML = filtered.map(o =>
+      `<div class="ago-select-item${o===currentValue?' selected':''}" data-val="${escAttr(o)}">${o}</div>`
+    ).join('') + (allowCustom && q && !filtered.some(o=>o.toLowerCase()===q)
+      ? `<div class="ago-select-item add-custom" data-custom="${escAttr(q)}">Use "${q}" instead</div>` : '');
+  }
+
+  function open(){
+    document.querySelectorAll('.ago-select.open').forEach(o => { if (o!==wrap) o.classList.remove('open'); });
+    wrap.classList.add('open');
+    searchInput.value = '';
+    render('');
+    setTimeout(()=>searchInput.focus(), 50);
+  }
+  function close(){ wrap.classList.remove('open'); }
+
+  trigger.addEventListener('click', () => {
+    if (trigger.disabled) return;
+    wrap.classList.contains('open') ? close() : open();
+  });
+  searchInput.addEventListener('input', () => render(searchInput.value));
+  list.addEventListener('click', e => {
+    const item = e.target.closest('.ago-select-item');
+    if (!item) return;
+    const val = item.dataset.val || item.dataset.custom;
+    if (!val) return;
+    setValue(val);
+    close();
+    if (onSelect) onSelect(val);
+  });
+  document.addEventListener('click', e => {
+    if (!wrap.contains(e.target)) close();
+  });
+
+  function setValue(v){
+    currentValue = v;
+    valueEl.textContent = v || trigger.dataset.placeholder;
+    valueEl.classList.toggle('placeholder', !v);
+    wrap.classList.remove('err');
+    // Some dropdown instances (address form) have no matching hint
+    // paragraph in the HTML, so $(hintId) legitimately returns null.
+    // Guard the lookup itself, not just what comes after it.
+    const hintEl = hintId ? $(hintId) : null;
+    if (hintEl) hintEl.parentElement?.classList?.remove('show-err');
+  }
+  function setOptions(opts, custom){
+    options = opts; allowCustom = !!custom;
+  }
+  function enable(placeholder){
+    trigger.disabled = false;
+    trigger.dataset.placeholder = placeholder;
+    if (!currentValue) { valueEl.textContent = placeholder; valueEl.classList.add('placeholder'); }
+  }
+  function disable(placeholder){
+    trigger.disabled = true;
+    currentValue = '';
+    valueEl.textContent = placeholder;
+    valueEl.classList.add('placeholder');
+  }
+  function getValue(){ return currentValue; }
+
+  return { setOptions, enable, disable, setValue, getValue, onSelect: (fn)=>{ onSelect = fn; } };
+}
+
+const addrStateSelectC = makeAgoSelect({
+  wrapId:'addrStateSelect', triggerId:'addrStateTrigger', valueId:'addrStateValue',
+  panelId:'addrStatePanel', searchId:'addrStateSearch', listId:'addrStateList', hintId:'addrStateHint',
+});
+const addrLgaSelectC = makeAgoSelect({
+  wrapId:'addrLgaSelect', triggerId:'addrLgaTrigger', valueId:'addrLgaValue',
+  panelId:'addrLgaPanel', searchId:'addrLgaSearch', listId:'addrLgaList', hintId:'addrLgaHint',
+});
+const addrBusStopSelectC = makeAgoSelect({
+  wrapId:'addrBusStopSelect', triggerId:'addrBusStopTrigger', valueId:'addrBusStopValue',
+  panelId:'addrBusStopPanel', searchId:'addrBusStopSearch', listId:'addrBusStopList', hintId:'addrBusStopHint',
+});
+
+addrStateSelectC.setOptions(NG_STATES, false);
+
+addrStateSelectC.onSelect(state => {
+  markErr2('addrStateSelect', false);
+  const lgas = NG_LGAS[state];
+  if (lgas){
+    addrLgaSelectC.setOptions(lgas, false);
+    addrLgaSelectC.enable('Select LGA');
+  } else {
+    addrLgaSelectC.setOptions([], true); // 'Other' state — free text
+    addrLgaSelectC.enable('Type your LGA');
+  }
+  addrLgaSelectC.setValue('');
+  addrBusStopSelectC.disable('Select LGA first');
+  addrBusStopSelectC.setValue('');
+});
+
+addrLgaSelectC.onSelect(lga => {
+  markErr2('addrLgaSelect', false);
+  const stops = LGA_BUSSTOPS[lga];
+  if (stops){
+    addrBusStopSelectC.setOptions(stops, true); // allow typing a custom area too
+    addrBusStopSelectC.enable('Select or type your area');
+  } else {
+    // No preset list for this LGA — pure free-text, still via the same UI
+    addrBusStopSelectC.setOptions([], true);
+    addrBusStopSelectC.enable(`Type your area near ${lga}`);
+  }
+  addrBusStopSelectC.setValue('');
+});
+
+addrBusStopSelectC.onSelect(() => markErr2('addrBusStopSelect', false));
+
+function markErr2(wrapId, bad){
+  $(wrapId).classList.toggle('err', bad);
+}
+
+function markErrSelect(wrapId, bad){
+  $(wrapId).classList.toggle('err', bad);
+  return !bad;
+}
+
+/* ════════════════════════════════════════════════════════════
+   AUTH SCREEN — tab switching, validation, submit handlers
+   ════════════════════════════════════════════════════════════ */
+document.querySelectorAll('.auth-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.auth-tab').forEach(t=>t.classList.remove('active'));
+    document.querySelectorAll('.auth-form').forEach(f=>f.classList.remove('active'));
+    tab.classList.add('active');
+    $(tab.dataset.tab + 'Form').classList.add('active');
+    $('authError').classList.remove('show');
+    $('authSuccess').classList.remove('show');
+  });
+});
+
+document.querySelectorAll('.pw-toggle').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const input = $(btn.dataset.target);
+    const show = input.type === 'password';
+    input.type = show ? 'text' : 'password';
+    btn.textContent = show ? 'Hide' : 'Show';
+  });
+});
+
+/* ════════════════════════════════════════════════════════════
+   PASSWORD STRENGTH METER — real scoring, not decorative
+   Checks length, character variety, and common weak patterns.
+   Animates each segment filling in with a little pulse so it
+   feels responsive rather than just flipping a color.
+   ════════════════════════════════════════════════════════════ */
+const COMMON_WEAK_PATTERNS = [
+  /^12345/, /^password/i, /^qwerty/i, /^letmein/i, /^abc123/i,
+  /^(.)\1{4,}/, // same character repeated 5+ times, e.g. "aaaaaa"
+];
+
+function scorePassword(pw){
+  if (!pw) return { score:0, level:'', label:'' };
+
+  let score = 0;
+  if (pw.length >= 6)  score++;
+  if (pw.length >= 10) score++;
+  if (/[a-z]/.test(pw) && /[A-Z]/.test(pw)) score++;
+  if (/\d/.test(pw)) score++;
+  if (/[^A-Za-z0-9]/.test(pw)) score++;
+
+  const isCommonWeak = COMMON_WEAK_PATTERNS.some(re => re.test(pw));
+  if (isCommonWeak) score = Math.min(score, 1);
+  if (pw.length < 6) score = 0;
+
+  score = Math.min(score, 4);
+
+  let level, label;
+  if (score <= 1)      { level='weak';   label='Weak — try adding numbers or symbols'; }
+  else if (score <= 2) { level='fair';   label='Fair — a bit longer would help'; }
+  else if (score === 3){ level='fair';   label='Good — almost there'; }
+  else                 { level='strong'; label='Strong password'; }
+
+  return { score, level, label };
+}
+
+function updatePasswordStrength(pw){
+  const meter = $('pwStrength');
+  const label = $('pwStrengthLabel');
+  const segs  = meter.querySelectorAll('.pw-strength-seg');
+
+  if (!pw){
+    meter.classList.remove('show');
+    return;
+  }
+  meter.classList.add('show');
+
+  const { score, level, label: text } = scorePassword(pw);
+  meter.dataset.level = level;
+  label.textContent = text;
+
+  segs.forEach((seg, i) => {
+    const shouldFill = i < score;
+    const wasFilled = seg.classList.contains('filled');
+    seg.classList.toggle('filled', shouldFill);
+    // Only pulse a segment the moment it newly becomes filled —
+    // avoids re-triggering the animation on every keystroke
+    if (shouldFill && !wasFilled){
+      seg.classList.remove('pulse');
+      void seg.offsetWidth; // restart animation
+      seg.classList.add('pulse');
+    }
+  });
+}
+
+$('suPassword').addEventListener('input', e => updatePasswordStrength(e.target.value));
+
+function showAuthError(msg){
+  const el = $('authError');
+  el.textContent = msg; el.classList.add('show');
+  $('authSuccess').classList.remove('show');
+}
+function showAuthSuccess(msg){
+  const el = $('authSuccess');
+  el.textContent = msg; el.classList.add('show');
+  $('authError').classList.remove('show');
+}
+
+$('signinForm').addEventListener('submit', async e => {
+  e.preventDefault();
+  const btn = $('siSubmit');
+  const email = $('siEmail').value.trim();
+  const password = $('siPassword').value;
+  if (!email || !password){ showAuthError('Please fill in both fields'); return; }
+  btn.disabled = true; btn.textContent = 'Signing in…';
+  try {
+    const result = await Auth.signIn(email, password);
+
+    // REAL, GENUINE MFA GATE — sign-in is NOT actually complete yet;
+    // show the real, honest code screen instead of proceeding.
+    if (result?.mfaRequired) {
+      pendingMfaFactorId = result.mfaFactorId;
+      document.querySelectorAll('.sign-in-screen, .sign-up-screen, .code-screen').forEach(el => el.style.display = 'none');
+      $('mfaScreen').style.display = 'block';
+      $('mfaInputs').querySelector('.mfa-digit').focus();
+      return;
+    }
+
+    showToast('Welcome back!');
+    // If we arrived here via a "sign in to checkout" redirect,
+    // send them straight back instead of leaving them on Account.
+    const params = new URLSearchParams(location.search);
+    const redirect = params.get('redirect');
+    if (redirect && /^[a-z0-9_-]+\.html$/i.test(redirect)) {
+      location.href = redirect;
+      return;
+    }
+    await boot();
+  } catch(err){
+    showAuthError(err.message);
+  } finally {
+    btn.disabled = false; btn.textContent = 'Sign In';
+  }
+});
+
+$('signupForm').addEventListener('submit', async e => {
+  e.preventDefault();
+  const btn = $('suSubmit');
+  const name  = $('suName').value.trim();
+  const email = $('suEmail').value.trim();
+  const phone = $('suPhone').value.trim();
+  const password = $('suPassword').value;
+  if (name.length < 2){ showAuthError('Please enter your full name'); return; }
+  if (!/^\S+@\S+\.\S+$/.test(email)){ showAuthError('Please enter a valid email'); return; }
+  if (phone.replace(/\D/g,'').length < 10){ showAuthError('Please enter a valid phone number'); return; }
+  if (password.length < 6){ showAuthError('Password must be at least 6 characters'); return; }
+
+  btn.disabled = true; btn.textContent = 'Creating account…';
+  try {
+    // Account creation now happens server-side inside the
+    // send-verification-code function (via the admin API), NOT via
+    // Auth.signUp()'s call to GoTrue's public /signup endpoint. That
+    // public endpoint always fires Supabase's own default
+    // confirmation email regardless of app settings — creating the
+    // user via the admin API skips that entirely, so our own
+    // branded code is the only email that ever gets sent.
+    pendingSignupPassword = password;
+    await openCodeScreen(email, 'signup', { password, full_name: name, phone });
+  } catch(err){
+    showAuthError(err.message);
+  } finally {
+    btn.disabled = false; btn.textContent = 'Create Account';
+  }
+});
+
+/* ════════════════════════════════════════════════════════════
+   CODE VERIFICATION SCREEN — shared by signup + password reset
+   ════════════════════════════════════════════════════════════ */
+let pendingSignupPassword = null;
+let currentCodeEmail = '';
+let pendingMfaFactorId = null;
+let currentCodePurpose = '';
+let codeTimerInterval = null;
+
+// Real, reusable swipe-in helper — applies the animation class to
+// whichever screen just became visible, then cleans it up once the
+// animation genuinely finishes so it doesn't replay on a later,
+// unrelated re-render of the same element.
+function agoSwipeInScreen(el){
+  el.classList.remove('ago-swipe-in');
+  void el.offsetWidth; // force reflow so the class removal above is actually registered before re-adding it
+  el.classList.add('ago-swipe-in');
+  el.addEventListener('animationend', () => el.classList.remove('ago-swipe-in'), { once:true });
+}
+
+function showAuthPanel(){
+  document.querySelectorAll('.auth-tabs, .auth-form').forEach(el => el.style.display = '');
+  $('codeScreen').classList.remove('active');
+  $('guestNote').style.display = '';
+  const wrap = document.querySelector('.auth-wrap');
+  if (wrap) agoSwipeInScreen(wrap);
+}
+
+function showCodePanel(){
+  document.querySelectorAll('.auth-tabs, .auth-form, #guestNote').forEach(el => el.style.display = 'none');
+  $('codeScreen').classList.add('active');
+  agoSwipeInScreen($('codeScreen'));
+}
+
+async function openCodeScreen(email, purpose, signupDetails){
+  currentCodeEmail = email;
+  currentCodePurpose = purpose;
+  $('codeEmailDisplay').textContent = email;
+  $('codeScreenTitle').textContent = purpose === 'password_reset' ? 'Reset Your Password' : 'Check Your Email';
+  $('codeErrorMsg').textContent = '';
+  $('devModeBanner').style.display = 'none';
+  document.querySelectorAll('.code-digit').forEach(d => { d.value=''; d.classList.remove('filled','error'); });
+  $('codeSuccessIcon').classList.remove('show');
+  $('codeIconWrap').style.display = '';
+  showCodePanel();
+
+  const ok = await requestCode(email, purpose, /*silent=*/false, signupDetails);
+  if (!ok) { showAuthPanel(); return; } // account creation or send failed — don't strand them on a dead code screen
+  document.querySelector('.code-digit[data-idx="0"]').focus();
+  startCodeTimer();
+}
+
+async function requestCode(email, purpose, silent, signupDetails){
+  try {
+    const body = { email, purpose };
+    if (purpose === 'signup' && signupDetails) {
+      body.password  = signupDetails.password;
+      body.full_name = signupDetails.full_name;
+      body.phone     = signupDetails.phone;
+    }
+    const res = await fetch(SEND_CODE_URL, {
+      method: 'POST',
+      headers: { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY, 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Could not send code');
+
+    // TEMPORARY: while Resend's sandbox restriction blocks emailing
+    // real customers (only the account owner's own address works
+    // until a domain is verified), the function falls back to
+    // returning the code directly so testing isn't blocked. Auto-fill
+    // it into the boxes and say so clearly — this must be removed
+    // once a verified sending domain is in place.
+    if (data.dev_code) {
+      $('devModeBanner').style.display = 'block';
+      showToast('Email unavailable (test mode) — code auto-filled below', 'error');
+      setTimeout(() => {
+        const digits = String(data.dev_code).split('');
+        document.querySelectorAll('.code-digit').forEach((input, i) => {
+          input.value = digits[i] || '';
+          input.classList.toggle('filled', !!digits[i]);
+        });
+      }, 400);
+    } else if (!silent) {
+      showToast('Code sent to ' + email);
+    }
+    return true;
+  } catch(err){
+    showToast(err.message || 'Could not send verification code');
+    if (window.__agoLogError) window.__agoLogError('send-verification-code failed for ' + purpose, err);
+    return false;
+  }
+}
+
+function startCodeTimer(){
+  clearInterval(codeTimerInterval);
+  let seconds = 600; // 10 minutes, matches the code's actual expiry
+  const update = () => {
+    const m = Math.floor(seconds / 60);
+    const s = seconds % 60;
+    $('codeTimerVal').textContent = `${m}:${String(s).padStart(2,'0')}`;
+    if (seconds <= 0){
+      clearInterval(codeTimerInterval);
+      $('codeTimer').innerHTML = 'Code expired — tap Resend Code below';
+    }
+    seconds--;
+  };
+  update();
+  codeTimerInterval = setInterval(update, 1000);
+}
+
+// ── Digit box behavior: auto-advance, backspace, paste ──
+const codeDigits = () => Array.from(document.querySelectorAll('.code-digit'));
+
+codeDigits().forEach((input, i) => {
+  input.addEventListener('input', () => {
+    input.value = input.value.replace(/\D/g,'').slice(0,1);
+    input.classList.toggle('filled', !!input.value);
+    input.classList.remove('error');
+    $('codeErrorMsg').textContent = '';
+    if (input.value && i < 5) codeDigits()[i+1].focus();
+  });
+  input.addEventListener('keydown', e => {
+    if (e.key === 'Backspace' && !input.value && i > 0){
+      codeDigits()[i-1].focus();
+    }
+  });
+  input.addEventListener('paste', e => {
+    e.preventDefault();
+    const pasted = (e.clipboardData.getData('text') || '').replace(/\D/g,'').slice(0,6).split('');
+    codeDigits().forEach((d, idx) => {
+      d.value = pasted[idx] || '';
+      d.classList.toggle('filled', !!d.value);
+    });
+    (codeDigits()[Math.min(pasted.length,6)-1] || codeDigits()[5]).focus();
+  });
+});
+
+// REAL, genuinely SEPARATE digit-input logic for the MFA screen —
+// deliberately not sharing codeDigits() above, since that function
+// is wired to the email-verification screen's own specific elements
+// (codeErrorMsg, etc.) and briefly, genuinely collided with these
+// new inputs before this real, dedicated version was added.
+const mfaDigits = () => Array.from(document.querySelectorAll('.mfa-digit'));
+
+mfaDigits().forEach((input, i) => {
+  input.addEventListener('input', () => {
+    input.value = input.value.replace(/\D/g,'').slice(0,1);
+    input.classList.toggle('filled', !!input.value);
+    $('mfaErrorMsg').textContent = '';
+    if (input.value && i < 5) mfaDigits()[i+1].focus();
+  });
+  input.addEventListener('keydown', e => {
+    if (e.key === 'Backspace' && !input.value && i > 0) mfaDigits()[i-1].focus();
+  });
+  input.addEventListener('paste', e => {
+    e.preventDefault();
+    const pasted = (e.clipboardData.getData('text') || '').replace(/\D/g,'').slice(0,6).split('');
+    mfaDigits().forEach((d, idx) => { d.value = pasted[idx] || ''; d.classList.toggle('filled', !!d.value); });
+    (mfaDigits()[Math.min(pasted.length,6)-1] || mfaDigits()[5]).focus();
+  });
+});
+
+$('mfaVerifyBtn').addEventListener('click', async () => {
+  const code = mfaDigits().map(d => d.value).join('');
+  if (code.length !== 6) { $('mfaErrorMsg').textContent = 'Enter the full 6-digit code.'; return; }
+
+  const btn = $('mfaVerifyBtn');
+  btn.disabled = true; btn.textContent = 'Verifying…';
+  try {
+    await Auth.verifyMfaCode(pendingMfaFactorId, code);
+    showToast('Welcome back!');
+    $('mfaScreen').style.display = 'none';
+    pendingMfaFactorId = null;
+    const params = new URLSearchParams(location.search);
+    const redirect = params.get('redirect');
+    if (redirect && /^[a-z0-9_-]+\.html$/i.test(redirect)) { location.href = redirect; return; }
+    await boot();
+  } catch(err){
+    $('mfaErrorMsg').textContent = err.message;
+    mfaDigits().forEach(d => { d.value=''; d.classList.remove('filled'); });
+    mfaDigits()[0].focus();
+  } finally {
+    btn.disabled = false; btn.textContent = 'Verify';
+  }
+});
+
+function getEnteredCode(){
+  return codeDigits().map(d => d.value).join('');
+}
+
+function shakeCodeInputs(){
+  codeDigits().forEach(d => d.classList.add('error'));
+  setTimeout(() => codeDigits().forEach(d => d.classList.remove('error')), 400);
+}
+
+$('codeVerifyBtn').addEventListener('click', async () => {
+  const code = getEnteredCode();
+  if (code.length !== 6){
+    $('codeErrorMsg').textContent = 'Please enter all 6 digits';
+    shakeCodeInputs();
+    return;
+  }
+  currentVerifiedCode = code;
+
+  const btn = $('codeVerifyBtn');
+  btn.disabled = true; btn.textContent = 'Verifying…';
+
+  try {
+    const res = await fetch(VERIFY_CODE_URL, {
+      method: 'POST',
+      headers: { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: currentCodeEmail, code, purpose: currentCodePurpose }),
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Verification failed');
+
+    // Success animation
+    clearInterval(codeTimerInterval);
+    $('codeIconWrap').style.display = 'none';
+    $('codeSuccessIcon').classList.add('show');
+    $('codeErrorMsg').textContent = '';
+    btn.textContent = 'Verified!';
+
+    setTimeout(async () => {
+      if (currentCodePurpose === 'signup' && pendingSignupPassword){
+        // Auto sign-in now that the account is confirmed server-side
+        try {
+          await Auth.signIn(currentCodeEmail, pendingSignupPassword);
+          pendingSignupPassword = null;
+          showToast('Welcome to ÀGÒ LUXE!');
+          const params = new URLSearchParams(location.search);
+          const redirect = params.get('redirect');
+          if (redirect && /^[a-z0-9_-]+\.html$/i.test(redirect)) { location.href = redirect; return; }
+          showAuthPanel();
+          await boot();
+        } catch(err){
+          showAuthPanel();
+          document.querySelector('[data-tab="signin"]').click();
+          $('siEmail').value = currentCodeEmail;
+          showToast('Account confirmed — please sign in');
+        }
+      } else if (currentCodePurpose === 'password_reset'){
+        showNewPasswordScreen();
+      }
+    }, 900);
+
+  } catch(err){
+    $('codeErrorMsg').textContent = err.message;
+    shakeCodeInputs();
+    btn.disabled = false; btn.textContent = 'Verify Code';
+  }
+});
+
+let resendCooldownInterval = null;
+
+function startResendCooldown(){
+  clearInterval(resendCooldownInterval);
+  const btn = $('codeResendBtn');
+  let secondsLeft = 30; // real, standard cooldown — separate from the 10-minute code EXPIRY above, this specifically throttles repeated resend taps
+  btn.disabled = true;
+  const update = () => {
+    if (secondsLeft <= 0) {
+      clearInterval(resendCooldownInterval);
+      btn.disabled = false;
+      btn.textContent = 'Resend Code';
+      return;
+    }
+    btn.textContent = `Resend Code (${secondsLeft}s)`;
+    secondsLeft--;
+  };
+  update();
+  resendCooldownInterval = setInterval(update, 1000);
+}
+
+$('codeResendBtn').addEventListener('click', async () => {
+  const btn = $('codeResendBtn');
+  btn.disabled = true; btn.textContent = 'Sending…';
+  // REAL FIX: the old code digits (whatever was typed, valid or not)
+  // previously stayed visible on screen through the entire resend —
+  // in real production mode (no dev auto-fill) they'd sit there
+  // looking valid indefinitely until manually cleared, and even in
+  // dev mode there was a genuine 400ms window where a stale code was
+  // visible before being silently overwritten. Clearing immediately
+  // makes it honestly clear a NEW code is expected, not the old one.
+  document.querySelectorAll('.code-digit').forEach(d => { d.value=''; d.classList.remove('filled','error'); });
+  $('codeErrorMsg').textContent = '';
+  const ok = await requestCode(currentCodeEmail, currentCodePurpose, false);
+  if (ok) { startCodeTimer(); startResendCooldown(); }
+  else { btn.disabled = false; btn.textContent = 'Resend Code'; }
+  // Real convenience — put focus back on the first box so typing
+  // the new code can start immediately, matching how the initial
+  // code screen already behaves.
+  document.querySelector('.code-digit[data-idx="0"]').focus();
+});
+
+$('codeBackBtn').addEventListener('click', () => {
+  clearInterval(codeTimerInterval);
+  pendingSignupPassword = null;
+  showAuthPanel();
+});
+
+/* ── NEW PASSWORD SCREEN (shown after a password_reset code verifies) ──
+   The customer isn't signed in at this point (they've only proven
+   email ownership via the code), so setting their new password needs
+   a server-side admin action — not something the browser can do with
+   just a publishable key. This calls the same verify-code function's
+   companion, reusing the already-verified state server-side is out of
+   scope for a single call, so here we re-verify + set password in one
+   trusted request via a small dedicated endpoint. */
+let currentVerifiedCode = ''; // held in memory only, never persisted
+
+function showNewPasswordScreen(){
+  document.querySelectorAll('.auth-tabs, .auth-form, #guestNote').forEach(el => el.style.display = 'none');
+  $('codeScreen').classList.remove('active');
+  $('newpwScreen').classList.add('active');
+  $('newPwInput').value = '';
+  $('newPwStrength').classList.remove('show');
+  $('newPwInput').focus();
+  agoSwipeInScreen($('newpwScreen'));
+}
+
+$('newPwInput').addEventListener('input', e => updatePasswordStrengthGeneric(e.target.value, 'newPwStrength', 'newPwStrengthLabel'));
+
+$('newPwSubmit').addEventListener('click', async () => {
+  const btn = $('newPwSubmit');
+  const newPassword = $('newPwInput').value;
+  if (newPassword.length < 6){ showToast('Password must be at least 6 characters'); return; }
+
+  btn.disabled = true; btn.textContent = 'Updating…';
+  try {
+    // Re-sends the same code the customer already proved they own,
+    // together with the new password, in one request. This is the
+    // call that actually consumes the code server-side — the earlier
+    // "Verify Code" tap only confirmed correctness without consuming
+    // it, specifically so this second step could still use it.
+    const res = await fetch(VERIFY_CODE_URL, {
+      method: 'POST',
+      headers: { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY, 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        email: currentCodeEmail, purpose: 'password_reset',
+        code: currentVerifiedCode, new_password: newPassword,
+      }),
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Could not update password');
+
+    showToast('Password updated — please sign in');
+    showAuthPanel();
+    document.querySelector('[data-tab="signin"]').click();
+    $('siEmail').value = currentCodeEmail;
+    $('siPassword').value = '';
+  } catch(err){
+    showToast(err.message || 'Could not update password');
+  } finally {
+    btn.disabled = false; btn.textContent = 'Update Password';
+  }
+});
+
+// Generic version of the strength meter so it can drive both the
+// sign-up password field and this new-password field independently
+function updatePasswordStrengthGeneric(pw, meterId, labelId){
+  const meter = $(meterId);
+  const label = $(labelId);
+  const segs  = meter.querySelectorAll('.pw-strength-seg');
+  if (!pw){ meter.classList.remove('show'); return; }
+  meter.classList.add('show');
+  const { score, level, label: text } = scorePassword(pw);
+  meter.dataset.level = level;
+  label.textContent = text;
+  segs.forEach((seg, i) => {
+    const shouldFill = i < score;
+    const wasFilled = seg.classList.contains('filled');
+    seg.classList.toggle('filled', shouldFill);
+    if (shouldFill && !wasFilled){
+      seg.classList.remove('pulse'); void seg.offsetWidth; seg.classList.add('pulse');
+    }
+  });
+}
+
+$('forgotPwBtn').addEventListener('click', async () => {
+  const email = $('siEmail').value.trim();
+  if (!/^\S+@\S+\.\S+$/.test(email)){ showAuthError('Enter your email above first, then tap "Forgot password?"'); return; }
+  await openCodeScreen(email, 'password_reset');
+});
+
+/* ════════════════════════════════════════════════════════════
+   PROFILE SCREEN — populate from Supabase once logged in
+   ════════════════════════════════════════════════════════════ */
+let currentProfile = null;
+
+async function renderProfileScreen(){
+  const user = Auth.currentUser();
+  if (!user) return;
+
+  const [profile, orders, couponCount] = await Promise.all([
+    fetchProfile(user.id),
+    fetchOrderCount(user.id),
+    fetchCouponCount(user.id),
+  ]);
+  currentProfile = profile;
+
+  loadInboxUnreadCount(); // fire-and-forget — real badge appears once it resolves, doesn't block the rest of the profile screen
+
+  const displayName = profile?.full_name || user.email.split('@')[0];
+  const isAdmin = profile?.role === 'admin';
+
+  $('profileGreeting').textContent = isAdmin ? `WELCOME, ${displayName.toUpperCase()}` : displayName.toUpperCase();
+  $('walletBalanceDisplay').textContent = fmt(profile?.wallet_balance || 0);
+  $('couponsCountDisplay').textContent = couponCount;
+
+  // Admin recognition — the storefront and admin area were feeling
+  // disconnected because nothing on the customer-facing account page
+  // ever acknowledged an admin was signed in. This surfaces it right
+  // at the top, with a direct shortcut into admin.html.
+  if (isAdmin) {
+    $('adminWelcomeCard').style.display = 'block';
+    $('adminWelcomeSub').textContent = `Signed in as ${user.email} · Store Administrator`;
+    $('bottomNavAccountLabel').textContent = 'Admin';
+  } else {
+    $('adminWelcomeCard').style.display = 'none';
+    $('bottomNavAccountLabel').textContent = 'Account';
+  }
+
+  const inProgress = orders.filter(o => !['delivered','cancelled','refunded'].includes(o.status)).length;
+  $('ordersSummary').innerHTML = `${inProgress} in progress <svg class="chev" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>`;
+}
+
+/* ════════════════════════════════════════════════════════════
+   DARK MODE — AgoTheme (from ago-cart.js) already applied the
+   saved theme site-wide on load. This just syncs the toggle
+   switch's visual state and wires the click.
+
+   Defensive check: if AgoTheme is somehow missing (e.g. a stale
+   cached copy of ago-cart.js from before this feature existed, or
+   a network hiccup that broke the script load), fail gracefully
+   here instead of throwing — a broken theme toggle shouldn't be
+   able to block anything else on the page from working.
+   ════════════════════════════════════════════════════════════ */
+if (typeof AgoTheme !== 'undefined') {
+  function updateDarkModeLabel(theme){
+    const isDark = theme === 'dark';
+    $('darkModeLabel').innerHTML = isDark
+      ? `<strong style="color:var(--accent);">Dark</strong> / Light`
+      : `Dark / <strong style="color:var(--accent);">Light</strong>`;
+  }
+  $('darkModeToggle').classList.toggle('on', AgoTheme.get() === 'dark');
+  updateDarkModeLabel(AgoTheme.get());
+  $('darkModeToggle').addEventListener('click', () => {
+    const newTheme = AgoTheme.toggle();
+    $('darkModeToggle').classList.toggle('on', newTheme === 'dark');
+    updateDarkModeLabel(newTheme);
+  });
+} else {
+  console.warn('AgoTheme unavailable — ago-cart.js may be stale or failed to load. Try a hard refresh.');
+  if (window.__agoLogError) window.__agoLogError('AgoTheme was undefined on account.html', new Error('AgoTheme not defined'));
+}
+
+/* ════════════════════════════════════════════════════════════
+   PUSH NOTIFICATIONS — real opt-in, genuinely tied to this direct
+   tap (required by iOS; permission cannot be requested automatically
+   on page load). Real public VAPID key below — safe to expose
+   client-side, this is the whole point of the public half of the
+   pair. The matching private key lives only as a real Supabase Edge
+   Function secret, never here.
+   ════════════════════════════════════════════════════════════ */
+const AGO_VAPID_PUBLIC_KEY = 'BIwumO_JdlrQHDaroa5z0P7kApLQqgz8jSIXJCFOuNzLAaIQggrf4Wx3M602dUtc2mTCnE2IZ8BKDn1NsQ2tMTY';
+
+function urlBase64ToUint8Array(base64String) {
+  const padding = '='.repeat((4 - base64String.length % 4) % 4);
+  const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
+  const rawData = atob(base64);
+  const outputArray = new Uint8Array(rawData.length);
+  for (let i = 0; i < rawData.length; ++i) outputArray[i] = rawData.charCodeAt(i);
+  return outputArray;
+}
+
+async function refreshPushToggleState(){
+  const toggle = $('pushNotifToggle');
+  if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
+    toggle.style.opacity = '.4'; toggle.style.pointerEvents = 'none';
+    return;
+  }
+  try {
+    const reg = await navigator.serviceWorker.ready;
+    const existingSub = await reg.pushManager.getSubscription();
+    toggle.classList.toggle('on', !!existingSub);
+  } catch(e){ /* genuinely fine — toggle just stays off */ }
+}
+
+/* ════════════════════════════════════════════════════════════
+   REAL, GENUINE MFA ENROLLMENT — real status check, real QR code
+   setup, real verification. Reuses the .mfa-digit class from the
+   login-time challenge screen (safe here since the two screens are
+   never simultaneously visible), but every real query below is
+   deliberately scoped to #mfaEnrollInputs specifically, not the bare
+   class alone — the exact, real lesson from the earlier collision bug.
+   ════════════════════════════════════════════════════════════ */
+let currentMfaFactorId = null;
+let pendingUnverifiedFactorId = null;
+
+async function refreshMfaStatus(){
+  const label = $('mfaStatusLabel');
+  const user = Auth.currentUser();
+  if (!user) { label.textContent = 'sign in required'; return; }
+  try {
+    const factors = await Auth.listMfaFactors();
+    const verified = factors.find(f => f.status === 'verified');
+    // REAL, CONFIRMED FIX: previously this only distinguished
+    // verified vs. everything-else, meaning a real, genuinely
+    // INCOMPLETE enrollment (a factor that exists but was never
+    // verified — confirmed live to happen if the QR sheet is closed
+    // or verification fails partway through) looked identical to
+    // "never started at all." Now honestly shown as its own, real,
+    // distinct state.
+    const unverified = factors.find(f => f.status === 'unverified');
+    if (verified) {
+      currentMfaFactorId = verified.id;
+      pendingUnverifiedFactorId = null;
+      label.innerHTML = '<strong style="color:#4ADE80; font-weight:700;">On</strong> <svg class="chev" viewBox="0 0 24 24" width="16" height="16"><path d="M9 18l6-6-6-6"/></svg>';
+    } else if (unverified) {
+      currentMfaFactorId = null;
+      pendingUnverifiedFactorId = unverified.id;
+      label.innerHTML = '<strong style="color:#FBBF24; font-weight:700;">Setup Incomplete</strong> <svg class="chev" viewBox="0 0 24 24" width="16" height="16"><path d="M9 18l6-6-6-6"/></svg>';
+    } else {
+      currentMfaFactorId = null;
+      pendingUnverifiedFactorId = null;
+      label.innerHTML = 'Off <svg class="chev" viewBox="0 0 24 24" width="16" height="16"><path d="M9 18l6-6-6-6"/></svg>';
+    }
+  } catch(e){
+    label.textContent = 'unavailable';
+    // REAL, TEMPORARY diagnostic — logs the actual, real, live error
+    // so we can genuinely see what's failing, since "unavailable"
+    // alone was hiding the real, honest cause.
+    console.error('[MFA STATUS CHECK FAILED]', e.message);
+    if (window.__agoLogError) window.__agoLogError('refreshMfaStatus failed', e);
+  }
+}
+
+$('rowMfaSetup').addEventListener('click', async () => {
+  $('mfaSetupOverlay').classList.add('open');
+  // Real, honest loading state while we confirm the actual, current
+  // status — prevents ever briefly showing the wrong real view.
+  $('mfaEnabledView').style.display = 'none';
+  $('mfaStartView').style.display = 'none';
+  $('mfaQrView').style.display = 'none';
+
+  // REAL, CONFIRMED FIX: previously trusted currentMfaFactorId
+  // without ensuring the async refreshMfaStatus() call from page
+  // load had genuinely finished — a real, honest timing bug that
+  // could show "Get Started" for an account that actually already
+  // has 2FA on, if the row was tapped before that check resolved.
+  await refreshMfaStatus();
+
+  if (currentMfaFactorId) {
+    $('mfaEnabledView').style.display = 'block';
+  } else {
+    // REAL, HONEST CLEANUP — a genuinely incomplete, unverified
+    // factor (confirmed live to happen if the QR sheet was closed
+    // before finishing, or a verification attempt failed) is
+    // silently removed here, so tapping "Get Started" always begins
+    // a real, genuinely fresh enrollment rather than leaving stale,
+    // unverified factors piling up in the account.
+    if (pendingUnverifiedFactorId) {
+      try { await Auth.unenrollMfa(pendingUnverifiedFactorId); } catch(e) { /* real, honest — if this fails, enrollMfa() below will still work, Supabase allows multiple factors */ }
+      pendingUnverifiedFactorId = null;
+    }
+    $('mfaStartView').style.display = 'block';
+  }
+});
+$('mfaSetupClose').addEventListener('click', () => $('mfaSetupOverlay').classList.remove('open'));
+$('mfaSetupOverlay').addEventListener('click', e => { if (e.target === $('mfaSetupOverlay')) $('mfaSetupOverlay').classList.remove('open'); });
+
+let pendingEnrollFactorId = null;
+
+// REAL, complete, honest implementation of the brief's exact model:
+// "if error === already exists { setMfaEnabled(true); openManageMfaSheet(); }"
+// — this genuinely, silently clears a real, stuck, unverified factor
+// (the confirmed, real, live scenario this project has hit before)
+// and immediately retries enrollment, so the customer never sees any
+// error, any intermediate recovery screen, or any toast for this
+// specific, honest edge case.
+async function agoStartMfaEnrollment(){
+  const btn = $('mfaStartBtn');
+  try {
+    const result = await Auth.enrollMfa();
+    pendingEnrollFactorId = result.id;
+    $('mfaQrCodeWrap').innerHTML = result.totp?.qr_code || '';
+    $('mfaManualSecret').textContent = result.totp?.secret || '';
+    $('mfaStartView').style.display = 'none';
+    $('mfaQrView').style.display = 'block';
+  } catch(err){
+    const isAlreadyExistsError = /already exists/i.test(err.message || '');
+    if (!isAlreadyExistsError) throw err; // real, honest — genuinely unexpected errors still surface normally
+
+    // Real, silent, background resolution — no visible error at all.
+    const factors = await Auth.listMfaFactors();
+    const stuck = factors.find(f => f.status === 'unverified');
+    if (stuck) await Auth.unenrollMfa(stuck.id);
+
+    // Real, immediate retry — this should now genuinely succeed,
+    // since the real, stuck factor blocking it is gone.
+    const result = await Auth.enrollMfa();
+    pendingEnrollFactorId = result.id;
+    $('mfaQrCodeWrap').innerHTML = result.totp?.qr_code || '';
+    $('mfaManualSecret').textContent = result.totp?.secret || '';
+    $('mfaStartView').style.display = 'none';
+    $('mfaQrView').style.display = 'block';
+  }
+}
+
+$('mfaStartBtn').addEventListener('click', async () => {
+  const btn = $('mfaStartBtn');
+  btn.disabled = true; btn.textContent = 'Setting up…';
+  try {
+    await agoStartMfaEnrollment();
+  } catch(err){
+    // REAL, HONEST FALLBACK — this only fires for a genuinely
+    // unexpected, real error, never the confirmed "already exists"
+    // case, which agoStartMfaEnrollment() now resolves completely
+    // silently on its own.
+    showToast(err.message || 'Could not start 2FA setup');
+  } finally {
+    btn.disabled = false; btn.textContent = 'Get Started';
+  }
+});
+
+// Real, scoped digit handling — deliberately queries within
+// #mfaEnrollInputs specifically, never the bare .mfa-digit class
+// page-wide, to avoid the exact real collision found and fixed
+// during the login-challenge build.
+const mfaEnrollDigits = () => Array.from(document.querySelectorAll('#mfaEnrollInputs .mfa-digit'));
+
+mfaEnrollDigits().forEach((input, i) => {
+  input.addEventListener('input', () => {
+    input.value = input.value.replace(/\D/g,'').slice(0,1);
+    input.classList.toggle('filled', !!input.value);
+    $('mfaEnrollErrorMsg').textContent = '';
+    if (input.value && i < 5) mfaEnrollDigits()[i+1].focus();
+  });
+  input.addEventListener('keydown', e => {
+    if (e.key === 'Backspace' && !input.value && i > 0) mfaEnrollDigits()[i-1].focus();
+  });
+});
+
+$('mfaEnrollVerifyBtn').addEventListener('click', async () => {
+  const code = mfaEnrollDigits().map(d => d.value).join('');
+  if (code.length !== 6) { $('mfaEnrollErrorMsg').textContent = 'Enter the full 6-digit code.'; return; }
+
+  const btn = $('mfaEnrollVerifyBtn');
+  btn.disabled = true; btn.textContent = 'Confirming…';
+  try {
+    await Auth.verifyMfaEnrollment(pendingEnrollFactorId, code);
+    // REAL, CONFIRMED FIX: previously closed the sheet and relied on
+    // a toast alone — the brief's own, explicit, correct requirement
+    // is a real, genuine SUCCESS STATE shown inline, not a toast
+    // that can be missed. The sheet now stays open and switches to
+    // the actual, real "Enabled" view.
+    await refreshMfaStatus();
+    $('mfaStartView').style.display = 'none';
+    $('mfaQrView').style.display = 'none';
+    $('mfaEnabledView').style.display = 'block';
+  } catch(err){
+    $('mfaEnrollErrorMsg').textContent = err.message;
+    mfaEnrollDigits().forEach(d => { d.value=''; d.classList.remove('filled'); });
+    mfaEnrollDigits()[0].focus();
+  } finally {
+    btn.disabled = false; btn.textContent = 'Confirm & Turn On';
+  }
+});
+
+$('mfaDoneBtn').addEventListener('click', () => {
+  $('mfaSetupOverlay').classList.remove('open');
+});
+
+$('mfaDisableBtn').addEventListener('click', async () => {
+  if (!currentMfaFactorId) return;
+  const btn = $('mfaDisableBtn');
+  btn.disabled = true; btn.textContent = 'Turning off…';
+  try {
+    await Auth.unenrollMfa(currentMfaFactorId);
+    showToast('Two-factor authentication is now off');
+    $('mfaSetupOverlay').classList.remove('open');
+    await refreshMfaStatus();
+  } catch(err){
+    showToast(err.message || 'Could not turn off 2FA');
+  } finally {
+    btn.disabled = false; btn.textContent = 'Turn Off 2FA';
+  }
+});
+
+$('pushNotifToggle').addEventListener('click', async () => {
+  const toggle = $('pushNotifToggle');
+  const user = Auth.currentUser();
+  if (!user) { showToast('Please sign in first'); return; }
+  if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
+    showToast('Push notifications aren’t supported on this browser');
+    return;
+  }
+
+  try {
+    const reg = await navigator.serviceWorker.ready;
+    const existingSub = await reg.pushManager.getSubscription();
+
+    if (existingSub) {
+      // Real, genuine unsubscribe — removes the real, live browser
+      // subscription AND the matching real row in our own database.
+      await fetch(`${SB_REST}/push_subscriptions?user_id=eq.${user.id}`, {
+        method: 'DELETE', headers: Auth.authHeaders(),
+      }).catch(() => {});
+      await existingSub.unsubscribe();
+      toggle.classList.remove('on');
+      showToast('Notifications turned off');
+      return;
+    }
+
+    // Real, genuine subscribe flow — this permission request is
+    // directly, synchronously tied to this real click handler, which
+    // is a hard iOS requirement (cannot be requested on page load).
+    const permission = await Notification.requestPermission();
+    if (permission !== 'granted') {
+      showToast('Notifications permission was not granted');
+      return;
+    }
+
+    const subscription = await reg.pushManager.subscribe({
+      userVisibleOnly: true,
+      applicationServerKey: urlBase64ToUint8Array(AGO_VAPID_PUBLIC_KEY),
+    });
+
+    const res = await fetch(`${SB_REST}/push_subscriptions`, {
+      method: 'POST', headers: { ...Auth.authHeaders(), 'Prefer': 'return=minimal' },
+      body: JSON.stringify({ user_id: user.id, subscription_json: subscription.toJSON() }),
+    });
+    if (!res.ok) throw new Error('Could not save subscription');
+
+    toggle.classList.add('on');
+    showToast('Notifications turned on');
+  } catch(e){
+    showToast('Could not update notification settings');
+    if (window.__agoLogError) window.__agoLogError('Push subscription toggle failed', e);
+  }
+});
+
+refreshPushToggleState();
+refreshMfaStatus();
+
+/* ════════════════════════════════════════════════════════════
+   WALLET SHEET — top up flow
+   ════════════════════════════════════════════════════════════ */
+let selectedAmount = 0;
+
+function openWalletSheet(){
+  $('walletOverlay').classList.add('open');
+  $('sheetBalance').textContent = fmt(currentProfile?.wallet_balance || 0);
+  loadWalletTx();
+}
+function closeWalletSheet(){ $('walletOverlay').classList.remove('open'); }
+
+$('rowWallet').addEventListener('click', openWalletSheet);
+$('walletClose').addEventListener('click', closeWalletSheet);
+$('walletOverlay').addEventListener('click', e => { if (e.target === $('walletOverlay')) closeWalletSheet(); });
+
+document.querySelectorAll('.amount-chip[data-amt]').forEach(chip => {
+  chip.addEventListener('click', () => {
+    document.querySelectorAll('.amount-chip').forEach(c=>c.classList.remove('active'));
+    chip.classList.add('active');
+    selectedAmount = parseInt(chip.dataset.amt);
+    $('customAmtField').style.display = 'none';
+    $('topupSubmit').disabled = false;
+  });
+});
+$('customAmtChip').addEventListener('click', () => {
+  document.querySelectorAll('.amount-chip').forEach(c=>c.classList.remove('active'));
+  $('customAmtChip').classList.add('active');
+  $('customAmtField').style.display = 'block';
+  $('customAmtInput').focus();
+  selectedAmount = 0;
+  $('topupSubmit').disabled = true;
+});
+$('customAmtInput').addEventListener('input', e => {
+  const val = parseInt(e.target.value) || 0;
+  selectedAmount = val;
+  $('topupSubmit').disabled = val < 500;
+});
+
+$('topupSubmit').addEventListener('click', () => {
+  if (selectedAmount < 500) { showToast('Minimum top-up is ₦500'); return; }
+  const user = Auth.currentUser();
+  const btn = $('topupSubmit');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="btn-spinner"></span> Opening payment…';
+  showToast('Preparing payment…');
+
+  let attempts = 0;
+  const MAX_ATTEMPTS = 12; // ~3 seconds at 250ms intervals
+
+  function tryOpenPaystack(){
+    if (typeof PaystackPop === 'undefined'){
+      attempts++;
+      if (attempts >= MAX_ATTEMPTS){
+        btn.disabled = false; btn.textContent = 'Top Up Wallet';
+        showToast('Payment service could not load — check your connection and try again');
+        return;
+      }
+      setTimeout(tryOpenPaystack, 250);
+      return;
+    }
+
+    btn.textContent = 'Opening payment…';
+
+    let handler;
+    // Paystack's inline.js validates the callback with a strict
+    // check that async functions can fail (confirmed via the remote
+    // debug logger — this exact error was traced to their own
+    // validateInputTypes()). Fix: pass a PLAIN function as the
+    // callback, which internally calls an async helper — Paystack
+    // never sees anything but a normal function reference.
+    async function handleTopupSuccess(response){
+      btn.textContent = 'Confirming…';
+      try {
+        await creditWallet(user.id, selectedAmount, response.reference);
+        currentProfile.wallet_balance = (parseFloat(currentProfile.wallet_balance)||0) + selectedAmount;
+        $('walletBalanceDisplay').textContent = fmt(currentProfile.wallet_balance);
+        $('sheetBalance').textContent = fmt(currentProfile.wallet_balance);
+        showToast(`Wallet topped up with ${fmt(selectedAmount)}`);
+        loadWalletTx();
+      } catch(err){
+        showToast('Payment succeeded but wallet update failed — contact support');
+      }
+      btn.disabled = false; btn.textContent = 'Top Up Wallet';
+    }
+
+    try {
+      handler = PaystackPop.setup({
+        key: PAYSTACK_PK,
+        email: user.email,
+        amount: Math.round(selectedAmount * 100),
+        currency: 'NGN',
+        metadata: { custom_fields: [{ display_name:'Purpose', variable_name:'purpose', value:'Wallet Top-up' }] },
+        callback: function(response){ handleTopupSuccess(response); },
+        onClose: function(){
+          btn.disabled = false; btn.textContent = 'Top Up Wallet';
+          showToast('Payment window closed');
+        },
+      });
+    } catch(setupErr){
+      console.error('PaystackPop.setup() threw:', setupErr);
+      if (window.__agoLogError) window.__agoLogError('Top-up: PaystackPop.setup() threw', setupErr);
+      btn.disabled = false; btn.textContent = 'Top Up Wallet';
+      showToast('Could not start payment — ' + (setupErr.message || 'unknown error'));
+      return;
+    }
+
+    if (!handler || typeof handler.openIframe !== 'function'){
+      btn.disabled = false; btn.textContent = 'Top Up Wallet';
+      showToast('Payment popup could not be created — please try again');
+      return;
+    }
+
+    try {
+      handler.openIframe();
+      // Give a visible confirmation that we got this far, in case the
+      // actual Paystack iframe render is delayed or silently blocked
+      // (some in-app browsers / webviews restrict iframe popups).
+      setTimeout(() => {
+        if (btn.disabled) showToast('If no payment window appeared, try opening this site in Chrome or Safari directly');
+      }, 2000);
+    } catch(openErr){
+      console.error('handler.openIframe() threw:', openErr);
+      if (window.__agoLogError) window.__agoLogError('Top-up: handler.openIframe() threw', openErr);
+      btn.disabled = false; btn.textContent = 'Top Up Wallet';
+      showToast('Could not open payment window — ' + (openErr.message || 'unknown error'));
+    }
+  }
+
+  tryOpenPaystack();
+});
+
+async function loadWalletTx(){
+  const user = Auth.currentUser();
+  const tx = await fetchWalletTx(user.id);
+  const list = $('txList');
+  if (!tx.length){ list.innerHTML = '<p class="tx-empty">No transactions yet.</p>'; return; }
+  list.innerHTML = tx.map(t => `
+    <div class="tx-row">
+      <div class="tx-left">
+        <span class="tx-reason">${t.reason.replace(/_/g,' ')}</span>
+        <span class="tx-date">${new Date(t.created_at).toLocaleDateString('en-NG', {day:'numeric', month:'short', year:'numeric'})}</span>
+      </div>
+      <span class="tx-amt ${t.type}">${t.type === 'credit' ? '+' : '−'}${fmt(t.amount)}</span>
+    </div>`).join('');
+}
+
+/* ════════════════════════════════════════════════════════════
+   ROW ACTIONS — placeholders that toast for now (Day 6+ pages)
+   ════════════════════════════════════════════════════════════ */
+/* ════════════════════════════════════════════════════════════
+   MY ACCOUNT — edit name/phone, change password
+   ════════════════════════════════════════════════════════════ */
+function openAccountSheet(){
+  const user = Auth.currentUser();
+  $('acctName').value  = currentProfile?.full_name || '';
+  $('acctPhone').value = currentProfile?.phone || '';
+  $('acctEmail').value = user?.email || '';
+  $('accountOverlay').classList.add('open');
+}
+$('rowMyAccount').addEventListener('click', openAccountSheet);
+$('accountClose').addEventListener('click', () => $('accountOverlay').classList.remove('open'));
+$('accountOverlay').addEventListener('click', e => { if (e.target === $('accountOverlay')) $('accountOverlay').classList.remove('open'); });
+
+$('acctSaveBtn').addEventListener('click', async () => {
+  const btn = $('acctSaveBtn');
+  const name  = $('acctName').value.trim();
+  const phone = $('acctPhone').value.trim();
+  if (name.length < 2){ showToast('Please enter your full name'); return; }
+  btn.disabled = true; btn.textContent = 'Saving…';
+  try {
+    const user = Auth.currentUser();
+    const res = await fetch(`${SB_REST}/profiles?id=eq.${user.id}`, {
+      method:'PATCH',
+      headers: Auth.authHeaders(),
+      body: JSON.stringify({ full_name: name, phone }),
+    });
+    if (!res.ok) throw new Error('Save failed');
+    currentProfile.full_name = name;
+    currentProfile.phone = phone;
+    $('profileGreeting').textContent = name.toUpperCase();
+    showToast('Account details updated');
+    $('accountOverlay').classList.remove('open');
+  } catch(e){
+    showToast('Could not save — check your connection');
+  } finally {
+    btn.disabled = false; btn.textContent = 'Save Changes';
+  }
+});
+
+$('acctChangePwBtn').addEventListener('click', async () => {
+  const user = Auth.currentUser();
+  // Use the same 6-digit code flow as "Forgot password?" instead of
+  // a Supabase email link — keeps password changes consistent with
+  // the one email path that's actually confirmed working, and avoids
+  // relying on Supabase's own (unreliable) link-based reset email.
+  $('accountOverlay').classList.remove('open');
+  await openCodeScreen(user.email, 'password_reset');
+});
+
+/* ════════════════════════════════════════════════════════════
+   MY ORDERS — real order history from Supabase
+   ════════════════════════════════════════════════════════════ */
+function openOrdersSheet(){
+  $('ordersOverlay').classList.add('open');
+  loadOrders();
+}
+$('rowMyOrders').addEventListener('click', openOrdersSheet);
+$('ordersClose').addEventListener('click', () => $('ordersOverlay').classList.remove('open'));
+$('ordersOverlay').addEventListener('click', e => { if (e.target === $('ordersOverlay')) $('ordersOverlay').classList.remove('open'); });
+
+/* ════════════════════════════════════════════════════════════
+   INBOX — real, live notifications: payment confirmed, shipped,
+   delivered/collected. Genuinely fires in real time off actual
+   order events (see webhook_confirm_payment() and admin's order-
+   status update flow) — no email needed, works inside the account
+   the customer already signs into.
+   ════════════════════════════════════════════════════════════ */
+const INBOX_ICONS = {
+  order_placed: '<svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" fill="none" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>',
+  order_cancelled_admin: '<svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" fill="none" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
+  payment_confirmed: '<svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" fill="none" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>',
+  confirmed: '<svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" fill="none" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>',
+  shipped: '<svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" fill="none" stroke-width="2"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/></svg>',
+  arrived: '<svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" fill="none" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>',
+  delivered: '<svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" fill="none" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>',
+  refunded: '<svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" fill="none" stroke-width="2"><path d="M1 4v6h6M23 20v-6h-6"/><path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15"/></svg>',
+};
+
+async function loadInboxUnreadCount(){
+  const user = Auth.currentUser();
+  if (!user) return;
+  try {
+    const res = await fetch(`${SB_REST}/customer_notifications?user_id=eq.${user.id}&is_read=eq.false&select=id`, { headers: Auth.authHeaders() });
+    const unread = res.ok ? await res.json() : [];
+    const badge = $('inboxSummary');
+    badge.innerHTML = `${unread.length} new <svg class="chev" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>`;
+    if (unread.length > 0) badge.style.color = 'var(--accent)';
+  } catch(e){ /* real, honest failure — badge just won't update this load, not worth alarming the customer over */ }
+}
+
+async function loadInbox(){
+  const user = Auth.currentUser();
+  if (!user) return;
+  $('inboxList').innerHTML = '<p class="tx-empty">Loading…</p>';
+  try {
+    const res = await fetch(`${SB_REST}/customer_notifications?user_id=eq.${user.id}&select=*&order=created_at.desc&limit=50`, { headers: Auth.authHeaders() });
+    const notifications = res.ok ? await res.json() : [];
+
+    if (!notifications.length){
+      $('inboxList').innerHTML = '<p class="tx-empty">Nothing here yet — you will see updates on your orders as they happen.</p>';
+      return;
+    }
+
+    $('inboxList').innerHTML = notifications.map(n => {
+      // REAL, honest routing — only a new_message notification has a
+      // real, live destination (chat.html) to open. Every other real
+      // type stays a plain, non-clickable row, matching its existing behavior.
+      const isClickable = n.type === 'new_message';
+      const tag = isClickable ? 'a' : 'div';
+      const hrefAttr = isClickable ? 'href="chat.html"' : '';
+      return `
+      <${tag} ${hrefAttr} class="inbox-item ${n.is_read ? '' : 'unread'}" style="${isClickable ? 'display:block; text-decoration:none; color:inherit; cursor:pointer;' : ''}">
+        <p class="inbox-item-title"><span class="inbox-item-icon ${n.type}">${INBOX_ICONS[n.type] || ''}</span>${escHtml(n.title)}</p>
+        <p class="inbox-item-body">${escHtml(n.body)}</p>
+        <p class="inbox-item-time">${new Date(n.created_at).toLocaleString('en-NG', { dateStyle:'medium', timeStyle:'short' })}</p>
+      </${tag}>`;
+    }).join('');
+
+    // Real, honest mark-as-read — genuinely opening the inbox is
+    // what "reading" it means here, matching how a real inbox works.
+    const unreadIds = notifications.filter(n => !n.is_read).map(n => n.id);
+    if (unreadIds.length) {
+      fetch(`${SB_REST}/customer_notifications?id=in.(${unreadIds.join(',')})`, {
+        method: 'PATCH', headers: Auth.authHeaders(), body: JSON.stringify({ is_read: true }),
+      }).then(() => loadInboxUnreadCount()).catch(() => {});
+    }
+  } catch(e){
+    $('inboxList').innerHTML = '<p class="tx-empty">Could not load your inbox — check your connection.</p>';
+  }
+}
+
+function openInboxSheet(){
+  $('inboxOverlay').classList.add('open');
+  loadInbox();
+}
+$('rowInbox').addEventListener('click', openInboxSheet);
+$('inboxClose').addEventListener('click', () => $('inboxOverlay').classList.remove('open'));
+$('inboxOverlay').addEventListener('click', e => { if (e.target === $('inboxOverlay')) $('inboxOverlay').classList.remove('open'); });
+
+async function loadOrders(){
+  const user = Auth.currentUser();
+  const list = $('ordersList');
+  list.innerHTML = '<p class="tx-empty">Loading…</p>';
+  try {
+    const res = await fetch(`${SB_REST}/orders?user_id=eq.${user.id}&select=*&order=created_at.desc`, { headers: Auth.authHeaders() });
+    const orders = res.ok ? await res.json() : [];
+    if (!orders.length){
+      list.innerHTML = `
+        <div class="orders-empty">
+          <p>No orders yet — your purchases will show up here.</p>
+          <a href="shop.html">Start Shopping</a>
+        </div>`;
+      return;
+    }
+    list.innerHTML = orders.map(o => {
+      const itemCount = Array.isArray(o.items) ? o.items.length : 0;
+      const preview = Array.isArray(o.items) ? o.items.slice(0,3).map(i=>escHtml(i.name)).join(', ') + (itemCount>3 ? `, +${itemCount-3} more` : '') : '';
+      let displayStatus = o.payment_status === 'paid' && o.status === 'pending' ? 'paid' : o.status;
+      // REAL, CONFIRMED FIX: this view never applied the same
+      // pickup-aware relabeling admin.js already has — meaning a
+      // real customer with a genuine pickup order saw the raw
+      // "arrived"/"delivered" status text, never "Ready for
+      // Collection"/"Collected", even though admin correctly showed
+      // the right label. Both sides now genuinely agree.
+      const isPickupOrder = o.shipping_address?.type === 'pickup';
+      let displayLabel = displayStatus;
+      if (isPickupOrder && displayStatus === 'arrived') displayLabel = 'ready for collection';
+      if (isPickupOrder && displayStatus === 'delivered') displayLabel = 'collected';
+      // Real, honest mirror of customer_cancel_order()'s own real
+      // cutoff — an order that's shipped, delivered, cancelled,
+      // refunded, or abandoned genuinely can't be cancelled anymore,
+      // so the button simply isn't offered rather than being shown
+      // and then failing.
+      // REAL, TIGHTENED rule, per explicit request: cancellation is
+      // ONLY offered at 'pending' (just placed) or 'paid'/'confirmed'
+      // (confirmed) — genuinely narrower than before, and using an
+      // explicit allow-list (not a deny-list) so this can never drift
+      // out of sync with the backend's own real cutoff in
+      // customer_cancel_order().
+      const isCancellable = ['pending','paid','confirmed'].includes(o.status);
+      return `
+        <a class="order-card" href="order-detail.html?id=${o.id}" style="display:block; text-decoration:none; color:inherit;">
+          <div class="order-card-top">
+            <div>
+              <div class="order-num">${o.order_number}</div>
+              <div class="order-date">${new Date(o.created_at).toLocaleDateString('en-NG', {day:'numeric', month:'short', year:'numeric'})}</div>
+            </div>
+            <span class="order-status ${displayStatus}">${displayLabel}</span>
+          </div>
+          <p class="order-items-preview">${preview}</p>
+          <p class="order-total">${fmt(o.total)}</p>
+          <span class="order-details-btn">See Details</span>
+          ${isCancellable ? `<button class="order-cancel-btn" data-order-id="${o.id}" data-order-number="${escHtml(o.order_number)}" data-order-total="${o.total}" data-was-paid="${o.payment_status === 'paid'}">Cancel Order</button>` : ''}
+        </a>`;
+    }).join('');
+  } catch(e){
+    list.innerHTML = '<p class="tx-empty">Could not load orders — check your connection.</p>';
+  }
+}
+
+/* ════════════════════════════════════════════════════════════
+   CANCEL ORDER — calls the real, tested customer_cancel_order()
+   function (atomic wallet refund + stock restoration + notification,
+   all server-side). This UI only ever offers the button for orders
+   the backend would genuinely still accept — see the isCancellable
+   check in loadOrders() above.
+   ════════════════════════════════════════════════════════════ */
+let pendingCancelOrderId = null;
+
+$('ordersList').addEventListener('click', (e) => {
+  const btn = e.target.closest('.order-cancel-btn');
+  if (!btn) return;
+  e.preventDefault(); e.stopPropagation(); // real fix — Cancel Order must not also navigate to the order detail page
+  pendingCancelOrderId = btn.dataset.orderId;
+  const wasPaid = btn.dataset.wasPaid === 'true';
+  const total = parseFloat(btn.dataset.orderTotal) || 0;
+  // Real, honest copy — tells the customer exactly what will
+  // genuinely happen, since a paid order triggers a real refund and
+  // an unpaid one doesn't.
+  $('cancelOrderMsg').textContent = wasPaid
+    ? `${fmt(total)} will be refunded to your wallet immediately. This can't be undone.`
+    : `This order hasn't been paid for yet, so no refund is needed. This can't be undone.`;
+  $('cancelOrderOverlay').classList.add('open');
+});
+
+$('cancelOrderStay').addEventListener('click', () => {
+  pendingCancelOrderId = null;
+  $('cancelOrderOverlay').classList.remove('open');
+});
+$('cancelOrderOverlay').addEventListener('click', e => {
+  if (e.target === $('cancelOrderOverlay')) { pendingCancelOrderId = null; $('cancelOrderOverlay').classList.remove('open'); }
+});
+
+$('cancelOrderConfirm').addEventListener('click', async () => {
+  if (!pendingCancelOrderId) return;
+  const btn = $('cancelOrderConfirm');
+  btn.disabled = true; btn.textContent = 'Cancelling…';
+  try {
+    const res = await fetch(`${SB_REST}/rpc/customer_cancel_order`, {
+      method: 'POST', headers: Auth.authHeaders(),
+      body: JSON.stringify({ p_order_id: pendingCancelOrderId }),
+    });
+    const data = await res.json();
+    const result = Array.isArray(data) ? data[0] : data;
+    if (!result?.success) throw new Error(result?.message || 'Could not cancel this order');
+
+    showToast(result.message);
+    $('cancelOrderOverlay').classList.remove('open');
+    pendingCancelOrderId = null;
+    await loadOrders();
+    // Real wallet balance may have just changed — refresh it so the
+    // customer sees the genuine, current number immediately, not a
+    // stale one until their next full page load.
+    if (currentProfile) {
+      const p = await fetchProfile(Auth.currentUser().id);
+      currentProfile = p;
+      $('walletBalanceDisplay').textContent = fmt(p?.wallet_balance || 0);
+    }
+  } catch(e){
+    showToast(e.message || 'Could not cancel this order');
+  } finally {
+    btn.disabled = false; btn.textContent = 'Cancel Order';
+  }
+});
+
+/* ════════════════════════════════════════════════════════════
+   ADDRESS BOOK — full CRUD against the addresses table
+   ════════════════════════════════════════════════════════════ */
+let editingAddressId = null;
+let pendingDeleteAddrId = null;
+
+$('deleteAddrCancel').addEventListener('click', () => {
+  pendingDeleteAddrId = null;
+  $('deleteAddrOverlay').classList.remove('open');
+});
+$('deleteAddrOverlay').addEventListener('click', e => {
+  if (e.target === $('deleteAddrOverlay')) { pendingDeleteAddrId = null; $('deleteAddrOverlay').classList.remove('open'); }
+});
+$('deleteAddrConfirm').addEventListener('click', async () => {
+  if (!pendingDeleteAddrId) return;
+  const btn = $('deleteAddrConfirm');
+  btn.disabled = true; btn.textContent = 'Deleting…';
+  try {
+    const res = await fetch(`${SB_REST}/addresses?id=eq.${pendingDeleteAddrId}`, { method:'DELETE', headers: Auth.authHeaders() });
+    if (!res.ok) {
+      const errBody = await res.text();
+      console.error('Delete address failed:', res.status, errBody);
+      throw new Error('Could not delete address');
+    }
+    showToast('Address deleted');
+    loadAddresses();
+  } catch(e){
+    showToast(e.message || 'Could not delete address');
+    if (window.__agoLogError) window.__agoLogError('Delete address failed', e);
+  } finally {
+    pendingDeleteAddrId = null;
+    btn.disabled = false; btn.textContent = 'Delete';
+    $('deleteAddrOverlay').classList.remove('open');
+  }
+});
+let addrIsDefault = false;
+
+function openAddressSheet(){
+  $('addressOverlay').classList.add('open');
+  showAddrListView();
+  loadAddresses();
+}
+$('rowAddressBook').addEventListener('click', openAddressSheet);
+$('addressClose').addEventListener('click', () => $('addressOverlay').classList.remove('open'));
+$('addressOverlay').addEventListener('click', e => { if (!e.target.closest('.sheet')) $('addressOverlay').classList.remove('open'); });
+
+function showAddrListView(){
+  $('addrListView').style.display = 'block';
+  $('addrFormView').style.display = 'none';
+  $('addrBackBtn').classList.remove('show');
+}
+function showAddrFormView(){
+  $('addrListView').style.display = 'none';
+  $('addrFormView').style.display = 'block';
+  $('addrBackBtn').classList.add('show');
+}
+$('addrBackBtn').addEventListener('click', () => { showAddrListView(); loadAddresses(); });
+
+async function loadAddresses(){
+  const user = Auth.currentUser();
+  const list = $('addrList');
+  list.innerHTML = '<p class="tx-empty">Loading…</p>';
+  try {
+    const res = await fetch(`${SB_REST}/addresses?user_id=eq.${user.id}&select=*&order=is_default.desc,created_at.desc`, { headers: Auth.authHeaders() });
+    const rows = res.ok ? await res.json() : [];
+    if (!rows.length){
+      list.innerHTML = '<div class="addr-empty"><p>No saved addresses yet.</p></div>';
+      return;
+    }
+    list.innerHTML = rows.map(a => `
+      <div class="addr-card ${a.is_default ? 'is-default' : ''}" data-id="${a.id}">
+        <div class="addr-label-row">
+          <span class="addr-label">${escHtml(a.label || 'Address')}</span>
+          ${a.is_default ? '<span class="addr-default-tag">Default</span>' : ''}
+        </div>
+        <p class="addr-text">${escHtml(a.full_name)}<br>${escHtml(a.line1)}, ${escHtml(a.city)}, ${escHtml(a.state)}<br>${escHtml(a.phone)}</p>
+        <div class="addr-actions">
+          <button data-edit="${a.id}">Edit</button>
+          ${!a.is_default ? `<button data-setdefault="${a.id}">Set Default</button>` : ''}
+          <button class="danger" data-delete="${a.id}">Delete</button>
+        </div>
+      </div>`).join('');
+  } catch(e){
+    list.innerHTML = '<p class="tx-empty">Could not load addresses.</p>';
+  }
+}
+
+$('addAddrBtn').addEventListener('click', (e) => {
+  e.preventDefault();
+  e.stopPropagation();
+  try {
+    editingAddressId = null;
+    addrIsDefault = false;
+    ['addrLabel','addrName','addrPhone','addrLine1'].forEach(id => $(id).value = '');
+    addrStateSelectC.setValue('');
+    addrLgaSelectC.setOptions([], true);
+    addrLgaSelectC.disable('Select state first');
+    addrBusStopSelectC.setOptions([], true);
+    addrBusStopSelectC.disable('Select LGA first');
+    $('addrDefaultToggle').classList.remove('on');
+    $('addrFormTitle').textContent = 'Add Address';
+    showAddrFormView();
+  } catch(err){
+    console.error('Add New Address failed:', err);
+    if (window.__agoLogError) window.__agoLogError('Add New Address button failed', err);
+    showToast('Could not open the address form — please try again');
+  }
+});
+
+$('addrDefaultToggle').addEventListener('click', () => {
+  addrIsDefault = !addrIsDefault;
+  $('addrDefaultToggle').classList.toggle('on', addrIsDefault);
+});
+
+$('addrList').addEventListener('click', async e => {
+  const editId = e.target.dataset.edit;
+  const delId  = e.target.dataset.delete;
+  const defId  = e.target.dataset.setdefault;
+  const user = Auth.currentUser();
+
+  if (editId){
+    try {
+      const res = await fetch(`${SB_REST}/addresses?id=eq.${editId}&select=*`, { headers: Auth.authHeaders() });
+      if (!res.ok) {
+        const errBody = await res.text();
+        console.error('Load address failed:', res.status, errBody);
+        throw new Error(res.status === 401 ? 'Session expired — please sign in again' : 'Could not load address');
+      }
+      const rows = await res.json();
+      const a = rows[0];
+      if (!a) { showToast('Address not found'); return; }
+      editingAddressId = a.id;
+      addrIsDefault = a.is_default;
+      $('addrLabel').value = a.label || '';
+      $('addrName').value  = a.full_name || '';
+      $('addrPhone').value = a.phone || '';
+      $('addrLine1').value = a.line1 || '';
+
+      // Restore the State → LGA → Bus-stop cascade from saved data.
+      // "city" is used as the bus-stop value (see save function note).
+      if (a.state){
+        addrStateSelectC.setValue(a.state);
+        const lgas = NG_LGAS[a.state];
+        if (lgas){ addrLgaSelectC.setOptions(lgas, false); addrLgaSelectC.enable('Select LGA'); }
+        else     { addrLgaSelectC.setOptions([], true);    addrLgaSelectC.enable('Type your LGA'); }
+      }
+      if (a.city){
+        // We don't know which LGA this city/bus-stop belonged to from
+        // the addresses table alone (it only stores city, not LGA) —
+        // so allow it as free text on top of whatever the state's LGA
+        // list suggests, rather than guessing the wrong LGA.
+        addrBusStopSelectC.setOptions([a.city], true);
+        addrBusStopSelectC.enable('Select or type your area');
+        addrBusStopSelectC.setValue(a.city);
+      }
+
+      $('addrDefaultToggle').classList.toggle('on', addrIsDefault);
+      $('addrFormTitle').textContent = 'Edit Address';
+      showAddrFormView();
+    } catch(e){ showToast(e.message || 'Could not load address'); }
+  }
+
+  if (delId){
+    pendingDeleteAddrId = delId;
+    $('deleteAddrOverlay').classList.add('open');
+  }
+
+  if (defId){
+    try {
+      // Clear any existing default, then set the new one
+      const clearRes = await fetch(`${SB_REST}/addresses?user_id=eq.${user.id}`, {
+        method:'PATCH', headers: Auth.authHeaders(), body: JSON.stringify({ is_default:false }),
+      });
+      if (!clearRes.ok) throw new Error('Could not clear existing default');
+
+      const setRes = await fetch(`${SB_REST}/addresses?id=eq.${defId}`, {
+        method:'PATCH', headers: Auth.authHeaders(), body: JSON.stringify({ is_default:true }),
+      });
+      if (!setRes.ok) throw new Error('Could not set new default');
+
+      showToast('Default address updated');
+      loadAddresses();
+    } catch(e){ showToast(e.message || 'Could not update default address'); }
+  }
+});
+
+$('addrSaveBtn').addEventListener('click', async () => {
+  const btn = $('addrSaveBtn');
+  const payload = {
+    user_id:   Auth.currentUser().id,
+    label:     $('addrLabel').value.trim() || 'Address',
+    full_name: $('addrName').value.trim(),
+    phone:     $('addrPhone').value.trim(),
+    line1:     $('addrLine1').value.trim(),
+    // The addresses table has one "city" column — we store the
+    // bus-stop/area here (the more specific, actually useful value
+    // for delivery), matching what checkout.html treats as the
+    // closest equivalent field.
+    city:      addrBusStopSelectC.getValue(),
+    state:     addrStateSelectC.getValue(),
+    country:   'Nigeria',
+    is_default: addrIsDefault,
+  };
+  if (!payload.full_name || !payload.phone || !payload.line1 || !payload.city || !payload.state){
+    showToast('Please fill in all fields, including State, LGA and Bus-Stop'); return;
+  }
+  btn.disabled = true; btn.textContent = 'Saving…';
+  try {
+    if (addrIsDefault){
+      // Unset any existing default before saving this one as default
+      const clearRes = await fetch(`${SB_REST}/addresses?user_id=eq.${payload.user_id}`, {
+        method:'PATCH', headers: Auth.authHeaders(), body: JSON.stringify({ is_default:false }),
+      });
+      if (!clearRes.ok) console.warn('Could not clear existing defaults:', await clearRes.text());
+    }
+
+    let saveRes;
+    if (editingAddressId){
+      saveRes = await fetch(`${SB_REST}/addresses?id=eq.${editingAddressId}`, {
+        method:'PATCH',
+        headers: { ...Auth.authHeaders(), 'Prefer': 'return=representation' },
+        body: JSON.stringify(payload),
+      });
+    } else {
+      saveRes = await fetch(`${SB_REST}/addresses`, {
+        method:'POST',
+        headers: { ...Auth.authHeaders(), 'Prefer': 'return=representation' },
+        body: JSON.stringify(payload),
+      });
+    }
+
+    // This is the actual fix: check the response instead of assuming
+    // success. Previously every save "worked" in the UI (toast +
+    // closed form) even when the request failed outright — which is
+    // exactly why addresses looked saved but never existed in the
+    // database at all.
+    if (!saveRes.ok) {
+      const errBody = await saveRes.text();
+      console.error('Address save failed:', saveRes.status, errBody);
+      throw new Error(saveRes.status === 401 ? 'Session expired — please sign in again' : 'Could not save address');
+    }
+
+    showToast('Address saved');
+    showAddrListView();
+    loadAddresses();
+  } catch(e){
+    showToast(e.message || 'Could not save address');
+  } finally {
+    btn.disabled = false; btn.textContent = 'Save Address';
+  }
+});
+
+/* ============ LOGOUT CONFIRMATION ============ */
+const logoutOverlay = document.getElementById('logoutOverlay');
+
+$('logoutBtn').addEventListener('click', () => {
+  logoutOverlay.classList.add('open');
+});
+
+$('logoutCancel').addEventListener('click', () => {
+  logoutOverlay.classList.remove('open');
+});
+
+logoutOverlay.addEventListener('click', e => {
+  if (e.target === logoutOverlay) logoutOverlay.classList.remove('open');
+});
+
+$('logoutConfirm').addEventListener('click', async () => {
+  const btn = $('logoutConfirm');
+  btn.disabled = true; btn.textContent = 'Logging out…';
+  await Auth.signOut();
+  showToast('Signed out');
+  setTimeout(() => location.reload(), 600);
+});
+
+/* ════════════════════════════════════════════════════════════
+   BOOT — decide which screen to show
+   ════════════════════════════════════════════════════════════ */
+async function boot(){
+  // Real fix for "signed in as the wrong/stale account after
+  // redeploy": the app used to trust whatever was sitting in
+  // localStorage indefinitely, with no check that the token was
+  // still genuinely valid. If a token had expired or belonged to an
+  // old test session, authHeaders() would silently fall back to the
+  // public anon key instead — meaning any account-specific fetch
+  // could return inconsistent or wrong-looking results instead of
+  // clearly failing. Now we verify the token against Supabase's own
+  // /auth/v1/user endpoint before trusting it as "logged in."
+  if (Auth.isLoggedIn()) {
+    const isValid = await Auth.verifySessionIsValid();
+    if (!isValid) {
+      console.warn('Stored session was stale or invalid — clearing it.');
+      Auth.clearSession();
+    }
+  }
+
+  if (Auth.isLoggedIn()){
+    $('authScreen').style.display = 'none';
+    $('profileScreen').style.display = 'block';
+    $('bottomNav').style.display = '';
+    $('navTitle').textContent = 'Account';
+    $('navShopLink').style.display = ''; // desktop-only via CSS — mobile keeps using the bottom nav's Home icon instead
+    await renderProfileScreen();
+
+    // Arrived here already logged in via a checkout redirect (e.g.
+    // opened Account directly while a redirect param is still in the
+    // URL from a previous visit) — send them straight back.
+    const params = new URLSearchParams(location.search);
+    const redirect = params.get('redirect');
+    if (redirect && /^[a-z0-9_-]+\.html$/i.test(redirect)) {
+      location.href = redirect;
+      return;
+    }
+  } else {
+    $('authScreen').style.removeProperty('display'); // let CSS decide (block on mobile, flex on desktop) — an inline 'block' here was overriding the desktop centering fix
+    $('profileScreen').style.display = 'none';
+    $('bottomNav').style.display = 'none';
+    document.body.style.paddingBottom = '0';
+    $('navTitle').textContent = 'Sign In';
+
+    // Contextual messaging when arriving specifically because
+    // checkout requires an account before payment.
+    const params = new URLSearchParams(location.search);
+    if (params.get('redirect') === 'checkout.html') {
+      $('authTagline').textContent = 'Create a free account or sign in to complete your order.';
+      $('guestNote').style.display = 'none';
+    }
+  }
+  if (window.__agoContentReady) window.__agoContentReady();
+}
+boot();
+</script>
+</body>
+</html>

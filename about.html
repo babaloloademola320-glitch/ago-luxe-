@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/x-icon" href="favicon.ico">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="theme-color" content="#0A0A0A">
+
+<meta name="description" content="ÀGÒ LUXE — Nigerian heritage, ready-to-wear. Made in Nigeria, worn worldwide.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="ÀGÒ LUXE">
+<meta property="og:title" content="About ÀGÒ LUXE — ÀGÒ LUXE">
+<meta property="og:description" content="ÀGÒ LUXE — Nigerian heritage, ready-to-wear. Made in Nigeria, worn worldwide.">
+<meta property="og:image" content="https://ago-luxeclothing.netlify.app/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="About ÀGÒ LUXE — ÀGÒ LUXE">
+<meta name="twitter:description" content="ÀGÒ LUXE — Nigerian heritage, ready-to-wear. Made in Nigeria, worn worldwide.">
+<meta name="twitter:image" content="https://ago-luxeclothing.netlify.app/og-image.png">
+
+<title>About ÀGÒ LUXE — ÀGÒ LUXE</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<script>window.__agoPageName = 'about';</script>
+<script src="ago-cart.js?v=20260711b"></script>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Gentium+Plus:ital,wght@0,400;0,700;1,400;1,700&family=Newsreader:ital,wght@0,500;0,600;1,500&display=swap" rel="stylesheet">
+<style>
+:root[data-theme="dark"]{
+  --bg:#0A0A0A; --surface:#141414; --text:#F9F9F9; --text-soft:#9A9A9A; --border:#222222;
+}
+:root[data-theme="light"]{
+  --bg:#F9F9F9; --surface:#FFFFFF; --text:#0A0A0A; --text-soft:#6B6B6B; --border:#E8E8E8;
+}
+:root{ --accent:#C084FC; --accent-deep:#8B5CF6; }
+
+@keyframes skel-shimmer{0%{background-position:-500px 0;}100%{background-position:500px 0;}}
+.skel-loading{background-image:linear-gradient(90deg, var(--surface) 25%, #2a2a2a 37%, var(--surface) 63%) !important; background-size:600px 100% !important; animation:skel-shimmer 1.4s linear infinite !important;}
+.skel-loading.img-loaded{animation:none !important; background-image:none !important;}
+img.skel-img{opacity:0 !important; transition:opacity .4s ease;}
+img.skel-img.loaded{opacity:1 !important;}
+
+*{box-sizing:border-box; margin:0; padding:0;}
+html,body{background:var(--bg); color:var(--text); font-family:var(--theme-font-body, 'Newsreader', serif); font-weight:500; -webkit-tap-highlight-color:transparent;}
+img{display:block; max-width:100%;}
+a{color:inherit; text-decoration:none;}
+button{font-family:inherit; border:none; background:none; cursor:pointer; color:inherit;}
+h1,h2,h3{font-family:var(--theme-font-heading, 'Gentium Plus', serif); font-weight:700;}
+::selection{background:var(--accent); color:#0A0A0A;}
+body{padding-bottom:64px;}
+.eyebrow{font-family:'Newsreader',serif; font-style:italic; letter-spacing:.14em; text-transform:uppercase; font-size:.72rem; color:var(--accent);}
+
+/* ============ NAVBAR ============ */
+.navbar{position:sticky; top:0; z-index:50; background:var(--bg); border-bottom:1px solid var(--border); display:flex; align-items:center; gap:10px; padding:12px 14px;}
+.back-btn{display:flex; padding:4px;}
+.back-btn svg{width:20px; height:20px; stroke:var(--text); fill:none; stroke-width:1.8;}
+.nav-title{flex:1; text-align:center; font-family:'Gentium Plus',serif; font-style:italic; font-size:1.05rem;}
+.desktop-nav-links{display:none;}
+
+.page-header{padding:22px 16px 6px;}
+.page-header h1{font-size:1.7rem; font-style:italic;}
+.page-header p{font-size:.85rem; color:var(--text-soft); margin-top:6px; line-height:1.5;}
+
+/* ============ ABOUT — EDITORIAL LAYOUT ============ */
+/* Deliberately NOT the shared narrow-column .page-content pattern
+   used by policy pages (Shipping, Contact) — a fashion About page
+   needs to breathe: full-bleed imagery, generous whitespace, text
+   that runs wide and sits beside/over images rather than boxed into
+   a 720px column. */
+
+.about-hero{position:relative; width:100%; aspect-ratio:3/4; overflow:hidden; background:var(--surface);}
+.about-hero img{width:100%; height:100%; object-fit:cover;}
+.about-hero::after{content:''; position:absolute; inset:0; background:linear-gradient(to top, rgba(10,10,10,.8) 0%, rgba(10,10,10,.1) 55%, transparent 75%);}
+.about-hero-text{position:absolute; left:20px; right:20px; bottom:24px; z-index:2;}
+.about-hero-text .eyebrow{color:#E8C9FF;}
+.about-hero-text h1{color:#F9F9F9; font-size:2rem; font-style:italic; line-height:1.15; margin-top:8px;}
+
+.about-intro{padding:36px 20px 8px; max-width:600px;}
+.about-intro p{font-family:var(--theme-font-heading,'Gentium Plus',serif); font-style:italic; font-size:1.2rem; line-height:1.55; color:var(--text);}
+
+.about-block{padding:40px 20px;}
+.about-block-label{font-size:.68rem; letter-spacing:.14em; text-transform:uppercase; color:var(--accent); margin-bottom:12px; display:block;}
+.about-block h2{font-size:1.4rem; font-style:italic; margin-bottom:16px; line-height:1.25;}
+.about-block p{font-size:.9rem; line-height:1.8; color:var(--text-soft); max-width:560px;}
+
+.about-image-break{width:100%; aspect-ratio:16/10; overflow:hidden; background:var(--surface);}
+.about-image-break img{width:100%; height:100%; object-fit:cover;}
+
+.about-statement{padding:60px 24px; text-align:center; border-top:1px solid var(--border); border-bottom:1px solid var(--border);}
+.about-statement p{font-family:var(--theme-font-heading,'Gentium Plus',serif); font-style:italic; font-size:1.4rem; line-height:1.45; max-width:520px; margin:0 auto;}
+.about-statement p::before, .about-statement p::after{content:'"'; color:var(--accent); opacity:.6;}
+
+.about-cta-wrap{padding:48px 20px 56px; text-align:center;}
+.about-cta-wrap a{display:inline-block; padding:16px 40px; background:var(--accent); color:#0A0A0A; font-size:.76rem; font-weight:700; letter-spacing:.08em; text-transform:uppercase;}
+
+
+/* ============ FOOTER / NAV (shared) ============ */
+footer{padding:36px 18px 20px;}
+.footer-grid{display:grid; grid-template-columns:1fr 1fr; gap:24px; margin-bottom:30px;}
+.footer-grid h4{font-size:.72rem; text-transform:uppercase; letter-spacing:.08em; color:var(--text-soft); margin-bottom:12px;}
+.footer-grid li{margin-bottom:8px; font-size:.8rem;}
+.payment-section{margin-bottom:16px;}
+.payment-section h4{font-size:.72rem; text-transform:uppercase; letter-spacing:.08em; color:var(--text-soft); margin-bottom:12px;}
+.payment-row{display:grid; grid-template-columns:1fr 1fr; gap:10px;}
+.payment-row img{width:100%; height:52px; background:#fff; border-radius:0; padding:10px 16px; object-fit:contain;}
+.copyright{font-size:.68rem; color:var(--text-soft); border-top:1px solid var(--border); padding-top:16px;}
+.bottom-nav{position:fixed; bottom:0; left:0; right:0; z-index:60; background:var(--bg); border-top:1px solid var(--border); display:flex; justify-content:space-around; padding:9px 0 11px;}
+.bottom-nav a{display:flex; flex-direction:column; align-items:center; gap:3px; font-size:.6rem; color:var(--text-soft); position:relative;}
+.bottom-nav a.active{color:var(--accent);}
+.bottom-nav svg{width:19px; height:19px; stroke:currentColor; fill:none; stroke-width:1.6;}
+.bottom-nav .badge{position:absolute; top:-4px; right:-8px; background:var(--accent); color:#0A0A0A; font-size:.6rem; font-weight:700; width:15px; height:15px; border-radius:50%; display:flex; align-items:center; justify-content:center;}
+.toast{position:fixed; bottom:78px; left:50%; transform:translateX(-50%) translateY(20px); background:var(--text); color:var(--bg); padding:10px 18px; border-radius:30px; font-size:.78rem; opacity:0; transition:all .3s ease; z-index:200; white-space:nowrap;}
+.toast.show{opacity:1; transform:translateX(-50%) translateY(0);}
+
+@media (min-width:860px){
+  body{padding-bottom:0;}
+  .bottom-nav{display:none;}
+  .navbar{padding:16px 40px; flex-wrap:wrap;}
+  .back-btn, .nav-title{display:none;}
+  .desktop-nav-links{display:flex; gap:26px; width:100%; padding-top:14px; border-top:1px solid var(--border); margin-top:14px; justify-content:center;}
+  .desktop-nav-links a{font-size:.78rem; letter-spacing:.04em; text-transform:uppercase; color:var(--text-soft);}
+  .desktop-nav-links a:hover{color:var(--accent);}
+
+  /* Full-bleed hero — genuinely fills the wide viewport, not boxed
+     into a narrow column. Text sits large and left-aligned like a
+     real lookbook opener. */
+  .about-hero{aspect-ratio:21/9; max-height:640px;}
+  .about-hero-text{left:64px; right:auto; bottom:56px; max-width:600px;}
+  .about-hero-text h1{font-size:3.2rem;}
+
+  .about-intro{max-width:none; padding:64px 64px 8px; display:flex; justify-content:center;}
+  .about-intro p{font-size:1.5rem; max-width:680px; text-align:center;}
+
+  /* Real asymmetric two-column block — text and image sit side by
+     side, image runs taller than the text column for genuine
+     editorial depth, NOT the shared centered-column grid used
+     elsewhere on the site. */
+  .about-block-grid{display:grid; grid-template-columns:1fr 1fr; gap:64px; align-items:center; padding:20px 64px; max-width:1280px; margin:0 auto;}
+  .about-block-grid.reverse{direction:rtl;}
+  .about-block-grid.reverse > *{direction:ltr;}
+  .about-block-grid .about-block{padding:0;}
+  .about-block-grid .about-block h2{font-size:1.9rem;}
+  .about-block-grid .about-block p{font-size:.95rem; max-width:460px;}
+  .about-block-grid .about-image-break{aspect-ratio:4/5; height:100%;}
+
+  .about-statement{padding:100px 64px;}
+  .about-statement p{font-size:2rem; max-width:760px;}
+
+  .about-cta-wrap{padding:64px 20px 80px;}
+
+  footer{padding:48px 40px 24px;}
+  .footer-grid{grid-template-columns:repeat(4,1fr);}
+  .payment-row{grid-template-columns:repeat(4,1fr); max-width:520px;}
+}
+</style>
+</head>
+<body>
+
+<header class="navbar">
+  <button class="back-btn" data-back-fallback="index.html" aria-label="Back to Home">
+    <svg viewBox="0 0 24 24"><path d="M19 12H5M11 18l-6-6 6-6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </button>
+  <div class="nav-title">About ÀGÒ LUXE</div>
+  <div class="desktop-nav-links">
+    <a href="index.html">Home</a>
+    <a href="categories.html">Categories</a>
+    <a href="shop.html?cat=women">Women</a>
+    <a href="shop.html?cat=men">Men</a>
+    <a href="jewelry.html">Jewelry</a>
+    <a href="shop.html?cat=bags">Bags</a>
+    <a href="shop.html?cat=footwear">Footwear</a>
+    <a href="shop.html?cat=caps">Caps</a>
+    <a href="cart.html">Cart</a>
+    <a href="wishlist.html">Wishlist</a>
+    <a href="account.html" data-account-link>Account</a>
+  </div>
+</header>
+
+<div class="about-hero">
+  <img class="skel-loading" data-content-key="hero_image" src="https://res.cloudinary.com/dikyzpmqi/image/upload/v1782747671/3d56eb7d7f5ac627934d7c18ee9df757_binyt7.jpg" alt="ÀGÒ LUXE — heritage craftsmanship">
+  <div class="about-hero-text">
+    <span class="eyebrow">Our Story</span>
+    <h1 data-content-key="hero_title">About ÀGÒ LUXE</h1>
+  </div>
+</div>
+
+<div class="about-intro">
+  <p data-content-key="lead_text">ÀGÒ LUXE creates ready-to-wear pieces rooted in Nigerian heritage — cut for the way people actually move, dress, and gather today.</p>
+</div>
+
+<div class="about-block-grid">
+  <div class="about-block">
+    <span class="about-block-label">Our Story</span>
+    <h2 data-content-key="story_heading">Our Story</h2>
+    <p data-content-key="story_text">Every piece starts with a question: how do you carry tradition into a room without it feeling like a costume? That's the space ÀGÒ LUXE lives in — heritage fabric and silhouette, tailored with a modern hand.</p>
+  </div>
+  <div class="about-image-break">
+    <img class="skel-loading" src="https://res.cloudinary.com/dikyzpmqi/image/upload/v1782747672/d2e263f5edb434c7dbcb15da98505626_tbidqh.jpg" alt="ÀGÒ LUXE craftsmanship in detail">
+  </div>
+</div>
+
+<div class="about-statement">
+  <p>Heritage isn't a print slapped on a t-shirt — it's in the silhouette, the fabric, the hand that made it.</p>
+</div>
+
+<div class="about-block-grid reverse">
+  <div class="about-block">
+    <span class="about-block-label">Made in Nigeria</span>
+    <h2 data-content-key="madein_heading">Made in Nigeria</h2>
+    <p data-content-key="madein_text">We work with local tailors and fabric sources, keeping production close to home. Every order supports Nigerian craftsmanship directly.</p>
+  </div>
+  <div class="about-image-break">
+    <img class="skel-loading" data-content-key="madein_image" src="https://res.cloudinary.com/dikyzpmqi/image/upload/v1782747668/b1e97f62a6aa08f5dd6b953f0adb170b_skhsxr.jpg" alt="The Heritage Edit — ÀGÒ LUXE">
+  </div>
+</div>
+
+<div class="about-block" style="padding:20px 20px 8px; max-width:640px; margin:0 auto; text-align:center;">
+  <span class="about-block-label">Quality First</span>
+  <h2 data-content-key="quality_heading" style="font-size:1.5rem;">Quality First</h2>
+  <p data-content-key="quality_text" style="max-width:none; margin:0 auto;">From fabric sourcing to final stitch, every piece is checked before it ships. If something doesn't meet our standard, it doesn't go out the door.</p>
+</div>
+
+<div class="about-cta-wrap">
+  <a href="shop.html">Shop the Collection</a>
+</div>
+
+<footer>
+  <div class="footer-grid">
+    <div><h4>Shop</h4><ul>
+      <li><a href="shop.html?cat=women">Women</a></li>
+      <li><a href="shop.html?cat=men">Men</a></li>
+      <li><a href="jewelry.html">Jewelry</a></li>
+      <li><a href="shop.html?cat=sale">Sale</a></li>
+    </ul></div>
+    <div><h4>Help</h4><ul>
+      <li><a href="shipping.html">Shipping & Returns</a></li>
+      <li><a href="size-guide.html">Size Guide</a></li>
+      <li><a href="contact.html">Contact Us</a></li>
+      <li><a href="track-order.html">Track Order</a></li>
+    </ul></div>
+    <div><h4>Company</h4><ul>
+      <li><a href="about.html">About ÀGÒ LUXE</a></li>
+      <li><a href="terms.html">Terms of Service</a></li>
+      <li><a href="privacy.html">Privacy Policy</a></li>
+    </ul></div>
+    <div><h4>Connect</h4><ul>
+      <li><a href="#" class="toast-link" data-toast="Instagram link coming soon">Instagram</a></li>
+      <li><a href="#" class="toast-link" data-toast="WhatsApp link coming soon">WhatsApp</a></li>
+      <li><a href="#" class="toast-link" data-toast="TikTok link coming soon">TikTok</a></li>
+    </ul></div>
+  </div>
+  <div class="payment-section">
+    <h4>Accepted Payments</h4>
+    <div class="payment-row">
+      <img src="https://res.cloudinary.com/dikyzpmqi/image/upload/v1782905659/Paystack_idSL4BuSLF_1_ihbzpo.png" alt="Paystack">
+      <img src="https://res.cloudinary.com/dikyzpmqi/image/upload/v1782905701/Visa_Inc-_idDUM8TcN7_1_y6azxr.png" alt="Visa">
+      <img src="https://res.cloudinary.com/dikyzpmqi/image/upload/v1782905614/MClogo-c823e495c5cf455c89ddfb0e17fc7978_j60mjl.jpg" alt="Mastercard">
+      <img src="https://res.cloudinary.com/dikyzpmqi/image/upload/v1782905615/Verve_Image_nraa6w.png" alt="Verve">
+    </div>
+  </div>
+  <p class="copyright">© 2026 ÀGÒ LUXE. All rights reserved.</p>
+</footer>
+
+<nav class="bottom-nav">
+  <a href="index.html">
+    <svg viewBox="0 0 24 24"><path d="M3 11l9-8 9 8M5 10v10h14V10" stroke-width="1.6"/></svg>Home
+  </a>
+  <a href="categories.html">
+    <svg viewBox="0 0 24 24"><rect x="3" y="3" width="8" height="8" stroke-width="1.6"/><rect x="13" y="3" width="8" height="8" stroke-width="1.6"/><rect x="3" y="13" width="8" height="8" stroke-width="1.6"/><rect x="13" y="13" width="8" height="8" stroke-width="1.6"/></svg>Categories
+  </a>
+  <a href="cart.html">
+    <svg viewBox="0 0 24 24" stroke-width="1.6"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>Cart
+    <span class="badge" data-cart-badge>0</span>
+  </a>
+  <a href="wishlist.html">
+    <svg viewBox="0 0 24 24" stroke-width="1.6"><path d="M12 21s-7.5-4.6-10-9.1C.4 8.5 2 4.5 6 4c2.2-.3 4 1 6 3.5C14 5 15.8 3.7 18 4c4 .5 5.6 4.5 4 7.9C19.5 16.4 12 21 12 21z"/></svg>Wishlist
+    <span class="badge" data-wish-badge>0</span>
+  </a>
+  <a href="account.html">
+    <svg viewBox="0 0 24 24" stroke-width="1.6"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-6 8-6s8 2 8 6"/></svg>Account
+  </a>
+</nav>
+
+<div class="toast" id="toast"></div>
+
+<script>
+skelInit(document);
+if (window.__agoContentReady) window.__agoContentReady();
+
+const toast = document.getElementById('toast');
+document.addEventListener('click', (e)=>{
+  const link = e.target.closest('.toast-link');
+  if(!link) return;
+  e.preventDefault();
+  toast.textContent = link.dataset.toast || '';
+  toast.classList.add('show');
+  setTimeout(()=> toast.classList.remove('show'), 1800);
+});
+
+function skelInit(root){
+  (root||document).querySelectorAll('img.skel-img:not(.skel-bound)').forEach(img=>{
+    img.classList.add('skel-bound');
+    const container = img.closest('.skel-loading');
+    function done(){
+      img.classList.add('loaded');
+      if(container) container.classList.add('img-loaded');
+    }
+    if(img.complete && img.naturalWidth) done();
+    else { img.addEventListener('load', done); img.addEventListener('error', done); }
+  });
+}
+
+</script>
+</body>
+</html>

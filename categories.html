@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- ── FAVICON ── -->
+<link rel="icon" type="image/x-icon" href="favicon.ico">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="theme-color" content="#0A0A0A">
+
+<!-- ── SOCIAL PREVIEW (Open Graph + Twitter) ── -->
+<meta name="description" content="Explore women’s and men’s collections. Premium Nigerian fashion.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="ÀGÒ LUXE">
+<meta property="og:title" content="Categories — ÀGÒ LUXE">
+<meta property="og:description" content="Explore women’s and men’s collections. Premium Nigerian fashion.">
+<meta property="og:image" content="https://ago-luxeclothing.netlify.app/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Categories — ÀGÒ LUXE">
+<meta name="twitter:description" content="Explore women’s and men’s collections. Premium Nigerian fashion.">
+<meta name="twitter:image" content="https://ago-luxeclothing.netlify.app/og-image.png">
+
+<title>Categories — ÀGÒ LUXE</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Gentium+Plus:ital,wght@0,400;0,700;1,400;1,700&family=Newsreader:ital,wght@0,500;0,600;1,500&display=swap" rel="stylesheet">
+<script>window.__agoPageName = 'categories';</script>
+<script src="ago-cart.js?v=20260711b"></script>
+<style>
+/* ============ TOKENS (same system as homepage/shop) ============ */
+:root[data-theme="dark"]{
+  --bg:#0A0A0A; --surface:#141414; --text:#F9F9F9; --text-soft:#9A9A9A; --border:#222222;
+}
+:root[data-theme="light"]{
+  --bg:#F9F9F9; --surface:#FFFFFF; --text:#0A0A0A; --text-soft:#6B6B6B; --border:#E8E8E8;
+}
+:root{ --accent:#C084FC; --accent-deep:#8B5CF6; --gold:#E5B567; --teal:#6FCFC0; }
+
+/* ============ IMAGE SKELETON LOADER (poor-network loading state) ============ */
+@keyframes skel-shimmer{0%{background-position:-500px 0;}100%{background-position:500px 0;}}
+.skel-loading{background-image:linear-gradient(90deg, var(--surface) 25%, #2a2a2a 37%, var(--surface) 63%) !important; background-size:600px 100% !important; animation:skel-shimmer 1.4s linear infinite !important;}
+.skel-loading.img-loaded{animation:none !important; background-image:none !important;}
+img.skel-img{opacity:0 !important; transition:opacity .4s ease;}
+img.skel-img.loaded{opacity:1 !important;}
+
+*{box-sizing:border-box; margin:0; padding:0;}
+html,body{background:var(--bg); color:var(--text); font-family:'Newsreader',serif; font-weight:500; -webkit-tap-highlight-color:transparent;}
+img{display:block; max-width:100%;}
+a{color:inherit; text-decoration:none;}
+button{font-family:inherit; border:none; background:none; cursor:pointer; color:inherit;}
+h1,h2,h3{font-family:'Gentium Plus',serif; font-weight:700;}
+::selection{background:var(--accent); color:#0A0A0A;}
+body{padding-bottom:64px;}
+.eyebrow{font-family:'Newsreader',serif; font-style:italic; letter-spacing:.14em; text-transform:uppercase; font-size:.72rem; color:var(--accent);}
+
+/* ============ NAVBAR (shared) ============ */
+.navbar{position:sticky; top:0; z-index:50; background:var(--bg); border-bottom:1px solid var(--border); display:flex; align-items:center; gap:10px; padding:12px 14px;}
+.logo{font-family:'Cinzel Decorative',serif; font-style:italic; font-weight:700; font-size:1.15rem; color:var(--text); white-space:nowrap; letter-spacing:.02em;}
+.logo .mark{color:var(--accent);}
+.nav-search{flex:1; display:flex; align-items:center; gap:6px; background:var(--surface); border:1px solid var(--border); border-radius:20px; padding:7px 12px;}
+.nav-search input{background:none; border:none; outline:none; color:var(--text); font-family:'Newsreader',serif; font-size:.85rem; width:100%;}
+.nav-search svg{width:15px; height:15px; stroke:var(--text-soft); flex-shrink:0;}
+.desktop-nav-links{display:none;}
+
+/* ============ PAGE HEADER ============ */
+.cat-header{position:relative; padding:22px 16px 4px; text-align:center;}
+.cat-header h1{font-size:1.5rem; font-style:italic;}
+.cat-header .back-btn{position:absolute; left:16px; top:20px; display:flex; padding:4px;}
+.cat-header .back-btn svg{width:20px; height:20px; stroke:var(--text); fill:none; stroke-width:1.8;}
+
+/* ============ TABS ============ */
+.tab-row{display:flex; gap:0; padding:18px 16px 0; border-bottom:1px solid var(--border); margin-top:6px;}
+.tab-btn{flex:1; text-align:center; padding:10px 0 14px; font-size:.9rem; letter-spacing:.03em; text-transform:uppercase; color:var(--text-soft); position:relative;}
+.tab-btn.active{color:var(--text); font-weight:700;}
+.tab-btn.active::after{content:''; position:absolute; bottom:-1px; left:20%; right:20%; height:2px; background:var(--text);}
+
+/* ============ TILE LIST (mobile) ============ */
+.tile-list{display:flex; flex-direction:column; gap:10px;}
+.tile{display:flex; align-items:stretch; background:var(--surface); border:1px solid var(--border); overflow:hidden; height:170px;}
+.tile-text{flex:0 0 42%; display:flex; align-items:center; padding:0 16px; font-size:1.05rem; font-family:'Gentium Plus',serif; font-weight:700;}
+.tile-media{flex:1; position:relative; overflow:hidden;}
+.tile-media img{width:100%; height:100%; object-fit:cover; transition:transform .5s ease;}
+.tile:active .tile-media img{transform:scale(1.04);}
+
+/* ============ SWIPE CONTAINER ============ */
+.swipe-wrap{overflow:hidden; width:100%; position:relative;}
+.swipe-track{
+  display:flex;
+  width:200%;
+  transition:transform .35s cubic-bezier(0.25,0.46,0.45,0.94);
+  will-change:transform;
+}
+.swipe-track.no-transition{transition:none;}
+.tile-panel{
+  width:50%;
+  flex-shrink:0;
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+  padding:12px 6px;
+}
+
+/* ============ FOOTER / BOTTOM NAV (shared) ============ */
+footer{padding:36px 18px 20px;}
+.footer-grid{display:grid; grid-template-columns:1fr 1fr; gap:24px; margin-bottom:30px;}
+.footer-grid h4{font-size:.72rem; text-transform:uppercase; letter-spacing:.08em; color:var(--text-soft); margin-bottom:12px;}
+.footer-grid li{margin-bottom:8px; font-size:.8rem;}
+.payment-section{margin-bottom:16px;}
+.payment-section h4{font-size:.72rem; text-transform:uppercase; letter-spacing:.08em; color:var(--text-soft); margin-bottom:12px;}
+.payment-row{display:grid; grid-template-columns:1fr 1fr; gap:10px;}
+.payment-row img{width:100%; height:52px; background:#fff; border-radius:0; padding:10px 16px; object-fit:contain;}
+.copyright{font-size:.68rem; color:var(--text-soft); border-top:1px solid var(--border); padding-top:16px;}
+.bottom-nav{position:fixed; bottom:0; left:0; right:0; z-index:60; background:var(--bg); border-top:1px solid var(--border); display:flex; justify-content:space-around; padding:9px 0 11px;}
+.bottom-nav a{display:flex; flex-direction:column; align-items:center; gap:3px; font-size:.6rem; color:var(--text-soft); position:relative;}
+.bottom-nav a.active{color:var(--accent);}
+.bottom-nav svg{width:19px; height:19px; stroke:currentColor; fill:none; stroke-width:1.6;}
+.toast{position:fixed; bottom:78px; left:50%; transform:translateX(-50%) translateY(20px); background:var(--text); color:var(--bg); padding:10px 18px; border-radius:30px; font-size:.78rem; opacity:0; transition:all .3s ease; z-index:200; white-space:nowrap;}
+.toast.show{opacity:1; transform:translateX(-50%) translateY(0);}
+
+/* ============ DESKTOP — irregular bento grid ============ */
+@media (min-width:860px){
+  body{padding-bottom:0;}
+  .bottom-nav{display:none;}
+  .navbar{padding:16px 40px; flex-wrap:wrap;}
+  .desktop-nav-links{display:flex; gap:26px; width:100%; padding-top:14px; border-top:1px solid var(--border); margin-top:14px; justify-content:center;}
+  .desktop-nav-links a{font-size:.78rem; letter-spacing:.04em; text-transform:uppercase; color:var(--text-soft);}
+  .desktop-nav-links a:hover{color:var(--accent);}
+
+  .cat-header, .tab-row{max-width:1520px; margin-left:auto; margin-right:auto;}
+  .cat-header{padding-left:40px; padding-right:40px; text-align:left;}
+  .cat-header .back-btn{position:static; margin-bottom:10px;}
+  .tab-row{padding-left:40px; padding-right:40px; max-width:460px; margin-bottom:6px; margin-top:0;}
+
+  /* Desktop: show both panels side by side, no swipe needed */
+  .swipe-wrap{overflow:visible;}
+  .swipe-track{width:100%; display:block; transform:none !important; transition:none !important;}
+  .tile-panel{width:100%; display:none; padding:8px 40px 50px;}
+  .tile-panel.active{display:grid; grid-template-columns:repeat(4,1fr); grid-auto-rows:260px; gap:20px;}
+  .tile-list{display:contents;}
+
+  .tile{height:100%; flex-direction:column;}
+  .tile-text{flex:0 0 auto; padding:16px 20px 8px; font-size:1.2rem;}
+  .tile-media{flex:1;}
+
+  .tile:nth-child(1){grid-column:span 2; grid-row:span 2;}
+  .tile:nth-child(1) .tile-text{font-size:1.8rem; padding:24px 28px 10px;}
+  .tile:nth-child(2){grid-column:span 2; grid-row:span 1;}
+  .tile:nth-child(2) .tile-text{flex-direction:row; align-items:center; justify-content:space-between; padding:0 26px; font-size:1.3rem;}
+  .tile:nth-child(3){grid-column:span 1; grid-row:span 1;}
+  .tile:nth-child(4){grid-column:span 1; grid-row:span 1;}
+
+  .tile:hover .tile-media img{transform:scale(1.06);}
+  .payment-row{grid-template-columns:repeat(4,1fr); max-width:520px;}
+  footer{padding:48px 40px 24px;}
+  .footer-grid{grid-template-columns:repeat(4,1fr);}
+}
+</style>
+</head>
+<body>
+
+<!-- ============ NAVBAR ============ -->
+<header class="navbar navbar-search-only">
+  <div class="nav-search" id="navSearchTrigger">
+    <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7" stroke="currentColor" fill="none" stroke-width="1.8"/><path d="M21 21l-4.3-4.3" stroke="currentColor" stroke-width="1.8"/></svg>
+    <input type="text" placeholder="Search products…" readonly onclick="location.href='shop.html'">
+  </div>
+  <div class="desktop-nav-links">
+    <a href="index.html">Home</a>
+    <a href="categories.html" style="color:var(--accent)">Categories</a>
+    <a href="shop.html?cat=women">Women</a>
+    <a href="shop.html?cat=men">Men</a>
+    <a href="jewelry.html">Jewelry</a>
+    <a href="shop.html?cat=bags">Bags</a>
+    <a href="shop.html?cat=footwear">Footwear</a>
+    <a href="shop.html?cat=caps">Caps</a>
+    <a href="cart.html">Cart</a>
+    <a href="wishlist.html">Wishlist</a>
+    <a href="account.html" data-account-link>Account</a>
+  </div>
+</header>
+
+<!-- ============ PAGE HEADER ============ -->
+<div class="cat-header">
+  <button class="back-btn" data-back-fallback="index.html" aria-label="Back to Home">
+    <svg viewBox="0 0 24 24"><path d="M19 12H5M11 18l-6-6 6-6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </button>
+  <h1>Category</h1>
+</div>
+
+<!-- ============ TABS ============ -->
+<div class="tab-row" id="tabRow">
+  <button class="tab-btn active" data-tab="women">Women</button>
+  <button class="tab-btn" data-tab="men">Men</button>
+</div>
+
+<!-- ============ SWIPEABLE PANELS ============ -->
+<div class="swipe-wrap">
+  <div class="swipe-track" id="swipeTrack">
+
+    <!-- WOMEN PANEL -->
+    <div class="tile-panel active" id="panel-women">
+      <div class="tile-list">
+        <a class="tile" href="shop.html?cat=women">
+          <div class="tile-text">Clothing</div>
+          <div class="tile-media skel-loading"><img class="skel-img" data-content-key="tile_women_image" src="https://res.cloudinary.com/dikyzpmqi/image/upload/a4717273f93957977ed4198a0f52b078_myore8.jpg" alt="Women's Clothing"></div>
+        </a>
+        <a class="tile" href="jewelry.html">
+          <div class="tile-text">Jewelry</div>
+          <div class="tile-media skel-loading"><img class="skel-img" data-content-key="tile_jewelry_image" src="https://res.cloudinary.com/dikyzpmqi/image/upload/8697b624da24390350be1673c6ad1994_gsarkm.jpg" alt="Jewelry"></div>
+        </a>
+        <a class="tile" href="shop.html?cat=bags">
+          <div class="tile-text">Bags</div>
+          <div class="tile-media skel-loading"><img class="skel-img" data-content-key="tile_bags_image" src="https://res.cloudinary.com/dikyzpmqi/image/upload/0b3590da0a18fe757552f27405eef9a3_fu5awb.jpg" alt="Bags"></div>
+        </a>
+        <a class="tile" href="shop.html?cat=footwear&type=women">
+          <div class="tile-text">Footwear</div>
+          <div class="tile-media skel-loading"><img class="skel-img" data-content-key="tile_women_footwear_image" src="https://res.cloudinary.com/dikyzpmqi/image/upload/b21ceb33fa57616820d24eb1a8e225f6_n7mn5u.jpg" alt="Women's Footwear"></div>
+        </a>
+      </div>
+    </div>
+
+    <!-- MEN PANEL -->
+    <div class="tile-panel" id="panel-men">
+      <div class="tile-list">
+        <a class="tile" href="shop.html?cat=men">
+          <div class="tile-text">Clothing</div>
+          <div class="tile-media skel-loading"><img class="skel-img" data-content-key="tile_men_image" src="https://res.cloudinary.com/dikyzpmqi/image/upload/91668a9420efd00e415756d9f8b19d4d_vmnvvm.jpg" alt="Men's Clothing"></div>
+        </a>
+        <a class="tile" href="shop.html?cat=footwear&type=men">
+          <div class="tile-text">Footwear</div>
+          <div class="tile-media skel-loading"><img class="skel-img" data-content-key="tile_men_footwear_image" src="https://res.cloudinary.com/dikyzpmqi/image/upload/c863e0e4b1d595b9a9fa8b9914e07df2_yu79p8.jpg" alt="Men's Footwear"></div>
+        </a>
+        <a class="tile" href="shop.html?cat=caps">
+          <div class="tile-text">Caps</div>
+          <div class="tile-media skel-loading"><img class="skel-img" data-content-key="tile_caps_image" src="https://res.cloudinary.com/dikyzpmqi/image/upload/c1073dfcc6547802c5a464aad05c943c_ul1uj4.jpg" alt="Caps"></div>
+        </a>
+      </div>
+    </div>
+
+  </div><!-- end swipe-track -->
+</div><!-- end swipe-wrap -->
+
+<!-- ============ FOOTER ============ -->
+<footer>
+  <div class="footer-grid">
+    <div><h4>Shop</h4><ul>
+      <li><a href="shop.html?cat=women">Women</a></li>
+      <li><a href="shop.html?cat=men">Men</a></li>
+      <li><a href="jewelry.html">Jewelry</a></li>
+      <li><a href="shop.html?cat=sale">Sale</a></li>
+    </ul></div>
+    <div><h4>Help</h4><ul>
+      <li><a href="shipping.html">Shipping & Returns</a></li>
+      <li><a href="size-guide.html">Size Guide</a></li>
+      <li><a href="contact.html">Contact Us</a></li>
+      <li><a href="track-order.html">Track Order</a></li>
+    </ul></div>
+    <div><h4>Company</h4><ul>
+      <li><a href="about.html">About ÀGÒ LUXE</a></li>
+      <li><a href="terms.html">Terms of Service</a></li>
+      <li><a href="privacy.html">Privacy Policy</a></li>
+    </ul></div>
+    <div><h4>Connect</h4><ul>
+      <li><a href="#" class="toast-link" data-toast="Instagram link coming soon">Instagram</a></li>
+      <li><a href="#" class="toast-link" data-toast="WhatsApp link coming soon">WhatsApp</a></li>
+      <li><a href="#" class="toast-link" data-toast="TikTok link coming soon">TikTok</a></li>
+    </ul></div>
+  </div>
+  <div class="payment-section">
+    <h4>Accepted Payments</h4>
+    <div class="payment-row">
+      <img src="https://res.cloudinary.com/dikyzpmqi/image/upload/v1782905659/Paystack_idSL4BuSLF_1_ihbzpo.png" alt="Paystack">
+      <img src="https://res.cloudinary.com/dikyzpmqi/image/upload/v1782905701/Visa_Inc-_idDUM8TcN7_1_y6azxr.png" alt="Visa">
+      <img src="https://res.cloudinary.com/dikyzpmqi/image/upload/v1782905614/MClogo-c823e495c5cf455c89ddfb0e17fc7978_j60mjl.jpg" alt="Mastercard">
+      <img src="https://res.cloudinary.com/dikyzpmqi/image/upload/v1782905615/Verve_Image_nraa6w.png" alt="Verve">
+    </div>
+  </div>
+  <p class="copyright">© 2026 ÀGÒ LUXE. All rights reserved.</p>
+</footer>
+
+<!-- ============ BOTTOM NAV (mobile) ============ -->
+<nav class="bottom-nav">
+  <a href="index.html">
+    <svg viewBox="0 0 24 24"><path d="M3 11l9-8 9 8M5 10v10h14V10" stroke-width="1.6"/></svg>Home
+  </a>
+  <a href="categories.html" class="active">
+    <svg viewBox="0 0 24 24"><rect x="3" y="3" width="8" height="8" stroke-width="1.6"/><rect x="13" y="3" width="8" height="8" stroke-width="1.6"/><rect x="3" y="13" width="8" height="8" stroke-width="1.6"/><rect x="13" y="13" width="8" height="8" stroke-width="1.6"/></svg>Categories
+  </a>
+  <a href="cart.html" style="position:relative;">
+    <svg viewBox="0 0 24 24" stroke-width="1.6"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>Cart
+    <span class="badge" data-cart-badge>0</span>
+  </a>
+  <a href="wishlist.html" style="position:relative;">
+    <svg viewBox="0 0 24 24" stroke-width="1.6"><path d="M12 21s-7.5-4.6-10-9.1C.4 8.5 2 4.5 6 4c2.2-.3 4 1 6 3.5C14 5 15.8 3.7 18 4c4 .5 5.6 4.5 4 7.9C19.5 16.4 12 21 12 21z"/></svg>Wishlist
+    <span class="badge" data-wish-badge>0</span>
+  </a>
+  <a href="account.html">
+    <svg viewBox="0 0 24 24" stroke-width="1.6"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-6 8-6s8 2 8 6"/></svg>Account
+  </a>
+</nav>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ============ SKELETON ============ */
+function skelInit(root){
+  (root||document).querySelectorAll('img.skel-img:not(.skel-bound)').forEach(img=>{
+    img.classList.add('skel-bound');
+    const container = img.closest('.skel-loading');
+    function done(){ img.classList.add('loaded'); if(container) container.classList.add('img-loaded'); }
+    if(img.complete && img.naturalWidth) done();
+    else { img.addEventListener('load', done); img.addEventListener('error', done); }
+  });
+}
+skelInit(document);
+if (window.__agoContentReady) window.__agoContentReady();
+
+/* ============ SWIPE + TAB LOGIC ============ */
+const track    = document.getElementById('swipeTrack');
+const tabs     = document.querySelectorAll('.tab-btn');
+const panels   = ['women','men'];
+let current    = 0; // 0 = women, 1 = men
+const vw       = () => window.innerWidth;
+
+function goTo(idx, animated = true) {
+  if (!animated) track.classList.add('no-transition');
+  track.style.transform = `translateX(-${idx * 50}%)`;
+  if (!animated) requestAnimationFrame(() => track.classList.remove('no-transition'));
+
+  // Sync tab underline
+  tabs.forEach((t, i) => t.classList.toggle('active', i === idx));
+
+  // Sync active class on panels (for desktop)
+  document.querySelectorAll('.tile-panel').forEach((p, i) => p.classList.toggle('active', i === idx));
+
+  current = idx;
+}
+
+// Tab clicks
+document.getElementById('tabRow').addEventListener('click', e => {
+  const btn = e.target.closest('.tab-btn');
+  if (!btn) return;
+  const idx = panels.indexOf(btn.dataset.tab);
+  if (idx !== -1) goTo(idx);
+});
+
+// Touch swipe
+let touchStartX = 0, touchStartY = 0, touchDeltaX = 0, isSwiping = false, isScrolling = false;
+
+track.addEventListener('touchstart', e => {
+  touchStartX  = e.touches[0].clientX;
+  touchStartY  = e.touches[0].clientY;
+  touchDeltaX  = 0;
+  isSwiping    = false;
+  isScrolling  = false;
+}, { passive: true });
+
+track.addEventListener('touchmove', e => {
+  const dx = e.touches[0].clientX - touchStartX;
+  const dy = e.touches[0].clientY - touchStartY;
+
+  // Determine intent after first movement
+  if (!isSwiping && !isScrolling) {
+    if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 8) {
+      isSwiping = true;
+    } else if (Math.abs(dy) > Math.abs(dx)) {
+      isScrolling = true;
+    }
+  }
+
+  if (!isSwiping) return;
+  e.preventDefault(); // prevent vertical scroll during horizontal swipe
+
+  touchDeltaX = dx;
+  const baseOffset = current * 50; // percent
+  const dragOffset = (dx / vw()) * 50; // convert px to percent of track
+  track.classList.add('no-transition');
+  track.style.transform = `translateX(calc(-${baseOffset}% + ${dx}px))`;
+}, { passive: false });
+
+track.addEventListener('touchend', () => {
+  track.classList.remove('no-transition');
+  if (!isSwiping) return;
+
+  const threshold = vw() * 0.2; // 20% of screen width
+  if (touchDeltaX < -threshold && current < panels.length - 1) {
+    goTo(current + 1); // swipe left → next
+  } else if (touchDeltaX > threshold && current > 0) {
+    goTo(current - 1); // swipe right → prev
+  } else {
+    goTo(current); // snap back
+  }
+  isSwiping = false;
+});
+
+/* ============ TOAST ============ */
+const toast = document.getElementById('toast');
+document.addEventListener('click', e => {
+  const link = e.target.closest('.toast-link');
+  if (!link) return;
+  e.preventDefault();
+  toast.textContent = link.dataset.toast || '';
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 1800);
+});
+
+/* ============ BADGES (ago-cart.js handles this but as fallback) ============ */
+const cart = JSON.parse(localStorage.getItem(agoCartKey()) || '[]');
+const wish = JSON.parse(localStorage.getItem(agoWishKey()) || '[]');
+document.querySelectorAll('[data-cart-badge]').forEach(el => el.textContent = cart.reduce((s,i)=>s+(i.qty||1),0));
+document.querySelectorAll('[data-wish-badge]').forEach(el => el.textContent = wish.length);
+</script>
+</body>
+</html>

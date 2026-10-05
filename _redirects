@@ -1,0 +1,26 @@
+# ÀGÒ LUXE — clean URLs (no .html extension visible)
+# Netlify serves the real file but the browser's address bar shows
+# the clean path instead. Order matters: more specific rules first.
+
+/shop              /shop.html               200
+/cart              /cart.html               200
+/checkout          /checkout.html           200
+/account           /account.html            200
+/admin             /admin.html              200
+/product           /product.html            200
+/categories        /categories.html         200
+/jewelry           /jewelry.html            200
+/wishlist          /wishlist.html           200
+/about             /about.html              200
+/contact           /contact.html            200
+/careers           /careers.html            200
+/our-craft         /our-craft.html          200
+/privacy           /privacy.html            200
+/terms             /terms.html              200
+/shipping          /shipping.html           200
+/size-guide        /size-guide.html         200
+/track-order       /track-order.html        200
+/coupons-and-gifts /coupons-and-gifts.html  200
+
+# Real, existing site behaviors — preserved exactly as before
+/                  /index.html              200

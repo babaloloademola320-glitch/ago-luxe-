@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- ── FAVICON ── -->
+<link rel="icon" type="image/x-icon" href="favicon.ico">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="theme-color" content="#0A0A0A">
+
+<!-- ── SOCIAL PREVIEW (Open Graph + Twitter) ── -->
+<meta name="description" content="Premium Nigerian men & women ready-to-wear.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="ÀGÒ LUXE">
+<meta property="og:title" content="Your Cart — ÀGÒ LUXE">
+<meta property="og:description" content="Premium Nigerian men & women ready-to-wear.">
+<meta property="og:image" content="https://ago-luxeclothing.netlify.app/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Your Cart — ÀGÒ LUXE">
+<meta name="twitter:description" content="Premium Nigerian men & women ready-to-wear.">
+<meta name="twitter:image" content="https://ago-luxeclothing.netlify.app/og-image.png">
+
+<title>Your Cart — ÀGÒ LUXE</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Gentium+Plus:ital,wght@0,400;0,700;1,400;1,700&family=Newsreader:ital,wght@0,500;0,600;1,500&display=swap" rel="stylesheet">
+<script>window.__agoPageName = 'cart';</script>
+<script src="ago-cart.js?v=20260724g"></script>
+<script src="install-prompt.js?v=20260722"></script>
+<style>
+/* ============ TOKENS ============ */
+:root[data-theme="dark"]{
+  --bg:#0A0A0A; --surface:#141414; --text:#F9F9F9; --text-soft:#9A9A9A; --border:#222222;
+}
+:root[data-theme="light"]{
+  --bg:#F9F9F9; --surface:#FFFFFF; --text:#0A0A0A; --text-soft:#6B6B6B; --border:#E8E8E8;
+}
+:root{ --accent:#C084FC; --accent-deep:#8B5CF6; }
+
+*{box-sizing:border-box; margin:0; padding:0;}
+html,body{background:var(--bg); color:var(--text); font-family:'Newsreader',serif; font-weight:500; -webkit-tap-highlight-color:transparent;}
+@keyframes page-fade-in{from{opacity:0;} to{opacity:1;}}
+body{animation:page-fade-in .25s ease; padding-bottom:64px;}
+img{display:block; max-width:100%;}
+a{color:inherit; text-decoration:none;}
+button{font-family:inherit; border:none; background:none; cursor:pointer; color:inherit;}
+ul{list-style:none;}
+h1,h2,h3{font-family:'Gentium Plus',serif; font-weight:700;}
+::selection{background:var(--accent); color:#0A0A0A;}
+
+/* ============ SKELETON ============ */
+@keyframes skel-shimmer{0%{background-position:-500px 0;}100%{background-position:500px 0;}}
+.skel-loading{background-image:linear-gradient(90deg,var(--surface) 25%,#2a2a2a 37%,var(--surface) 63%) !important; background-size:600px 100% !important; animation:skel-shimmer 1.4s linear infinite !important;}
+.skel-loading.img-loaded{animation:none !important; background-image:none !important;}
+img.skel-img{opacity:0 !important; transition:opacity .4s ease;}
+img.skel-img.loaded{opacity:1 !important;}
+
+/* ============ NAVBAR ============ */
+.navbar{position:sticky; top:0; z-index:50; background:var(--bg); border-bottom:1px solid var(--border); display:flex; align-items:center; gap:10px; padding:12px 14px;}
+.logo{font-family:'Cinzel Decorative',serif; font-style:italic; font-weight:700; font-size:1.15rem; color:var(--text); white-space:nowrap; letter-spacing:.02em;}
+.logo .mark{color:var(--accent);}
+.nav-title{flex:1; text-align:center; font-family:'Gentium Plus',serif; font-style:italic; font-size:1rem; color:var(--text-soft);}
+.back-btn{display:flex; padding:4px;}
+.back-btn svg{width:20px; height:20px; stroke:var(--text); fill:none; stroke-width:1.8;}
+.nav-icons{display:flex; align-items:center; gap:14px;}
+.nav-icons button{position:relative; display:flex;}
+.nav-icons svg{width:20px; height:20px; stroke:var(--text); fill:none; stroke-width:1.6;}
+.badge{position:absolute; top:-6px; right:-7px; background:var(--accent); color:#0A0A0A; font-size:.6rem; font-weight:700; width:15px; height:15px; border-radius:50%; display:flex; align-items:center; justify-content:center;}
+.desktop-nav-links{display:none;}
+
+/* ============ PAGE HEADER ============ */
+.cart-header{padding:22px 16px 4px;}
+.cart-header .eyebrow{display:block; font-family:'Newsreader',serif; font-style:italic; letter-spacing:.14em; text-transform:uppercase; font-size:.72rem; color:var(--accent); margin-bottom:6px;}
+.cart-header h1{font-size:1.7rem; font-style:italic;}
+.cart-count{font-size:.78rem; color:var(--text-soft); margin-top:4px;}
+
+/* ============ CART LAYOUT ============ */
+.cart-wrap{padding:16px;}
+.cart-empty{text-align:center; padding:80px 20px; grid-column:1 / -1;} /* spans the full grid width on desktop instead of sitting in the left 1fr column only — that column-1-only placement was the actual cause of the left-aligned-instead-of-centered look */
+.cart-empty svg{width:48px; height:48px; stroke:var(--text-soft); fill:none; stroke-width:1.4; margin:0 auto 16px;}
+.cart-empty h2{font-size:1.2rem; font-style:italic; margin-bottom:8px;}
+.cart-empty p{font-size:.82rem; color:var(--text-soft); margin-bottom:24px;}
+.cart-empty a{display:inline-block; padding:12px 28px; background:var(--accent); color:#0A0A0A; font-size:.76rem; font-weight:700; letter-spacing:.06em; text-transform:uppercase;}
+
+/* ============ CART ITEM ============ */
+.cart-items{display:flex; flex-direction:column; gap:0;}
+.cart-item{display:flex; gap:12px; padding:16px 0; border-bottom:1px solid var(--border); align-items:flex-start;}
+.cart-item-img{width:80px; height:100px; flex-shrink:0; background:var(--surface); overflow:hidden; border-radius:2px;}
+.cart-item-img img{width:100%; height:100%; object-fit:cover;}
+.cart-item-info{flex:1; min-width:0;}
+.cart-item-name{font-family:'Gentium Plus',serif; font-size:.95rem; line-height:1.3; margin-bottom:4px;}
+.cart-item-meta{font-size:.72rem; color:var(--text-soft); margin-bottom:10px;}
+.cart-item-price{font-size:.88rem; font-weight:600; color:var(--text); margin-bottom:10px;}
+.cart-item-price .was{color:var(--text-soft); text-decoration:line-through; font-size:.75rem; font-weight:400; margin-left:6px;}
+
+/* ============ QTY STEPPER ============ */
+.qty-row{display:flex; align-items:center; justify-content:space-between;}
+.qty-stepper{display:inline-flex; align-items:center; border:1px solid var(--border); border-radius:2px; overflow:hidden;}
+.qty-stepper button{width:32px; height:32px; font-size:1rem; font-weight:600; color:var(--text-soft); display:flex; align-items:center; justify-content:center; transition:background .15s;}
+.qty-stepper button:hover{background:var(--surface);}
+.qty-stepper .qty-val{width:32px; text-align:center; font-size:.82rem; font-weight:600;}
+.remove-btn{font-size:.7rem; color:var(--text-soft); letter-spacing:.04em; text-transform:uppercase; border-bottom:1px solid var(--border); padding-bottom:1px; transition:color .2s;}
+.remove-btn:hover{color:#FF6B6B; border-color:#FF6B6B;}
+
+/* ============ COUPON ============ */
+.coupon-wrap{margin:20px 0; border:1px solid var(--border); display:flex;}
+.coupon-input{flex:1; background:none; border:none; outline:none; padding:12px 14px; font-family:'Newsreader',serif; font-size:.85rem; color:var(--text);}
+.coupon-input::placeholder{color:var(--text-soft);}
+.coupon-btn{padding:0 16px; background:var(--surface); font-size:.72rem; letter-spacing:.06em; text-transform:uppercase; font-weight:700; color:var(--text); border-left:1px solid var(--border); transition:background .2s;}
+.coupon-btn:hover{background:var(--accent); color:#0A0A0A;}
+.coupon-msg{font-size:.76rem; margin-top:6px; padding:0 2px;}
+.coupon-msg.success{color:#6FCF97;}
+.coupon-msg.error{color:#FF6B6B;}
+
+/* ============ ORDER SUMMARY ============ */
+.summary-box{background:var(--surface); border:1px solid var(--border); padding:20px; margin-top:8px; border-radius:2px;}
+.summary-box h3{font-family:'Gentium Plus',serif; font-style:italic; font-size:1rem; margin-bottom:16px;}
+.summary-row{display:flex; justify-content:space-between; align-items:center; font-size:.82rem; margin-bottom:10px;}
+.summary-row.total{font-size:.95rem; font-weight:700; border-top:1px solid var(--border); padding-top:12px; margin-top:4px;}
+.summary-row span:last-child{font-weight:600;}
+.summary-row .discount{color:#6FCF97;}
+.checkout-btn{width:100%; margin-top:16px; padding:15px; background:var(--accent); color:#0A0A0A; font-family:'Newsreader',serif; font-size:.82rem; font-weight:700; letter-spacing:.06em; text-transform:uppercase; text-align:center; display:block; transition:background .2s, transform .15s;}
+.checkout-btn:hover{background:var(--accent-deep); color:#fff;}
+.checkout-btn:active{transform:scale(.98);}
+.continue-link{display:block; text-align:center; margin-top:14px; font-size:.76rem; color:var(--text-soft); letter-spacing:.04em; text-transform:uppercase; border-bottom:1px solid var(--border); padding-bottom:2px; width:fit-content; margin-left:auto; margin-right:auto;}
+
+/* ============ RECENTLY VIEWED ============ */
+.recently-viewed{margin-top:32px;}
+.recently-viewed h3{font-family:'Gentium Plus',serif; font-style:italic; font-size:1rem; margin-bottom:14px; padding:0 0 10px; border-bottom:1px solid var(--border);}
+.rv-scroll{display:flex; gap:10px; overflow-x:auto; scrollbar-width:none; padding-bottom:4px;}
+.rv-scroll::-webkit-scrollbar{display:none;}
+.rv-card{flex-shrink:0; width:120px;}
+.rv-img{width:120px; height:150px; background:var(--surface); overflow:hidden; border-radius:2px; margin-bottom:6px;}
+.rv-img img{width:100%; height:100%; object-fit:cover;}
+.rv-name{font-size:.72rem; line-height:1.3; margin-bottom:3px;}
+.rv-price{font-size:.72rem; color:var(--text-soft);}
+
+/* ============ TOAST ============ */
+.toast{position:fixed; bottom:78px; left:50%; transform:translateX(-50%) translateY(20px); background:var(--text); color:var(--bg); padding:10px 18px; border-radius:30px; font-size:.78rem; opacity:0; transition:all .3s ease; z-index:200; white-space:nowrap; pointer-events:none;}
+.toast.show{opacity:1; transform:translateX(-50%) translateY(0);}
+
+/* ============ CONFIRM MODAL ============ */
+.confirm-overlay{
+  position:fixed; inset:0; z-index:300;
+  background:rgba(10,10,10,.75);
+  backdrop-filter:blur(4px);
+  display:flex; align-items:center; justify-content:center;
+  opacity:0; pointer-events:none;
+  transition:opacity .25s ease;
+  padding:24px;
+}
+.confirm-overlay.open{opacity:1; pointer-events:all;}
+.confirm-box{
+  background:var(--surface);
+  border:1px solid var(--border);
+  padding:28px 24px 22px;
+  max-width:340px; width:100%;
+  text-align:center;
+  transform:translateY(16px) scale(.97);
+  transition:transform .25s cubic-bezier(0.25,0.46,0.45,0.94);
+}
+.confirm-overlay.open .confirm-box{transform:translateY(0) scale(1);}
+.confirm-box .c-icon{
+  width:44px; height:44px; margin:0 auto 14px;
+  border:1px solid var(--border); border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+}
+.confirm-box .c-icon svg{width:20px; height:20px; stroke:var(--accent); fill:none; stroke-width:1.6;}
+.confirm-box h3{font-family:'Gentium Plus',serif; font-style:italic; font-size:1.05rem; margin-bottom:6px;}
+.confirm-box p{font-size:.8rem; color:var(--text-soft); line-height:1.5; margin-bottom:20px;}
+.confirm-box p strong{color:var(--text); font-weight:600;}
+.confirm-actions{display:flex; gap:10px;}
+.confirm-actions button{
+  flex:1; padding:12px; font-size:.72rem; font-weight:700;
+  letter-spacing:.06em; text-transform:uppercase;
+  font-family:'Newsreader',serif; cursor:pointer;
+  transition:all .2s;
+}
+.c-cancel{background:none; border:1px solid var(--border); color:var(--text);}
+.c-cancel:hover{border-color:var(--text-soft);}
+.c-confirm{background:#B3261E; border:1px solid #B3261E; color:#fff;}
+.c-confirm:hover{background:#8f1d17;}
+
+/* ============ FOOTER ============ */
+footer{padding:36px 18px 20px;}
+.footer-grid{display:grid; grid-template-columns:1fr 1fr; gap:24px; margin-bottom:30px;}
+.footer-grid h4{font-size:.72rem; text-transform:uppercase; letter-spacing:.08em; color:var(--text-soft); margin-bottom:12px;}
+.footer-grid li{margin-bottom:8px; font-size:.8rem;}
+.payment-section{margin-bottom:16px;}
+.payment-section h4{font-size:.72rem; text-transform:uppercase; letter-spacing:.08em; color:var(--text-soft); margin-bottom:12px;}
+.payment-row{display:grid; grid-template-columns:1fr 1fr; gap:10px;}
+.payment-row img{width:100%; height:52px; background:#fff; padding:10px 16px; object-fit:contain;}
+.copyright{font-size:.68rem; color:var(--text-soft); border-top:1px solid var(--border); padding-top:16px;}
+
+/* ============ BOTTOM NAV ============ */
+.bottom-nav{position:fixed; bottom:0; left:0; right:0; z-index:60; background:var(--bg); border-top:1px solid var(--border); display:flex; justify-content:space-around; padding:9px 0 11px;}
+.bottom-nav a{display:flex; flex-direction:column; align-items:center; gap:3px; font-size:.6rem; color:var(--text-soft); position:relative;}
+.bottom-nav a.active{color:var(--accent);}
+.bottom-nav svg{width:19px; height:19px; stroke:currentColor; fill:none; stroke-width:1.6;}
+.bottom-nav .badge{position:absolute; top:-4px; right:-8px; background:var(--accent); color:#0A0A0A; font-size:.6rem; font-weight:700; width:15px; height:15px; border-radius:50%; display:flex; align-items:center; justify-content:center;}
+
+/* ============ DESKTOP ============ */
+@media(min-width:860px){
+  body{padding-bottom:0;}
+  .bottom-nav{display:none;}
+  .back-btn, .nav-title{display:none;}
+  .navbar{padding:16px 40px; flex-wrap:wrap;}
+  .logo{font-size:1.25rem;}
+  .desktop-nav-links{display:flex; gap:26px; width:100%; padding-top:14px; border-top:1px solid var(--border); margin-top:14px; justify-content:center;}
+  .desktop-nav-links a{font-size:.78rem; letter-spacing:.04em; text-transform:uppercase; color:var(--text-soft);}
+  .desktop-nav-links a:hover{color:var(--accent);}
+  .desktop-nav-links a.active{color:var(--accent);}
+  .cart-wrap{max-width:1100px; margin:0 auto; padding:24px 40px; display:grid; grid-template-columns:1fr 360px; gap:40px; align-items:start;}
+  .cart-header{max-width:1100px; margin:0 auto; padding:24px 40px 4px;}
+  .cart-main{min-width:0;}
+  .payment-row{grid-template-columns:repeat(4,1fr); max-width:520px;}
+}
+</style>
+</head>
+<body>
+
+
+<!-- ============ NAVBAR ============ -->
+<header class="navbar">
+  <button class="back-btn" data-back-fallback="index.html" aria-label="Back">
+    <svg viewBox="0 0 24 24"><path d="M19 12H5M11 18l-6-6 6-6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </button>
+  <a href="index.html" class="logo"><span class="mark">ÀGÒ</span> LUXE</a>
+  <div class="nav-title">My Cart</div>
+  <div class="desktop-nav-links">
+    <a href="index.html">Home</a>
+    <a href="categories.html">Categories</a>
+    <a href="shop.html?cat=women">Women</a>
+    <a href="shop.html?cat=men">Men</a>
+    <a href="jewelry.html">Jewelry</a>
+    <a href="shop.html?cat=bags">Bags</a>
+    <a href="shop.html?cat=footwear">Footwear</a>
+    <a href="shop.html?cat=caps">Caps</a>
+    <a href="cart.html" class="active">Cart</a>
+    <a href="wishlist.html">Wishlist</a>
+    <a href="account.html" data-account-link>Account</a>
+  </div>
+  <div class="nav-icons">
+    <a href="wishlist.html" style="display:flex; position:relative;">
+      <svg viewBox="0 0 24 24"><path d="M12 21s-7.5-4.6-10-9.1C.4 8.5 2 4.5 6 4c2.2-.3 4 1 6 3.5C14 5 15.8 3.7 18 4c4 .5 5.6 4.5 4 7.9C19.5 16.4 12 21 12 21z"/></svg>
+      <span class="badge" id="wishBadgeNav">0</span>
+    </a>
+  </div>
+</header>
+
+<!-- ============ PAGE HEADER ============ -->
+<div class="cart-header">
+  <span class="eyebrow">Shopping Bag</span>
+  <h1>Your Cart</h1>
+  <p class="cart-count" id="cartCount"></p>
+</div>
+
+<!-- ============ CART WRAP ============ -->
+<div class="cart-wrap" id="cartWrap">
+  <!-- populated by JS -->
+</div>
+
+<!-- ============ BOTTOM NAV ============ -->
+<nav class="bottom-nav">
+  <a href="index.html">
+    <svg viewBox="0 0 24 24"><path d="M3 11l9-8 9 8M5 10v10h14V10" stroke-width="1.6"/></svg>Home
+  </a>
+  <a href="categories.html">
+    <svg viewBox="0 0 24 24"><rect x="3" y="3" width="8" height="8" stroke-width="1.6"/><rect x="13" y="3" width="8" height="8" stroke-width="1.6"/><rect x="3" y="13" width="8" height="8" stroke-width="1.6"/><rect x="13" y="13" width="8" height="8" stroke-width="1.6"/></svg>Categories
+  </a>
+  <a href="cart.html" class="active">
+    <svg viewBox="0 0 24 24" stroke-width="1.6"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>Cart
+    <span class="badge" id="cartBadgeNav">0</span>
+  </a>
+  <a href="wishlist.html">
+    <svg viewBox="0 0 24 24" stroke-width="1.6"><path d="M12 21s-7.5-4.6-10-9.1C.4 8.5 2 4.5 6 4c2.2-.3 4 1 6 3.5C14 5 15.8 3.7 18 4c4 .5 5.6 4.5 4 7.9C19.5 16.4 12 21 12 21z"/></svg>Wishlist
+    <span class="badge" id="wishBadgeNav2">0</span>
+  </a>
+  <a href="account.html">
+    <svg viewBox="0 0 24 24" stroke-width="1.6"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-6 8-6s8 2 8 6"/></svg>Account
+  </a>
+</nav>
+
+<!-- ============ CONFIRM REMOVE MODAL ============ -->
+<div class="confirm-overlay" id="confirmOverlay">
+  <div class="confirm-box">
+    <div class="c-icon">
+      <svg viewBox="0 0 24 24"><path d="M3 6h18M8 6V4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2m3 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
+    </div>
+    <h3>Remove from cart?</h3>
+    <p id="confirmMsg">Remove <strong></strong> from your bag?</p>
+    <div class="confirm-actions">
+      <button class="c-cancel" id="confirmCancel">Keep It</button>
+      <button class="c-confirm" id="confirmYes">Remove</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ============ HELPERS ============ */
+const fmt = (n) => '₦' + Number(n).toLocaleString('en-NG');
+// Prevents quotes/apostrophes in product names from breaking data-* attributes
+const escAttr = (s) => String(s ?? '').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+const slugify = (s) => (s||'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,'');
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(t._t);
+  t._t = setTimeout(() => t.classList.remove('show'), 2200);
+}
+
+function skelInit(root) {
+  (root||document).querySelectorAll('img.skel-img:not(.skel-bound)').forEach(img => {
+    img.classList.add('skel-bound');
+    const c = img.closest('.skel-loading');
+    const done = () => { img.classList.add('loaded'); if(c) c.classList.add('img-loaded'); };
+    if(img.complete && img.naturalWidth) done();
+    else { img.addEventListener('load', done); img.addEventListener('error', done); }
+  });
+}
+
+/* ============ CART STATE ============ */
+let cart = JSON.parse(localStorage.getItem(agoCartKey()) || '[]');
+
+function saveCart() {
+  localStorage.setItem(agoCartKey(), JSON.stringify(cart));
+  const total = cart.reduce((s,i) => s + (i.qty||1), 0);
+  document.getElementById('cartBadgeNav').textContent = total;
+  document.getElementById('cartCount').textContent = `${total} item${total===1?'':'s'}`;
+}
+
+function removeItem(name, index, size = null) {
+  const before = cart.length;
+  // REAL, PERMANENT FIX: now uses the same, single, shared
+  // agoFindCartLine/agoFilterOutCartLine utility from ago-cart.js
+  // that AgoCart.remove() itself uses — the real countermeasure, so
+  // this page's own, separate cart logic can never silently drift
+  // out of sync with the shared one again.
+  const removedItem = (typeof agoFindCartLine === 'function')
+    ? agoFindCartLine(cart, name, size)
+    : (size ? cart.find(i => i.name === name && (i.size || null) === size) : cart.find(i => i.name === name));
+  cart = (typeof agoFilterOutCartLine === 'function')
+    ? agoFilterOutCartLine(cart, name, size)
+    : (size ? cart.filter(i => !(i.name === name && (i.size || null) === size)) : cart.filter(i => i.name !== name));
+  // Safety net: if nothing was removed (empty/corrupted name, or a
+  // name that no longer matches anything), fall back to removing by
+  // its exact position in the array so the item can't get stuck forever.
+  if (cart.length === before && typeof index === 'number' && cart[index] !== undefined) {
+    cart.splice(index, 1);
+  }
+  saveCart();
+  renderCart();
+  showToast('Item removed');
+
+  if (typeof agoAddTombstone === 'function') agoAddTombstone(name);
+  if (typeof AgoCart !== 'undefined' && AgoCart._syncToCloudByName) {
+    AgoCart._syncToCloudByName(name, 0, 0, 'delete', removedItem?.size || size || null);
+  }
+}
+
+function updateQty(name, delta, size = null) {
+  // REAL, PERMANENT FIX: same real, shared utility used here too.
+  const item = (typeof agoFindCartLine === 'function')
+    ? agoFindCartLine(cart, name, size)
+    : (size ? cart.find(i => i.name === name && (i.size || null) === size) : cart.find(i => i.name === name));
+  if (!item) return;
+  const newQty = (item.qty||1) + delta;
+  if (newQty <= 0) { askRemove(name, cart.indexOf(item), item.size); return; }
+  item.qty = newQty;
+  saveCart();
+
+  // Push the new quantity to the cloud too — this page manages cart
+  // state independently of AgoCart's own add/remove methods, so
+  // without this the cloud's qty would silently go stale every time
+  // someone adjusts quantity from the Cart page specifically.
+  if (item.slug && typeof AgoCart !== 'undefined' && AgoCart._syncToCloud) {
+    AgoCart._syncToCloud(item.slug, delta, newQty, 'upsert', item.size || null);
+  }
+
+  // Real fix: a coupon's discount was staying applied even after the
+  // cart's subtotal dropped below that coupon's minimum order — the
+  // discount value was cached once and never re-checked. Now it's
+  // re-validated against Supabase every time quantity changes.
+  if (appliedCoupon) {
+    const newSubtotal = cart.reduce((s,i) => s + (i.price||0) * (i.qty||1), 0);
+    applyCoupon(appliedCoupon.code, newSubtotal).then(result => {
+      const msgEl = document.getElementById('couponMsg');
+      if (result.valid) {
+        appliedCoupon = { code: result.code, discount: result.discount };
+        if (msgEl) { msgEl.textContent = result.msg; msgEl.className = 'coupon-msg success'; }
+      } else {
+        appliedCoupon = null;
+        if (msgEl) { msgEl.textContent = 'Coupon removed — ' + result.msg.toLowerCase(); msgEl.className = 'coupon-msg error'; }
+      }
+      renderCart();
+    });
+  } else {
+    renderCart();
+  }
+}
+
+/* ============ COUPON STATE ============ */
+let appliedCoupon = null;
+/* ============ SUPABASE — enrich via REST (no CDN library) ============ */
+const SB_URL = 'https://drjebroujarpugwadido.supabase.co/rest/v1';
+const SB_KEY = 'sb_publishable_0mAkL4aIqXf1nm9zlQF8Fg_yPyt-F71';
+
+/* Real coupon validation against the actual coupons table — this
+   used to be a hardcoded local object (COUPONS) that had nothing to
+   do with what admin actually creates in the dashboard. Now matches
+   checkout.html's real implementation: checks is_active, expiry,
+   max uses, and minimum order against genuine database rows. */
+async function applyCoupon(code, subtotal) {
+  try {
+    const res = await fetch(SB_URL + '/coupons?select=*&code=eq.' + encodeURIComponent(code.toUpperCase()) + '&is_active=eq.true&limit=1', {
+      headers: { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY }
+    });
+    if (!res.ok) throw new Error('net');
+    const rows = await res.json();
+    if (!rows.length) return { valid:false, msg:'Invalid coupon code' };
+    const c = rows[0];
+    if (c.expires_at && new Date(c.expires_at) < new Date()) return { valid:false, msg:'Coupon has expired' };
+    if (c.max_uses && c.used_count >= c.max_uses) return { valid:false, msg:'Coupon limit reached' };
+    if (subtotal < parseFloat(c.min_order||0)) return { valid:false, msg:'Minimum order is ' + fmt(c.min_order) };
+    const discount = c.type === 'percent'
+      ? Math.round(subtotal * parseFloat(c.value) / 100)
+      : parseFloat(c.value);
+    return { valid:true, code: c.code, discount, msg: fmt(discount) + ' discount applied!' };
+  } catch(e){
+    return { valid:false, msg:'Could not verify coupon — check your connection' };
+  }
+}
+
+async function enrichCartWithImages() {
+  if (!cart.length) return;
+  try {
+    const cols = 'name,slug,price,sale_price,images';
+    const list = 'in.(' + cart.map(i => '"' + String(i.name).replace(/"/g,'\\"') + '"').join(',') + ')';
+    const res  = await fetch(SB_URL + '/products?select=' + encodeURIComponent(cols) + '&name=' + encodeURIComponent(list), {
+      headers: { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY }
+    });
+    if (!res.ok) throw new Error('REST ' + res.status);
+    const data = await res.json();
+
+    if (data?.length) {
+      data.forEach(p => {
+        const item = cart.find(i => i.name === p.name);
+        if (item) {
+          const imgs = Array.isArray(p.images) ? p.images : [];
+          item.img   = imgs[0]?.url || item.img || '';
+          item.price = parseFloat(p.sale_price || p.price) || 0;
+          item.was   = p.sale_price ? parseFloat(p.price) : null;
+          item.slug  = p.slug;
+        }
+      });
+      // Save enriched prices back to localStorage
+      localStorage.setItem(agoCartKey(), JSON.stringify(cart));
+    }
+  } catch(e) {
+    console.warn('Could not enrich cart from Supabase:', e);
+  }
+}
+
+/* ============ RENDER ============ */
+function renderCart() {
+  const wrap = document.getElementById('cartWrap');
+  const wishCount = JSON.parse(localStorage.getItem(agoWishKey()) || '[]').length;
+  document.getElementById('wishBadgeNav').textContent = wishCount;
+  document.getElementById('wishBadgeNav2').textContent = wishCount;
+
+  if (!cart.length) {
+    wrap.innerHTML = `
+      <div class="cart-empty">
+        <svg viewBox="0 0 24 24"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+        <h2 data-content-key="empty_cart_message">Your bag is empty</h2>
+        <p data-content-key="empty_cart_subtext">Looks like you haven't added anything yet.</p>
+        <a href="shop.html">Continue Shopping</a>
+      </div>`;
+    document.getElementById('cartCount').textContent = '0 items';
+    document.getElementById('cartBadgeNav').textContent = '0';
+    return;
+  }
+
+  const subtotal = cart.reduce((s,i) => s + (i.price||0) * (i.qty||1), 0);
+  const discount = appliedCoupon ? appliedCoupon.discount : 0;
+  const shipping = subtotal >= 50000 ? 0 : 3500;
+  const total    = subtotal - discount + shipping;
+  const itemCount = cart.reduce((s,i) => s + (i.qty||1), 0);
+  document.getElementById('cartCount').textContent = `${itemCount} item${itemCount===1?'':'s'}`;
+  document.getElementById('cartBadgeNav').textContent = itemCount;
+
+  const itemsHTML = cart.map(item => `
+    <div class="cart-item" data-name="${item.name}">
+      <a href="product.html?id=${item.slug||slugify(item.name)}" class="cart-item-img skel-loading">
+        ${item.img ? `<img class="skel-img" src="${item.img}" alt="${item.name}">` : ''}
+      </a>
+      <div class="cart-item-info">
+        <p class="cart-item-name">${item.name}</p>
+        ${item.size ? `<p class="cart-item-meta">Size: ${item.size}</p>` : ''}
+        <p class="cart-item-price">
+          <span data-ngn="${item.price||0}">${fmt(item.price||0)}</span>
+          ${item.was ? `<span class="was">${fmt(item.was)}</span>` : ''}
+        </p>
+        <div class="qty-row">
+          <div class="qty-stepper">
+            <button class="qty-minus" data-name="${escAttr(item.name)}" data-size="${escAttr(item.size || '')}">−</button>
+            <span class="qty-val">${item.qty||1}</span>
+            <button class="qty-plus" data-name="${escAttr(item.name)}" data-size="${escAttr(item.size || '')}">+</button>
+          </div>
+          <button class="remove-btn" data-remove="${escAttr(item.name)}" data-size="${escAttr(item.size || '')}" data-index="${cart.indexOf(item)}">Remove</button>
+        </div>
+      </div>
+    </div>`).join('');
+
+  wrap.innerHTML = `
+    <div class="cart-main">
+      <div class="cart-items">${itemsHTML}</div>
+
+      <div class="coupon-wrap">
+        <input class="coupon-input" id="couponInput" type="text" placeholder="Coupon code" maxlength="20">
+        <button class="coupon-btn" id="couponBtn">Apply</button>
+      </div>
+      <p class="coupon-msg" id="couponMsg"></p>
+
+      ${cart.length > 0 ? `
+      <div class="recently-viewed" id="recentlyViewed"></div>` : ''}
+    </div>
+
+    <div class="summary-box">
+      <h3>Order Summary</h3>
+      <div class="summary-row"><span>Subtotal (${itemCount} items)</span><span data-ngn="${subtotal}">${fmt(subtotal)}</span></div>
+      ${discount > 0 ? `<div class="summary-row"><span>Discount</span><span class="discount" data-ngn="-${discount}">− ${fmt(discount)}</span></div>` : ''}
+      <div class="summary-row"><span>Shipping</span><span ${shipping > 0 ? `data-ngn="${shipping}"` : ''}>${shipping === 0 ? 'Free' : fmt(shipping)}</span></div>
+      ${shipping > 0 ? `<p style="font-size:.7rem;color:var(--text-soft);margin-top:-6px;margin-bottom:6px;">Add <span data-ngn="${50000 - subtotal}">${fmt(50000 - subtotal)}</span> more for free delivery</p>` : ''}
+      <div class="summary-row total"><span>Total</span><span data-ngn="${total}">${fmt(total)}</span></div>
+      <a href="checkout.html" class="checkout-btn">Proceed to Checkout</a>
+      <a href="shop.html" class="continue-link">Continue Shopping</a>
+    </div>`;
+
+  // Skeleton loader
+  skelInit(wrap);
+
+  // Coupon
+  document.getElementById('couponBtn').addEventListener('click', async () => {
+    const code = document.getElementById('couponInput').value.trim();
+    if (!code) return;
+    const btn = document.getElementById('couponBtn');
+    const msgEl = document.getElementById('couponMsg');
+    btn.disabled = true;
+    const originalText = btn.textContent;
+    btn.textContent = 'Checking…';
+    msgEl.textContent = '';
+
+    const result = await applyCoupon(code, subtotal);
+
+    btn.disabled = false;
+    btn.textContent = originalText;
+    msgEl.textContent = result.msg;
+    msgEl.className = 'coupon-msg ' + (result.valid ? 'success' : 'error');
+    if (result.valid) {
+      appliedCoupon = { code: result.code, discount: result.discount };
+      renderCart();
+    }
+  });
+
+  document.getElementById('couponInput')?.addEventListener('keydown', e => {
+    if (e.key === 'Enter') document.getElementById('couponBtn').click();
+  });
+
+  // Recently viewed
+  const rv = JSON.parse(localStorage.getItem('ago_recent') || '[]');
+  const rvEl = document.getElementById('recentlyViewed');
+  if (rv.length && rvEl) {
+    rvEl.innerHTML = `
+      <h3>Recently Viewed</h3>
+      <div class="rv-scroll">
+        ${rv.slice(0,8).map(p => `
+          <a class="rv-card" href="product.html?id=${p.slug||slugify(p.name)}">
+            <div class="rv-img skel-loading">
+              ${p.image ? `<img class="skel-img" src="${p.image}" alt="${p.name}">` : ''}
+            </div>
+            <p class="rv-name">${p.name}</p>
+            <p class="rv-price" data-ngn="${p.price||0}">${fmt(p.price||0)}</p>
+          </a>`).join('')}
+      </div>`;
+    skelInit(rvEl);
+  }
+
+  // Real, explicit re-conversion — cart.html rebuilds its own real,
+  // live DOM on quantity changes, coupon application, etc., so the
+  // one-time page-load conversion pass alone wouldn't keep up with
+  // these genuine, real, dynamic re-renders.
+  if (typeof agoApplyDisplayCurrency === 'function') agoApplyDisplayCurrency();
+}
+
+/* ============ CONFIRM REMOVE MODAL ============ */
+let pendingRemove = null;
+let pendingRemoveIndex = null;
+let pendingRemoveSize = null;
+const confirmOverlay = document.getElementById('confirmOverlay');
+
+function askRemove(name, index, size = null) {
+  pendingRemove = name;
+  pendingRemoveIndex = index;
+  pendingRemoveSize = size;
+  document.querySelector('#confirmMsg strong').textContent = name && name.trim() ? name : 'this item';
+  confirmOverlay.classList.add('open');
+}
+
+document.getElementById('confirmCancel').addEventListener('click', () => {
+  pendingRemove = null; pendingRemoveIndex = null; pendingRemoveSize = null;
+  confirmOverlay.classList.remove('open');
+});
+
+document.getElementById('confirmYes').addEventListener('click', () => {
+  if (pendingRemove !== null || pendingRemoveIndex !== null) removeItem(pendingRemove, pendingRemoveIndex, pendingRemoveSize);
+  pendingRemove = null; pendingRemoveIndex = null; pendingRemoveSize = null;
+  confirmOverlay.classList.remove('open');
+});
+
+// Tap outside the box closes it (counts as cancel)
+confirmOverlay.addEventListener('click', (e) => {
+  if (e.target === confirmOverlay) {
+    pendingRemove = null; pendingRemoveIndex = null;
+    confirmOverlay.classList.remove('open');
+  }
+});
+
+/* ============ EVENT DELEGATION ============ */
+document.addEventListener('click', e => {
+  const minus = e.target.closest('.qty-minus');
+  const plus  = e.target.closest('.qty-plus');
+  const rem   = e.target.closest('[data-remove]');
+  if (!minus && !plus && !rem) return;
+
+  // Critical: this page has its OWN qty/remove logic (with a real
+  // confirmation modal before deleting), but ago-cart.js ALSO has a
+  // generic, no-confirmation .qty-minus/.qty-plus handler meant for
+  // other pages' inline steppers. Both listen on `document`, so
+  // without stopping propagation here, ago-cart.js's handler was
+  // ALSO firing on the same click — silently removing the item and
+  // updating the cart badge immediately, before the confirmation
+  // modal below even finished opening. That's exactly why the badge
+  // dropped instantly regardless of what was chosen in the modal.
+  e.stopImmediatePropagation();
+
+  if (minus) { e.preventDefault(); updateQty(minus.dataset.name, -1, minus.dataset.size || null); }
+  if (plus)  { e.preventDefault(); updateQty(plus.dataset.name,   +1, plus.dataset.size || null); }
+  if (rem)   { e.preventDefault(); askRemove(rem.dataset.remove, parseInt(rem.dataset.index), rem.dataset.size || null); }
+}, true); // capture phase — ensures this runs BEFORE ago-cart.js's own bubble-phase listener, guaranteeing stopImmediatePropagation() actually prevents it from firing at all
+
+/* ============ INIT ============ */
+(async function init() {
+  await enrichCartWithImages();
+  renderCart();
+
+  // Persist updated cart (with images) back
+  saveCart();
+
+  if (window.__agoContentReady) window.__agoContentReady();
+})();
+
+// Real fix for cross-device cart sync: if the signed-in customer's
+// actual cart arrives from Supabase after this page already rendered
+// (normal — the sync is async), re-read it and re-render so this
+// page reflects the real, current cart rather than whatever stale
+// local cache existed before signing in on this device.
+document.addEventListener('agoCartSynced', async () => {
+  cart = JSON.parse(localStorage.getItem(agoCartKey()) || '[]');
+  await enrichCartWithImages();
+  renderCart();
+});
+
+// REAL FIX — confirmed mechanism behind "removed items come back
+// after navigation": a bfcache restore freezes this page's entire JS
+// state at the moment of navigating away, including the `cart`
+// variable itself. Simply calling renderCart() on restore isn't
+// enough, since it would just re-render that same frozen, possibly
+// stale array. This genuinely re-reads from localStorage (the real,
+// current source of truth) FIRST, so a restore always reflects
+// whatever was actually true at the moment of restoration, not
+// whatever happened to be in memory when the page was cached.
+window.__agoRerenderOnRestore = async function(){
+  cart = JSON.parse(localStorage.getItem(agoCartKey()) || '[]');
+  await enrichCartWithImages();
+  renderCart();
+};
+</script>
+</body>
+</html>

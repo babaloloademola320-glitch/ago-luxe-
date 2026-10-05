@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- ── FAVICON ── -->
+<link rel="icon" type="image/x-icon" href="favicon.ico">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="theme-color" content="#0A0A0A">
+<title>Order Details — ÀGÒ LUXE</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Gentium+Plus:ital,wght@0,400;0,700;1,400;1,700&family=Newsreader:ital,wght@0,500;0,600;1,500&display=swap" rel="stylesheet">
+<script src="ago-cart.js?v=20260724c"></script>
+<script src="install-prompt.js?v=20260722"></script>
+<style>
+:root[data-theme="dark"]{ --bg:#0A0A0A; --surface:#141414; --text:#F9F9F9; --text-soft:#9A9A9A; --border:#222222; }
+:root[data-theme="light"]{ --bg:#F9F9F9; --surface:#FFFFFF; --text:#0A0A0A; --text-soft:#6B6B6B; --border:#E8E8E8; }
+:root{ --accent:#C084FC; --accent-deep:#8B5CF6; }
+*{box-sizing:border-box; margin:0; padding:0;}
+body{ background:var(--bg); color:var(--text); font-family:'Gentium Plus', serif; padding-bottom:40px; }
+.top-bar{ position:sticky; top:0; z-index:50; background:var(--bg); border-bottom:1px solid var(--border); display:flex; align-items:center; gap:10px; padding:14px; }
+.back-btn{ display:flex; padding:4px; background:transparent; border:none; border-radius:0; box-shadow:none; }
+.back-btn svg{ width:20px; height:20px; stroke:var(--text); fill:none; stroke-width:1.8; }
+.top-bar h1{ font-family:'Newsreader', serif; font-size:1rem; font-weight:600; }
+.od-section{ padding:18px 16px; border-bottom:1px solid var(--border); }
+.od-label{ font-size:.68rem; text-transform:uppercase; letter-spacing:.08em; color:var(--text-soft); margin-bottom:8px; }
+.od-order-num{ font-family:'Newsreader', serif; font-size:1.2rem; font-weight:600; margin-bottom:4px; }
+.od-date{ font-size:.78rem; color:var(--text-soft); }
+.od-status-badge{ display:inline-block; padding:6px 14px; border-radius:20px; font-size:.72rem; text-transform:capitalize; margin-top:10px; background:rgba(192,132,252,.12); color:var(--accent); }
+.od-item{ display:flex; gap:12px; padding:12px 0; border-bottom:1px solid var(--border); }
+.od-item:last-child{ border-bottom:none; }
+.od-item img{ width:64px; height:80px; object-fit:cover; border-radius:4px; background:var(--surface); flex-shrink:0; }
+.od-item-info{ flex:1; min-width:0; }
+.od-item-name{ font-size:.85rem; font-weight:600; margin-bottom:4px; }
+.od-item-meta{ font-size:.75rem; color:var(--text-soft); margin-bottom:6px; }
+.od-item-price{ font-size:.82rem; font-weight:700; }
+.od-total-row{ display:flex; justify-content:space-between; font-size:.85rem; padding:6px 0; }
+.od-total-row.final{ font-weight:700; font-size:.95rem; padding-top:10px; border-top:1px solid var(--border); margin-top:6px; }
+.od-address-text{ font-size:.85rem; line-height:1.6; }
+.od-timeline{ position:relative; padding-left:20px; }
+.od-tl-item{ position:relative; padding-bottom:20px; }
+.od-tl-item:last-child{ padding-bottom:0; }
+.od-tl-item::before{ content:''; position:absolute; left:-20px; top:4px; width:8px; height:8px; border-radius:50%; background:var(--accent); }
+.od-tl-item::after{ content:''; position:absolute; left:-17px; top:14px; bottom:-6px; width:1px; background:var(--border); }
+.od-tl-item:last-child::after{ display:none; }
+.od-tl-title{ font-size:.82rem; font-weight:600; text-transform:capitalize; margin-bottom:2px; }
+.od-tl-time{ font-size:.7rem; color:var(--text-soft); }
+.od-cancel-btn{ width:100%; margin-top:6px; padding:13px; background:none; border:1px solid var(--border); color:var(--text-soft); font-size:.72rem; font-weight:600; letter-spacing:.04em; text-transform:uppercase; border-radius:6px; }
+.od-cancel-btn:hover{ border-color:#FF6B6B; color:#FF6B6B; }
+.od-empty{ text-align:center; padding:60px 20px; color:var(--text-soft); font-size:.85rem; }
+.confirm-overlay{ position:fixed; inset:0; z-index:200; background:rgba(0,0,0,.6); display:none; align-items:flex-end; justify-content:center; }
+.confirm-overlay.open{ display:flex; }
+.confirm-box{ background:var(--surface); border-radius:16px 16px 0 0; padding:22px; width:100%; max-width:480px; }
+.confirm-box h3{ font-family:'Newsreader', serif; margin-bottom:8px; }
+.confirm-box p{ font-size:.82rem; color:var(--text-soft); margin-bottom:18px; line-height:1.5; }
+.confirm-actions{ display:flex; gap:10px; }
+.confirm-actions button{ flex:1; padding:13px; border-radius:6px; font-size:.78rem; font-weight:700; text-transform:uppercase; letter-spacing:.03em; }
+.c-cancel{ background:none; border:1px solid var(--border); color:var(--text); }
+.c-confirm{ background:#FF6B6B; border:none; color:#fff; }
+</style>
+</head>
+<body>
+
+<div class="top-bar">
+  <button class="back-btn" onclick="history.length > 1 ? history.back() : location.href='account.html'" aria-label="Back">
+    <svg viewBox="0 0 24 24"><path d="M19 12H5M11 18l-6-6 6-6"/></svg>
+  </button>
+  <h1>Order Details</h1>
+</div>
+
+<div id="odContent">
+  <p class="od-empty">Loading…</p>
+</div>
+
+<div class="confirm-overlay" id="cancelOverlay">
+  <div class="confirm-box">
+    <h3>Cancel This Order?</h3>
+    <p id="cancelMsg">This can't be undone.</p>
+    <div class="confirm-actions">
+      <button class="c-cancel" id="cancelStay">Keep Order</button>
+      <button class="c-confirm" id="cancelConfirm">Cancel Order</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const SB_URL = 'https://drjebroujarpugwadido.supabase.co/rest/v1';
+const SB_KEY = 'sb_publishable_0mAkL4aIqXf1nm9zlQF8Fg_yPyt-F71';
+
+function escHtml(s){ return String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function fmt(n){ return '₦' + Number(n||0).toLocaleString('en-NG', {minimumFractionDigits:2, maximumFractionDigits:2}); }
+
+function authHeaders(){
+  const raw = localStorage.getItem('ago_auth_session');
+  const session = raw ? JSON.parse(raw) : null;
+  return { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + (session?.access_token || SB_KEY), 'Content-Type': 'application/json' };
+}
+function currentUserId(){
+  const raw = localStorage.getItem('ago_auth_session');
+  const session = raw ? JSON.parse(raw) : null;
+  return session?.user?.id || null;
+}
+
+let currentOrder = null;
+
+async function loadOrder(){
+  const params = new URLSearchParams(location.search);
+  const orderId = params.get('id');
+  const uid = currentUserId();
+
+  if (!orderId || !uid) {
+    document.getElementById('odContent').innerHTML = '<p class="od-empty">Order not found. Please sign in and try again.</p>';
+    return;
+  }
+
+  try {
+    const res = await fetch(`${SB_URL}/orders?id=eq.${orderId}&user_id=eq.${uid}&select=*`, { headers: authHeaders() });
+    const orders = res.ok ? await res.json() : [];
+    if (!orders.length) {
+      document.getElementById('odContent').innerHTML = '<p class="od-empty">Order not found.</p>';
+      return;
+    }
+    currentOrder = orders[0];
+    renderOrder(currentOrder);
+    loadTimeline(orderId);
+  } catch(e){
+    document.getElementById('odContent').innerHTML = '<p class="od-empty">Could not load this order — check your connection.</p>';
+  }
+}
+
+function renderOrder(o){
+  const addr = o.shipping_address || {};
+  const isPickup = addr.type === 'pickup';
+  let displayStatus = o.payment_status === 'paid' && o.status === 'pending' ? 'paid' : o.status;
+  let displayLabel = displayStatus;
+  if (isPickup && displayStatus === 'arrived') displayLabel = 'ready for collection';
+  if (isPickup && displayStatus === 'delivered') displayLabel = 'collected';
+
+  const items = Array.isArray(o.items) ? o.items : [];
+  const isCancellable = ['pending','paid','confirmed'].includes(o.status);
+
+  document.getElementById('odContent').innerHTML = `
+    <div class="od-section">
+      <p class="od-order-num">${escHtml(o.order_number)}</p>
+      <p class="od-date">${new Date(o.created_at).toLocaleString('en-NG', {dateStyle:'medium', timeStyle:'short'})}</p>
+      <span class="od-status-badge">${escHtml(displayLabel)}</span>
+    </div>
+
+    <div class="od-section">
+      <p class="od-label">Items</p>
+      ${items.map(i => `
+        <div class="od-item">
+          <img src="${i.image||''}" alt="" onerror="this.style.display='none'">
+          <div class="od-item-info">
+            <p class="od-item-name">${escHtml(i.name)}</p>
+            <p class="od-item-meta">${i.size ? `Size: ${escHtml(i.size)} · ` : ''}Qty: ${i.qty}</p>
+            <p class="od-item-price">${fmt(i.price * i.qty)}</p>
+          </div>
+        </div>`).join('')}
+      <div class="od-total-row"><span>Subtotal</span><span>${fmt(o.subtotal)}</span></div>
+      ${o.discount > 0 ? `<div class="od-total-row"><span>Discount</span><span>-${fmt(o.discount)}</span></div>` : ''}
+      ${o.shipping_fee > 0 ? `<div class="od-total-row"><span>Shipping</span><span>${fmt(o.shipping_fee)}</span></div>` : ''}
+      <div class="od-total-row final"><span>Total</span><span>${fmt(o.total)}</span></div>
+    </div>
+
+    <div class="od-section">
+      <p class="od-label">${isPickup ? 'Pickup Location' : 'Delivery Address'}</p>
+      <p class="od-address-text">${isPickup
+        ? `${escHtml(addr.location||'')}${addr.address ? ' — ' + escHtml(addr.address) : ''}`
+        : `${escHtml(addr.line1||'')}, ${escHtml(addr.busStop||addr.city||'')}, ${escHtml(addr.lga||'')} LGA, ${escHtml(addr.state||'')}`}</p>
+      ${o.tracking_number ? `<p class="od-address-text" style="margin-top:8px;">Tracking: ${escHtml(o.tracking_number)}</p>` : ''}
+      ${o.estimated_delivery_date ? `<p class="od-address-text" style="margin-top:4px;">Estimated: ${new Date(o.estimated_delivery_date + 'T00:00:00').toLocaleDateString('en-NG', {day:'numeric', month:'long', year:'numeric'})}</p>` : ''}
+    </div>
+
+    <div class="od-section" id="odTimelineSection">
+      <p class="od-label">Order Timeline</p>
+      <div class="od-timeline" id="odTimeline"><p class="od-empty" style="padding:10px 0;">Loading…</p></div>
+    </div>
+
+    ${isCancellable ? `<div class="od-section"><button class="od-cancel-btn" id="odCancelBtn">Cancel Order</button></div>` : ''}
+  `;
+
+  if (isCancellable) {
+    document.getElementById('odCancelBtn').addEventListener('click', () => {
+      const wasPaid = o.payment_status === 'paid';
+      document.getElementById('cancelMsg').textContent = wasPaid
+        ? `${fmt(o.total)} will be refunded to your wallet immediately. This can't be undone.`
+        : `This order hasn't been paid for yet, so no refund is needed. This can't be undone.`;
+      document.getElementById('cancelOverlay').classList.add('open');
+    });
+  }
+}
+
+async function loadTimeline(orderId){
+  try {
+    const res = await fetch(`${SB_URL}/order_events?order_id=eq.${orderId}&select=*&order=created_at.asc`, { headers: authHeaders() });
+    const events = res.ok ? await res.json() : [];
+    const el = document.getElementById('odTimeline');
+    if (!el) return;
+    if (!events.length) { el.innerHTML = '<p class="od-empty" style="padding:10px 0;">No history yet.</p>'; return; }
+    el.innerHTML = events.map(ev => `
+      <div class="od-tl-item">
+        <p class="od-tl-title">${escHtml(ev.event_type.replace(/_/g,' '))}</p>
+        <p class="od-tl-time">${new Date(ev.created_at).toLocaleString('en-NG', {dateStyle:'medium', timeStyle:'short'})}</p>
+      </div>`).join('');
+  } catch(e){
+    const el = document.getElementById('odTimeline');
+    if (el) el.innerHTML = '<p class="od-empty" style="padding:10px 0;">Could not load history.</p>';
+  }
+}
+
+document.getElementById('cancelStay').addEventListener('click', () => {
+  document.getElementById('cancelOverlay').classList.remove('open');
+});
+document.getElementById('cancelOverlay').addEventListener('click', (e) => {
+  if (e.target.id === 'cancelOverlay') document.getElementById('cancelOverlay').classList.remove('open');
+});
+document.getElementById('cancelConfirm').addEventListener('click', async () => {
+  if (!currentOrder) return;
+  const btn = document.getElementById('cancelConfirm');
+  btn.disabled = true; btn.textContent = 'Cancelling…';
+  try {
+    const res = await fetch(`${SB_URL}/rpc/customer_cancel_order`, {
+      method: 'POST', headers: authHeaders(),
+      body: JSON.stringify({ p_order_id: currentOrder.id }),
+    });
+    const data = await res.json();
+    const result = Array.isArray(data) ? data[0] : data;
+    if (!result?.success) throw new Error(result?.message || 'Could not cancel this order');
+    document.getElementById('cancelOverlay').classList.remove('open');
+    await loadOrder();
+  } catch(e){
+    alert(e.message || 'Could not cancel this order');
+  } finally {
+    btn.disabled = false; btn.textContent = 'Cancel Order';
+  }
+});
+
+loadOrder();
+</script>
+</body>
+</html>

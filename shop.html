@@ -1,0 +1,1001 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- ── FAVICON ── -->
+<link rel="icon" type="image/x-icon" href="favicon.ico">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="theme-color" content="#0A0A0A">
+
+<!-- ── SOCIAL PREVIEW (Open Graph + Twitter) ── -->
+<meta name="description" content="Browse gowns, kaftans, jewelry, bags, footwear and caps. Premium Nigerian fashion.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="ÀGÒ LUXE">
+<meta property="og:title" content="Shop the Edit — ÀGÒ LUXE">
+<meta property="og:description" content="Browse gowns, kaftans, jewelry, bags, footwear and caps. Premium Nigerian fashion.">
+<meta property="og:image" content="https://ago-luxeclothing.netlify.app/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Shop the Edit — ÀGÒ LUXE">
+<meta name="twitter:description" content="Browse gowns, kaftans, jewelry, bags, footwear and caps. Premium Nigerian fashion.">
+<meta name="twitter:image" content="https://ago-luxeclothing.netlify.app/og-image.png">
+
+<title>Shop All — ÀGÒ LUXE</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Gentium+Plus:ital,wght@0,400;0,700;1,400;1,700&family=Newsreader:ital,wght@0,500;0,600;1,500&display=swap" rel="stylesheet">
+<script src="ago-cart.js?v=20260724g"></script>
+<script src="install-prompt.js?v=20260722"></script>
+<style>
+/* ============ TOKENS (same system as homepage) ============ */
+:root[data-theme="dark"]{
+  --bg:#0A0A0A; --surface:#141414; --text:#F9F9F9; --text-soft:#9A9A9A; --border:#222222;
+}
+:root[data-theme="light"]{
+  --bg:#F9F9F9; --surface:#FFFFFF; --text:#0A0A0A; --text-soft:#6B6B6B; --border:#E8E8E8;
+}
+:root{ --accent:#C084FC; --accent-deep:#8B5CF6; }
+
+/* ============ IMAGE SKELETON LOADER (poor-network loading state) ============ */
+@keyframes skel-shimmer{0%{background-position:-500px 0;}100%{background-position:500px 0;}}
+.skel-loading{background-image:linear-gradient(90deg, var(--surface) 25%, #2a2a2a 37%, var(--surface) 63%) !important; background-size:600px 100% !important; animation:skel-shimmer 1.4s linear infinite !important;}
+.skel-loading.img-loaded{animation:none !important; background-image:none !important;}
+img.skel-img{opacity:0 !important; transition:opacity .4s ease;}
+img.skel-img.loaded{opacity:1 !important;}
+
+*{box-sizing:border-box; margin:0; padding:0;}
+html,body{background:var(--bg); color:var(--text); font-family:'Newsreader',serif; font-weight:500; -webkit-tap-highlight-color:transparent;}
+@keyframes page-fade-in{from{opacity:0;} to{opacity:1;}}
+body{animation:page-fade-in .25s ease;}
+img{display:block; max-width:100%;}
+a{color:inherit; text-decoration:none;}
+button{font-family:inherit; border:none; background:none; cursor:pointer; color:inherit;}
+ul{list-style:none;}
+h1,h2,h3{font-family:'Gentium Plus',serif; font-weight:700;}
+::selection{background:var(--accent); color:#0A0A0A;}
+body{padding-bottom:64px;}
+
+.eyebrow{font-family:'Newsreader',serif; font-style:italic; letter-spacing:.14em; text-transform:uppercase; font-size:.72rem; color:var(--accent);}
+section{padding:40px 0;}
+
+/* ============ ANNOUNCEMENT BAR ============ */
+.announce{position:relative; background:#C084FC; height:34px; overflow:hidden; transition:background-color .6s ease;}
+.announce-track{position:relative; height:34px; width:100%;}
+.announce-track div{position:absolute; top:0; left:0; right:0; height:34px; display:flex; align-items:center; justify-content:center; font-size:.7rem; font-weight:700; letter-spacing:.05em; color:#0A0A0A; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; padding:0 12px; opacity:0; transition:opacity .5s ease;}
+.announce-track div.active{opacity:1;}
+
+/* ============ NAVBAR ============ */
+.navbar{position:sticky; top:0; z-index:50; background:var(--bg); border-bottom:1px solid var(--border); display:flex; align-items:center; gap:10px; padding:12px 14px;}
+.logo{font-family:'Cinzel Decorative',serif; font-style:italic; font-weight:700; font-size:1.15rem; color:var(--text); white-space:nowrap; letter-spacing:.02em;}
+.logo .mark{color:var(--accent);}
+.nav-search{flex:1; display:flex; align-items:center; gap:6px; background:var(--surface); border:1px solid var(--border); border-radius:20px; padding:7px 12px;}
+.nav-search input{background:none; border:none; outline:none; color:var(--text); font-family:'Newsreader',serif; font-size:.85rem; width:100%;}
+.nav-search svg{width:15px; height:15px; stroke:var(--text-soft); flex-shrink:0;}
+.nav-icons{display:flex; align-items:center; gap:14px;}
+.nav-icons button{position:relative; display:flex;}
+.nav-icons svg{width:20px; height:20px; stroke:var(--text); fill:none; stroke-width:1.6;}
+.badge{position:absolute; top:-6px; right:-7px; background:var(--accent); color:#0A0A0A; font-size:.6rem; font-weight:700; width:15px; height:15px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-family:'Newsreader',serif;}
+.hamburger{display:flex; flex-direction:column; gap:4px; width:20px;}
+.hamburger span{height:1.4px; background:var(--text); width:100%;}
+
+/* ============ PAGE HEADER ============ */
+.shop-header{padding:24px 16px 4px;}
+.shop-header .eyebrow{display:block; margin-bottom:6px;}
+.shop-header h1{font-size:1.7rem; font-style:italic;}
+.shop-count{font-size:.78rem; color:var(--text-soft); margin-top:4px;}
+
+/* ============ CATEGORY STRIP + SORT ============ */
+.cat-strip{display:flex; gap:8px; overflow-x:auto; padding:14px 16px; scrollbar-width:none; border-bottom:1px solid var(--border);}
+.cat-strip::-webkit-scrollbar{display:none;}
+.pill{flex-shrink:0; padding:8px 16px; border-radius:30px; border:1px solid var(--border); font-size:.78rem; color:var(--text-soft); white-space:nowrap;}
+.pill.active{background:var(--accent); color:#0A0A0A; border-color:var(--accent); font-weight:600;}
+.sort-bar{display:flex; gap:8px; overflow-x:auto; padding:12px 16px 0; scrollbar-width:none;}
+.sort-bar::-webkit-scrollbar{display:none;}
+.sort-pill{flex-shrink:0; padding:7px 14px; border-radius:30px; border:1px solid var(--border); font-size:.74rem; color:var(--text-soft); white-space:nowrap;}
+.sort-pill.active{background:var(--text); color:var(--bg); border-color:var(--text); font-weight:600;}
+
+/* ============ PRODUCT GRID / CARD ============ */
+.grid-2{display:grid; grid-template-columns:1fr 1fr; gap:10px; padding:14px;}
+
+/* ============ RELATED PRODUCTS (You May Also Like) ============ */
+.related-section{padding:24px 0 30px;}
+.related-section h3{font-family:'Gentium Plus',serif; font-size:1.05rem; font-weight:700; margin-bottom:14px; padding:0 14px;}
+.h-scroll{display:flex; gap:10px; overflow-x:auto; scrollbar-width:none; padding:0 14px 4px;}
+.h-scroll::-webkit-scrollbar{display:none;}
+.h-scroll .rel-card{min-width:148px; flex-shrink:0; display:block; text-decoration:none; color:inherit;}
+.h-scroll .rel-media{position:relative; aspect-ratio:3/4; overflow:hidden; background:var(--surface); border-radius:2px;}
+.h-scroll .rel-media img{width:100%; height:100%; object-fit:cover; position:absolute; inset:0; opacity:0; transition:opacity .4s ease;}
+.h-scroll .rel-name{font-size:.75rem; margin-top:7px; line-height:1.25;}
+.h-scroll .rel-price{font-size:.75rem; margin-top:3px; font-weight:600;}
+.card{display:block; position:relative; animation:card-fade-in .45s ease both;}
+@keyframes card-fade-in{from{opacity:0; transform:translateY(10px);} to{opacity:1; transform:translateY(0);}}
+.card-media{position:relative; aspect-ratio:3/4; overflow:hidden; background:var(--surface); border-radius:2px;}
+.card-media img{width:100%; height:100%; object-fit:cover; position:absolute; inset:0; transition:opacity .4s ease, transform .5s ease;}
+.card-media .img-b{opacity:0;}
+.card:hover .img-b{opacity:1;}
+.card:hover .img-a, .card:active .img-a{transform:scale(1.06);}
+.wish-btn{position:absolute; top:8px; right:8px; width:28px; height:28px; border-radius:50%; background:rgba(10,10,10,.4); backdrop-filter:blur(3px); display:flex; align-items:center; justify-content:center; z-index:2;}
+.wish-btn svg{width:14px; height:14px; stroke:#fff; fill:none; stroke-width:1.6;}
+.wish-btn.active svg{fill:var(--accent); stroke:var(--accent);}
+.wish-btn.pop svg{animation:heart-pop .38s ease;}
+@keyframes heart-pop{0%{transform:scale(1);} 40%{transform:scale(1.35);} 100%{transform:scale(1);}}
+.sale-badge{position:absolute; top:8px; left:8px; background:var(--accent); color:#0A0A0A; font-size:.64rem; font-weight:700; padding:3px 7px; border-radius:2px; z-index:2;}
+.stock-badge{position:absolute; bottom:8px; left:8px; background:#0A0A0A; color:#F4E04D; border:1px solid #F4E04D; font-size:.62rem; font-weight:700; padding:3px 7px; border-radius:2px; z-index:2;}
+.card-info{padding-top:7px;}
+.card-name{font-size:.78rem; line-height:1.25;}
+.card-rating{display:flex; align-items:center; gap:4px; font-size:.68rem; color:var(--text-soft); margin-top:3px;}
+.card-rating svg{color:var(--accent); flex-shrink:0;}
+.card-rating span{color:var(--text-soft);}
+.card-price{font-size:.8rem; margin-top:3px; display:flex; gap:6px; align-items:baseline; flex-wrap:wrap;}
+.card-price .was{color:var(--text-soft); text-decoration:line-through; font-size:.7rem;}
+.card-actions{display:flex; flex-direction:column; gap:5px; margin-top:8px;}
+.btn-add{font-size:.68rem; letter-spacing:.04em; text-transform:uppercase; background:var(--text); color:var(--bg); padding:8px; text-align:center; font-weight:600;}
+.qty-stepper{display:flex; align-items:center; justify-content:space-between; background:var(--text); color:var(--bg); padding:6px 4px;}
+.qty-stepper button{width:24px; font-size:.9rem; font-weight:700; color:var(--bg);}
+.qty-stepper .qty-val{font-size:.78rem; font-weight:600;}
+.flying-thumb{position:fixed; z-index:999; border-radius:50%; object-fit:cover; pointer-events:none;}
+.grid-empty{grid-column:1/-1; text-align:center; padding:70px 20px;}
+.load-more-btn{
+  display:block; width:fit-content; margin:28px auto 40px;
+  padding:11px 28px; background:none; border:1px solid var(--accent); color:var(--accent);
+  font-family:'Newsreader', serif; font-size:.72rem; font-weight:700;
+  letter-spacing:.06em; text-transform:uppercase; border-radius:20px; cursor:pointer;
+  transition:background .2s ease, color .2s ease;
+  white-space:nowrap;
+}
+.load-more-btn:hover{ background:var(--accent); color:#0A0A0A; }
+
+/* REAL skeleton grid — genuinely mirrors the real card's exact shape
+   (same 3:4 image ratio, same text-line positions) so the page never
+   visibly shifts once real content replaces it. This is real,
+   defensive coverage for the case where the fetch is slow/fails and
+   the hardcoded fallback array is ever empty — the page should never
+   go blank while waiting. */
+.skel-card{ display:block; }
+.skel-card .skel-media{
+  aspect-ratio:3/4; border-radius:2px;
+  background-image:linear-gradient(90deg, var(--surface) 25%, #2a2a2a 37%, var(--surface) 63%);
+  background-size:600px 100%; animation:skel-shimmer 1.4s linear infinite;
+}
+.skel-card .skel-line{
+  height:11px; border-radius:2px; margin-top:8px;
+  background-image:linear-gradient(90deg, var(--surface) 25%, #2a2a2a 37%, var(--surface) 63%);
+  background-size:600px 100%; animation:skel-shimmer 1.4s linear infinite;
+}
+.skel-card .skel-line.name{ width:80%; }
+.skel-card .skel-line.price{ width:45%; margin-top:6px; height:12px; }
+.grid-empty svg{width:40px; height:40px; stroke:var(--text-soft); fill:none; stroke-width:1.4; margin-bottom:14px;}
+.grid-empty p{color:var(--text-soft); font-size:.85rem; margin-bottom:18px;}
+.grid-empty a{display:inline-block; padding:10px 22px; border:1px solid var(--border); font-size:.75rem; letter-spacing:.04em; text-transform:uppercase; color:var(--text);}
+.grid-empty a:hover{border-color:var(--accent); color:var(--accent);}
+
+/* ============ BRAND STATEMENT ============ */
+.brand-statement{text-align:center; padding:50px 24px;}
+.brand-statement .flank{color:var(--accent); font-size:.85rem; letter-spacing:.3em; display:block; margin-bottom:18px;}
+.brand-statement p{font-family:'Gentium Plus',serif; font-style:italic; font-size:1.2rem; line-height:1.5; max-width:320px; margin:0 auto;}
+
+/* ============ NEWSLETTER ============ */
+.newsletter{background:var(--surface); border-top:1px solid var(--border); border-bottom:1px solid var(--border); padding:36px 20px; text-align:center;}
+.newsletter h3{font-size:1.1rem; font-style:italic; margin-bottom:6px;}
+.newsletter p{font-size:.8rem; color:var(--text-soft); margin-bottom:16px;}
+.newsletter-form{display:flex; max-width:340px; margin:0 auto; border:1px solid var(--border);}
+.newsletter-form input{flex:1; background:none; border:none; outline:none; color:var(--text); padding:11px 12px; font-family:'Newsreader',serif; font-size:.82rem;}
+.newsletter-form button{background:var(--accent); color:#0A0A0A; padding:0 16px; font-size:.74rem; font-weight:700; text-transform:uppercase; letter-spacing:.04em;}
+
+/* ============ FOOTER ============ */
+footer{padding:36px 18px 20px;}
+.footer-grid{display:grid; grid-template-columns:1fr 1fr; gap:24px; margin-bottom:30px;}
+.footer-grid h4{font-size:.72rem; text-transform:uppercase; letter-spacing:.08em; color:var(--text-soft); margin-bottom:12px;}
+.footer-grid li{margin-bottom:8px; font-size:.8rem;}
+.payment-section{margin-bottom:16px;}
+.payment-section h4{font-size:.72rem; text-transform:uppercase; letter-spacing:.08em; color:var(--text-soft); margin-bottom:12px;}
+.payment-row{display:grid; grid-template-columns:1fr 1fr; gap:10px;}
+.payment-row img{width:100%; height:52px; background:#fff; border-radius:0; padding:10px 16px; object-fit:contain;}
+.copyright{font-size:.68rem; color:var(--text-soft); border-top:1px solid var(--border); padding-top:16px;}
+
+/* ============ BOTTOM NAV ============ */
+.bottom-nav{position:fixed; bottom:0; left:0; right:0; z-index:60; background:var(--bg); border-top:1px solid var(--border); display:flex; justify-content:space-around; padding:9px 0 11px;}
+.bottom-nav a{display:flex; flex-direction:column; align-items:center; gap:3px; font-size:.6rem; color:var(--text-soft); position:relative;}
+.bottom-nav a.active{color:var(--accent);}
+.bottom-nav svg{width:19px; height:19px; stroke:currentColor; fill:none; stroke-width:1.6;}
+.bottom-nav .badge{top:-4px; right:-8px;}
+
+/* ============ TOAST ============ */
+.toast{position:fixed; bottom:78px; left:50%; transform:translateX(-50%) translateY(20px); background:var(--text); color:var(--bg); padding:10px 18px; border-radius:30px; font-size:.78rem; opacity:0; transition:all .3s ease; z-index:200; white-space:nowrap;}
+.toast.show{opacity:1; transform:translateX(-50%) translateY(0);}
+
+/* ============ SEARCH OVERLAY ============ */
+.search-overlay{position:fixed; inset:0; background:var(--bg); z-index:300; display:none; flex-direction:column;}
+.search-overlay.active{display:flex;}
+.search-overlay-top{display:flex; align-items:center; gap:10px; padding:12px 14px; border-bottom:1px solid var(--border); flex-shrink:0;}
+.search-back{display:flex; padding:4px;}
+.search-back svg{width:20px; height:20px; stroke:var(--text); fill:none; stroke-width:1.8;}
+.search-overlay-input{flex:1; display:flex; align-items:center; gap:8px; background:var(--surface); border:1px solid var(--border); border-radius:20px; padding:9px 14px;}
+.search-overlay-input svg{width:15px; height:15px; stroke:var(--text-soft); flex-shrink:0;}
+.search-overlay-input input{flex:1; background:none; border:none; outline:none; color:var(--text); font-family:'Newsreader',serif; font-size:.9rem;}
+.search-overlay-body{flex:1; overflow-y:auto; padding:20px 16px; -webkit-overflow-scrolling:touch;}
+.search-section-title{display:flex; justify-content:space-between; align-items:center; font-size:.7rem; text-transform:uppercase; letter-spacing:.06em; color:var(--text-soft); margin-bottom:10px;}
+.search-section-title .clear-btn{color:var(--accent); text-transform:none; letter-spacing:0; font-size:.75rem;}
+.search-pills{display:flex; flex-wrap:wrap; gap:8px; margin-bottom:26px;}
+.search-pill{padding:8px 14px; border-radius:20px; border:1px solid var(--border); font-size:.78rem; color:var(--text);}
+.search-result-row{display:flex; gap:12px; align-items:center; padding:10px 0; border-bottom:1px solid var(--border);}
+.search-result-row img{width:100%; height:100%; object-fit:cover; display:block;}
+.search-thumb-wrap{width:48px; height:60px; border-radius:4px; flex-shrink:0; overflow:hidden; display:block; background:var(--surface);}
+.search-result-info p{font-size:.82rem; margin-bottom:3px;}
+.search-result-info span{font-size:.76rem; color:var(--text-soft);}
+.search-empty{text-align:center; color:var(--text-soft); font-size:.85rem; padding:50px 0;}
+
+/* ============ DESKTOP ============ */
+.desktop-nav-links{display:none;}
+@media (min-width:860px){
+  .grid-2{grid-template-columns:repeat(4,1fr); max-width:1320px; margin:0 auto; padding:20px 40px;}
+  .shop-header, .cat-strip, .sort-bar{max-width:1320px; margin-left:auto; margin-right:auto; padding-left:40px; padding-right:40px;}
+  .bottom-nav{display:none;}
+  body{padding-bottom:0;}
+  .navbar{padding:16px 40px; flex-wrap:wrap;}
+  .desktop-nav-links{display:flex; gap:26px; width:100%; padding-top:14px; border-top:1px solid var(--border); margin-top:14px; justify-content:center;}
+  .desktop-nav-links a{font-size:.78rem; letter-spacing:.04em; text-transform:uppercase; color:var(--text-soft);}
+  .desktop-nav-links a:hover{color:var(--accent);}
+  .payment-row{grid-template-columns:repeat(4,1fr); max-width:520px;}
+  footer{padding:48px 40px 24px;}
+  .footer-grid{grid-template-columns:repeat(4,1fr);}
+}
+</style>
+</head>
+<body>
+
+<!-- ============ NAVBAR — search bar only, per your request ============ -->
+<header class="navbar navbar-search-only">
+  <div class="nav-search" id="navSearchTrigger">
+    <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7" stroke="currentColor" fill="none" stroke-width="1.8"/><path d="M21 21l-4.3-4.3" stroke="currentColor" stroke-width="1.8"/></svg>
+    <input type="text" placeholder="Search products…" readonly>
+  </div>
+  <div class="desktop-nav-links">
+    <a href="index.html">Home</a>
+    <a href="categories.html">Categories</a>
+    <a href="shop.html?cat=women">Women</a>
+    <a href="shop.html?cat=men">Men</a>
+    <a href="jewelry.html">Jewelry</a>
+    <a href="shop.html?cat=bags">Bags</a>
+    <a href="shop.html?cat=footwear">Footwear</a>
+    <a href="shop.html?cat=caps">Caps</a>
+    <a href="cart.html">Cart</a>
+    <a href="wishlist.html">Wishlist</a>
+    <a href="account.html" data-account-link>Account</a>
+  </div>
+</header>
+
+<!-- ============ PAGE HEADER ============ -->
+<div class="shop-header">
+  <span class="eyebrow">The Full Edit</span>
+  <h1>Shop All</h1>
+  <p class="shop-count" id="shopCount"></p>
+</div>
+
+<!-- ============ CATEGORY STRIP ============ -->
+<nav class="cat-strip" id="catStrip">
+  <button class="pill active" data-filter="all">All</button>
+  <button class="pill" data-filter="women">Women's Clothing</button>
+  <button class="pill" data-filter="men">Men's Clothing</button>
+  <button class="pill" data-filter="jewelry">Jewelry</button>
+  <button class="pill" data-filter="bags">Bags</button>
+  <button class="pill" data-filter="footwear">Footwear</button>
+  <button class="pill" data-filter="caps">Caps</button>
+  <button class="pill" data-filter="sale">Sale</button>
+</nav>
+
+<div class="sort-bar" id="sortBar">
+  <button class="sort-pill active" data-sort="newest">Newest</button>
+  <button class="sort-pill" data-sort="price-asc">Price: Low to High</button>
+  <button class="sort-pill" data-sort="price-desc">Price: High to Low</button>
+</div>
+
+<!-- ============ PRODUCT GRID ============ -->
+<div class="grid-2" id="shopGrid"></div>
+
+<div class="related-section" id="relatedSection" style="display:none;">
+  <h3>You May Also Like</h3>
+  <div class="h-scroll" id="relatedRow"></div>
+</div>
+
+<!-- ============ BRAND STATEMENT ============ -->
+<div class="brand-statement">
+  <span class="flank">✦ · — »</span>
+  <p>Rooted in heritage, cut for the room you're about to walk into.</p>
+</div>
+
+<!-- ============ NEWSLETTER ============ -->
+<div class="newsletter">
+  <h3>Join the inner circle</h3>
+  <p>Early access to drops, restocks, and the Heritage archive.</p>
+  <form class="newsletter-form" id="newsletterForm">
+    <input type="email" placeholder="Your email address" required>
+    <button type="submit">Join</button>
+  </form>
+</div>
+
+<!-- ============ FOOTER ============ -->
+<footer>
+  <div class="footer-grid">
+    <div><h4>Shop</h4><ul>
+      <li><a href="shop.html?cat=women">Women</a></li>
+      <li><a href="shop.html?cat=men">Men</a></li>
+      <li><a href="jewelry.html">Jewelry</a></li>
+      <li><a href="shop.html?cat=sale">Sale</a></li>
+    </ul></div>
+    <div><h4>Help</h4><ul>
+      <li><a href="shipping.html">Shipping & Returns</a></li>
+      <li><a href="size-guide.html">Size Guide</a></li>
+      <li><a href="contact.html">Contact Us</a></li>
+      <li><a href="track-order.html">Track Order</a></li>
+    </ul></div>
+    <div><h4>Company</h4><ul>
+      <li><a href="about.html">About ÀGÒ LUXE</a></li>
+      <li><a href="terms.html">Terms of Service</a></li>
+      <li><a href="privacy.html">Privacy Policy</a></li>
+    </ul></div>
+    <div><h4>Connect</h4><ul>
+      <li><a href="#" class="toast-link" data-toast="Instagram link coming soon">Instagram</a></li>
+      <li><a href="#" class="toast-link" data-toast="WhatsApp link coming soon">WhatsApp</a></li>
+      <li><a href="#" class="toast-link" data-toast="TikTok link coming soon">TikTok</a></li>
+    </ul></div>
+  </div>
+  <div class="payment-section">
+    <h4>Accepted Payments</h4>
+    <div class="payment-row">
+      <img src="https://res.cloudinary.com/dikyzpmqi/image/upload/v1782905659/Paystack_idSL4BuSLF_1_ihbzpo.png" alt="Paystack">
+      <img src="https://res.cloudinary.com/dikyzpmqi/image/upload/v1782905701/Visa_Inc-_idDUM8TcN7_1_y6azxr.png" alt="Visa">
+      <img src="https://res.cloudinary.com/dikyzpmqi/image/upload/v1782905614/MClogo-c823e495c5cf455c89ddfb0e17fc7978_j60mjl.jpg" alt="Mastercard">
+      <img src="https://res.cloudinary.com/dikyzpmqi/image/upload/v1782905615/Verve_Image_nraa6w.png" alt="Verve">
+    </div>
+  </div>
+  <p class="copyright">© 2026 ÀGÒ LUXE. All rights reserved.</p>
+</footer>
+
+<!-- ============ BOTTOM NAV (mobile) ============ -->
+<nav class="bottom-nav">
+  <a href="index.html">
+    <svg viewBox="0 0 24 24"><path d="M3 11l9-8 9 8M5 10v10h14V10" stroke-width="1.6"/></svg>Home
+  </a>
+  <a href="categories.html">
+    <svg viewBox="0 0 24 24"><rect x="3" y="3" width="8" height="8" stroke-width="1.6"/><rect x="13" y="3" width="8" height="8" stroke-width="1.6"/><rect x="3" y="13" width="8" height="8" stroke-width="1.6"/><rect x="13" y="13" width="8" height="8" stroke-width="1.6"/></svg>Categories
+  </a>
+  <a href="cart.html">
+    <svg viewBox="0 0 24 24" stroke-width="1.6"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>Cart
+    <span class="badge" id="cartBadgeNav" data-cart-badge>0</span>
+  </a>
+  <a href="wishlist.html">
+    <svg viewBox="0 0 24 24" stroke-width="1.6"><path d="M12 21s-7.5-4.6-10-9.1C.4 8.5 2 4.5 6 4c2.2-.3 4 1 6 3.5C14 5 15.8 3.7 18 4c4 .5 5.6 4.5 4 7.9C19.5 16.4 12 21 12 21z"/></svg>Wishlist
+    <span class="badge" id="wishBadgeNav" data-wish-badge>0</span>
+  </a>
+  <a href="account.html">
+    <svg viewBox="0 0 24 24" stroke-width="1.6"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-6 8-6s8 2 8 6"/></svg>Account
+  </a>
+</nav>
+
+<!-- ============ SEARCH OVERLAY ============ -->
+<div class="search-overlay" id="searchOverlay">
+  <div class="search-overlay-top">
+    <button class="search-back" id="searchBackBtn" aria-label="Close search">
+      <svg viewBox="0 0 24 24"><path d="M19 12H5M11 18l-6-6 6-6" stroke="currentColor" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+    <div class="search-overlay-input">
+      <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7" stroke="currentColor" fill="none" stroke-width="1.8"/><path d="M21 21l-4.3-4.3" stroke="currentColor" stroke-width="1.8"/></svg>
+      <input type="text" id="searchOverlayInput" placeholder="Search products…">
+    </div>
+  </div>
+  <div class="search-overlay-body" id="searchOverlayBody"></div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// REAL, defensive skeleton — renders a genuine placeholder grid the
+// instant this script runs, BEFORE the real fallback array or the
+// async Supabase fetch below have had any chance to populate
+// anything. This guarantees the page never shows a blank grid, even
+// in the edge case where the hardcoded fallback data is ever empty
+// or the real render is delayed for any reason. Genuinely mirrors
+// the real card's shape (same image ratio, same two text lines) so
+// there's no visible shift once real content replaces it.
+(function renderSkeletonGrid(){
+  const grid = document.getElementById('shopGrid');
+  if (!grid) return;
+  const SKELETON_CARD_COUNT = 8; // enough to fill a real screen without over-rendering
+  grid.innerHTML = Array.from({ length: SKELETON_CARD_COUNT }, () => `
+    <div class="skel-card">
+      <div class="skel-media"></div>
+      <div class="skel-line name"></div>
+      <div class="skel-line price"></div>
+    </div>`).join('');
+})();
+
+/* ==================================================================
+   Same 34 confirmed products as the homepage (kept in sync manually
+   for now — once there's a backend/admin this becomes one shared
+   data source instead of copy-pasted between pages).
+================================================================== */
+const CLD = 'https://res.cloudinary.com/dikyzpmqi/image/upload/';
+const img = (id) => CLD + id;
+
+const flashSale = [
+  {name:'Swan Clutch', price:165000, was:230000, cat:'bags sale', img:img('v1782849704/dc55f4aff5112269fad9f63c395db3f0_sgwihl.jpg')},
+  {name:'Butterfly Clutch', price:178000, was:225000, cat:'bags sale', img:img('v1782849703/794a978cdb44067a86e2aaede3c432e6_dqr9wm.jpg')},
+  {name:'Coral Beads', price:142000, was:185000, cat:'jewelry sale', tags:'earrings necklace women', img:img('v1782849702/6dc008b044df08b80897ea79cd6abfe9_hwe0h2.jpg')},
+  {name:'Teak Beads', price:98000, was:135000, cat:'jewelry sale', tags:'earrings necklace women', img:img('v1782849700/9e636dcb6bea730e1d4aed43c4c69c89_efu5cd.jpg')},
+];
+const newArrivals = [
+  {name:'Onyx Beads', price:215000, was:null, cat:'jewelry', tags:'earrings necklace', img:img('v1782849699/aa4bcc2750ef050914e1a6283b9a300d_a7c3dp.jpg')},
+  {name:'Couples Beads', price:135000, was:null, cat:'jewelry', tags:'earrings necklace', img:img('v1782849699/7450f2c762cf60ef56d9605d5cfaa304_unmfab.jpg')},
+  {name:'Coral Bangles', price:175000, was:null, cat:'jewelry', img:img('v1782849697/3aeea5d8c54d810af111544a842fa7ff_ehbuyg.jpg')},
+  {name:'Leather Slides', price:92000, was:null, cat:'footwear', tags:'men', img:img('v1782849696/84731995c8bd7129c75edeb13ed4ea3c_ayrkzt.jpg')},
+];
+const womensPicks = [
+  {name:'Scarlet Jumpsuit', price:88000, was:null, cat:'women', img:img('v1782746593/e1149b114ea6ea2c4178c501a71f8b63_fdhe8c.jpg')},
+  {name:'Amethyst Jumpsuit', price:210000, was:250000, cat:'women sale', img:img('v1782746591/6c1505ebaec007b71cd571ccac3da06c_l4u5nc.jpg')},
+  {name:'Emerald Ankara Gown', price:105000, was:null, cat:'women', img:img('v1782746590/06501624e5456fe54f9eca0009a72388_nlqnkz.jpg')},
+  {name:'Cobalt Print Gown', price:58000, was:null, cat:'women', img:img('v1782746589/cb768a27175fb5aa67c12c8060d2afd1_rlqg0m.jpg')},
+];
+const mensPicks = [
+  {name:'Leopard Jacket', price:92000, was:null, cat:'men', img:img('v1782746552/e7b17b33f633f5074c615f2165bd21c6_hvgdgn.jpg')},
+  {name:'Cobalt Ankara Blazer', price:205000, was:230000, cat:'men sale', img:img('v1782746554/bdf7bf7da6e1600d0b74db2fd9fb38eb_ak2pni.jpg')},
+  {name:'Wine Senator Set', price:78000, was:null, cat:'men', tags:'agbada traditional wear', img:img('v1782746555/c2604902ddb147512d6797538887a1f3_hnkk2x.jpg')},
+  {name:'Adire Jacket', price:225000, was:null, cat:'men', img:img('v1782746557/3d03638680542e5fdfd41428a7bf4342_euiaco.jpg')},
+  {name:'Onyx Shorts Set', price:65000, was:null, cat:'men', img:img('v1782746557/6add607f8db7b347d695561408fb9c40_j3nwas.jpg')},
+  {name:'Mono Stripe Shirt', price:135000, was:null, cat:'men', img:img('v1782746561/402a3eb66b0fefc1a71cc39e8826d024_imljuh.jpg')},
+  {name:'Ankara Baggy Pants', price:195000, was:225000, cat:'men sale', img:img('v1782746561/1d1f8b1bbac1d7e588f2f2b3d8fd77a3_coh70i.jpg')},
+  {name:'Onyx Senator Kaftan', price:185000, was:null, cat:'men', tags:'agbada traditional wear set', img:img('v1782746552/4d09d117003b9ad5d2994a001f760d97_wm3bpp.jpg')},
+];
+const accessories = [
+  {name:'Beaded Clutch', price:85000, cat:'bags', img:img('v1782849704/99f27c8a79b90d2ccc2657406e57ac27_nra67m.jpg')},
+  {name:'Black Leather Slides', price:45000, cat:'footwear', tags:'men', img:img('v1782849695/86e9ddd81e81b2a8ba32deffd122390e_te6tm1.jpg')},
+  {name:'Emerald Heels', price:68000, cat:'footwear', tags:'women', img:img('v1782849691/1679c51648278a114cc2f901fcaae914_dqblsx.jpg')},
+  {name:'Cross Slides', price:38000, cat:'footwear', tags:'men', img:img('v1782849695/a00d4325ce9c80525bb249e7f96009d2_msn2f8.jpg')},
+  {name:'Fur Heels', price:72000, cat:'footwear', tags:'women', img:img('v1782849692/89ca53a97de3f2f8068594be2857468c_dfku21.jpg')},
+  {name:'Crystal Bow Heels', price:95000, was:null, cat:'footwear', lowStock:2, tags:'women', img:img('v1782849690/b7129b13ac00b174bfec8d0c300b6b7a_vsq4ej.jpg')},
+  {name:'Patent Loafers', price:58000, cat:'footwear', tags:'women', img:img('v1782849688/831bae2cfeed040db658e10e95b00fb6_kpt10p.jpg')},
+  {name:'Bridal Slippers', price:32000, cat:'footwear', tags:'women', img:img('v1782849686/f98f8c2ce4c5c373876bc4d0358dbdeb_hvlqld.jpg')},
+];
+accessories.push(
+  {name:'Silk Yoruba Purple Cap', price:18000, was:null, cat:'caps yoruba', img:img('v1782746562/c901b61204a30284648f177e202e01c0_wrxadq.jpg')},
+  {name:'Woven Yoruba Green Cap', price:16000, was:20000, cat:'caps yoruba sale', img:img('v1782849679/7d9df9f360c9469d5cce9b0a34b70d69_prqck6.jpg')},
+  {name:'Embroidered Hausa Black Cap', price:22000, cat:'caps hausa', img:img('v1782849676/f36fe6e78bced0b89cecda694f470c67_ztugcm.jpg')},
+  {name:'Embroidered Hausa Teal Cap', price:22000, cat:'caps hausa', img:img('v1782849681/7a51e7d1a0cb4508de5ad68ffc4c2b5e_zraq1c.jpg')},
+  {name:'Woven Black & White Cap', price:19000, cat:'caps', img:img('v1782849672/3d8ed78617e1240e7970c538c88fa106_xri7sz.jpg')},
+  {name:'Woven Maroon Stripe Cap', price:17000, cat:'caps yoruba', img:img('v1782849682/8f74f0ec894ffc226245d3f8c61b4290_yw6svw.jpg')}
+);
+
+// NEW — confirmed from your filename batch, prices not yet provided (TBD,
+// same as your existing unpriced accessories). Simple descriptive names.
+const moreProducts = [
+  {name:'Blue Ankara Wrap Dress', price:95000, cat:'women', img:img('v1782746570/f978479cc43ff98f32d918c0377b54c3_elk2iw.jpg')},
+  {name:'Gold Draped Gown', price:145000, cat:'women', img:img('v1782746571/253bdaee275ffceee1a79d8b252fe93d_cfjswv.jpg')},
+  {name:'Ivory Kaftan', price:110000, cat:'women', img:img('v1782746568/2adb7209b76fd749657c37ea937d0aba_zkdpii.jpg')},
+  {name:'Purple Beaded Gown', price:195000, was:null, cat:'women', lowStock:2, img:img('v1782746576/c486f8892441356c378fad6efc9d5fc8_a5j9k1.jpg')},
+  {name:'Black Zigzag Kaftan', price:125000, cat:'women', img:img('v1782746578/e6f93643d87c72f531e0c4b1634b76a5_ycd0wo.jpg')},
+  {name:'Red Print Co-ord Set', price:98000, cat:'women', img:img('v1782746589/d60ff0ab3fdef08fd235fad9daa4f39a_rkhcio.jpg')},
+  {name:'Cream Train Jumpsuit', price:175000, cat:'women', img:img('v1782746594/9a969e3fea81b69d078f4c3eeeec4505_p2uuqa.jpg')},
+  {name:'Sage Jumpsuit', price:82000, cat:'women', img:img('v1782746595/ac2ff2c6a8722268079385fa162fa55e_lmq5cf.jpg')},
+  {name:'Navy Sequin Jumpsuit', price:165000, cat:'women', img:img('v1782746596/9f1ef33b49b96e5cb70be2aecc6afca1_df1oot.jpg')},
+  {name:'Wine Batwing Kaftan', price:88000, cat:'men', tags:'agbada traditional wear set', img:img('v1782746564/d3c604197db84cc2184947942841cbaf_cvrnd0.jpg')},
+  {name:'Grey Batwing Kaftan', price:92000, cat:'men', tags:'agbada traditional wear set', img:img('v1782746565/75a0faf0b5688fde34ddffd33939f18d_kdw1yx.jpg')},
+  {name:'Purple Teal Agbada', price:195000, cat:'men', tags:'traditional wear set', img:img('v1782746567/43f6da5fda98a6dc882bc43ba61db448_npbsrw.jpg')},
+  {name:'Purple Agbada', price:230000, cat:'men', tags:'traditional wear set', img:img('v1782746568/be3bc8e278ede734089cc03ca9cb1033_m3agrl.jpg')},
+  {name:'Tan Slide Sandal', price:42000, cat:'footwear', tags:'men', img:img('v1782849692/ab2957653fe11ac95e71b42f1f855519_uxhg8w.jpg')},
+  {name:'Black Patent Lace-Up', price:55000, cat:'footwear', tags:'men', img:img('v1782849692/32a590ebebbdd8d3a116c30a6e4fbfe6_b7zfcu.jpg')},
+  {name:'Black Pin Loafer', price:62000, cat:'footwear', tags:'women', img:img('v1782849687/1f90de8425f93f5e1cae728d03638f9f_z47pqf.jpg')},
+  {name:'Red Beaded Necklace Set', price:78000, cat:'jewelry', tags:'earrings necklace women', img:img('v1782849699/4a8ae7428abddb6ba36943c8ebebd4bb_qfrayd.jpg')},
+  {name:'Coral Waist Beads', price:35000, cat:'jewelry', tags:'body chain traditional waist', img:img('v1782849674/ba9b0116859a70416af15565b0b02a03_nbaxnl.jpg')},
+
+  // ---- NEW BATCH: confirmed from Cloudinary, added Jul 1 ----
+  {name:'Black Platform Loafers', price:68000, cat:'footwear', tags:'men', img:img('be076270dc166f66d13fbecf3abeba47_iczgvz.jpg')},
+  {name:'Suede Platform Boots', price:85000, cat:'footwear', tags:'men', img:img('82b41cc2f508a0053eba2e658d513f72_bqmubl.jpg')},
+  {name:'Monogram Loafers', price:78000, cat:'footwear', tags:'men', img:img('707656116e6466c9030976bf0a5d005e_javkft.jpg')},
+  {name:'Cross Strap Slides', price:48000, cat:'footwear', tags:'men', img:img('eb7605cee74064c9e40d8ee7e9d7114f_eoct2s.jpg')},
+  {name:'Feather Strap Heels', price:65000, cat:'footwear', tags:'women', img:img('9f8e19d9cf0087d3b72047bf71c070b6_f0odnb.jpg')},
+
+  {name:'Quilted Tote', price:132000, cat:'bags', img:img('b2c718879f26738259cd30142f094502_o0ywnl.jpg')},
+  {name:'Woven Straw Tote', price:68000, cat:'bags', img:img('1a02d711dd864b0b76508f6964bad74f_y4fktp.jpg')},
+  {name:'Scarf-Tie Satchel', price:168000, cat:'bags', img:img('bdf12d93a591e71c10a0d40187afeb16_as9qsw.jpg')},
+
+  {name:'Woven Logo Cap', price:20000, cat:'caps', img:img('c1073dfcc6547802c5a464aad05c943c_ul1uj4.jpg')},
+  {name:'Red Fez Cap', price:18000, cat:'caps', img:img('64fe692ef2033c007f441f4eeb4eff97_cac2eh.jpg')},
+  {name:'Folded Red Fez', price:18000, cat:'caps', img:img('61901f9b050d1838e3991709fbcccd78_xqllhh.jpg')},
+
+  {name:'Beaded Bracelet Stack', price:45000, cat:'jewelry', tags:'bracelet wrist bangle', img:img('cc09a473b54cca4d946918b242ddc0f9_serlby.jpg')},
+  {name:'Red Waist Chain', price:32000, cat:'jewelry', tags:'necklace body chain waist', img:img('7302d0984e51d6d7c3ce7956fc3b05e3_jjlnzy.jpg')},
+  {name:'Pearl Necklace Set', price:88000, cat:'jewelry', tags:'earrings necklace women', img:img('ceb28504ce6029a8f116695a8ced7f6a_fobiud.jpg')},
+  {name:'Gold Chain Necklace', price:72000, cat:'jewelry', tags:'necklace women', img:img('2effab4cba1b93d161faec4ded6b97ed_fdy6rn.jpg')},
+  {name:'Cowrie Necklace Set', price:55000, cat:'jewelry', tags:'earrings necklace women', img:img('3395d57f4eed177d8edef6f9c20dfe1f_oq2oap.jpg')},
+  {name:'Pearl Hoop Earring', price:28000, cat:'jewelry', tags:'earrings women', img:img('7bca4543ca927457711043b193cbe64b_cpbwa5.jpg')},
+  {name:'Pearl Drop Earrings', price:34000, cat:'jewelry', tags:'earrings women', img:img('498ef52373027bc7fc9cfff591777dff_po7196.jpg')},
+  {name:'Cowrie Drop Earrings', price:26000, cat:'jewelry', tags:'earrings women', img:img('39776f575f14af6298703bf3f5fbc261_suhaqf.jpg')},
+  {name:'Pearl Chain Necklace', price:62000, cat:'jewelry', tags:'necklace women', img:img('b7f29c9dbb41396c59c5ea50b3e93f4a_xoflse.jpg')},
+
+  {name:'Crochet Stripe Set', price:98000, cat:'women', img:img('1cbf05f5c235c2c7d8737a4f1362361a_1_kyo7c4.jpg')},
+  {name:'Circle Print Wrap Dress', price:92000, cat:'women', img:img('ea4352ae1dd52d52be5fc292f6c07203_zlbhis.jpg')},
+  {name:'Ruffle Trim Jumpsuit', price:145000, cat:'women', img:img('07173c56eff72a0176df842e34bf2547_ei9srp.jpg')},
+  {name:'Emerald Wrap Top', price:58000, cat:'women', img:img('f694f33ddc59d9480dfc61e64eee72d5_v4ilic.jpg')},
+  {name:'Print Cargo Trousers', price:78000, cat:'women', img:img('06523e5fa555546664d829cfc2850cdf_dht8ss.jpg')},
+
+  {name:'Tribal Trim Kimono', price:165000, cat:'men', img:img('106ac60fd67b409af7815aa79a8aa57c_il2bip.jpg')},
+
+  // ---- NEW BATCH 2: confirmed from Cloudinary, added Jul 1 (categories build) ----
+  {name:'Onyx Beaded Gown', price:225000, was:null, cat:'women', img:img('a4717273f93957977ed4198a0f52b078_myore8.jpg')},
+  {name:'Heritage Stripe Set', price:145000, cat:'men', tags:'agbada traditional wear set', img:img('91668a9420efd00e415756d9f8b19d4d_vmnvvm.jpg')},
+  {name:'Lilac Fur Clutch', price:118000, cat:'bags', img:img('0b3590da0a18fe757552f27405eef9a3_fu5awb.jpg')},
+  {name:'Beaded Sunrise Bag', price:96000, cat:'bags', img:img('4ac448ae1e8aba6d5d9febd3b4ac560e_vy3wnx.jpg')},
+  {name:'Floral Strap Heels', price:88000, cat:'footwear', tags:'women', img:img('b21ceb33fa57616820d24eb1a8e225f6_n7mn5u.jpg')},
+  {name:'Double Buckle Monk Shoe', price:95000, cat:'footwear', tags:'men', img:img('c863e0e4b1d595b9a9fa8b9914e07df2_yu79p8.jpg')},
+  {name:'Silver Hoop Earrings', price:38000, cat:'jewelry', tags:'earrings women', img:img('87b39f44b2eb1e3d4ea578e1949147dc_eqwdpn.jpg')},
+  {name:'Scarlet Bow Earrings', price:29000, cat:'jewelry', tags:'earrings women', img:img('1a4b6af26934b58896a22694df4c2faa_tge04k.jpg')},
+  {name:'Crystal Strand Necklace', price:112000, cat:'jewelry', tags:'earrings necklace women', img:img('8697b624da24390350be1673c6ad1994_gsarkm.jpg')},
+  {name:'Butterfly Charm Bracelet', price:36000, cat:'jewelry', tags:'bracelet wrist women', img:img('d9d67bdaa3092f02b24b4ca2719c7157_h8prua.jpg')},
+  {name:'Silver Bead Bracelet', price:31000, cat:'jewelry', tags:'bracelet wrist women', img:img('5efccda9b4f6c8d6a8a741d0d56969c4_relgia.jpg')},
+  {name:'Sapphire Crystal Bracelet', price:39000, cat:'jewelry', tags:'bracelet wrist women', img:img('d791053f5da3018732d3d1201e695051_sfyavc.jpg')},
+  {name:'Blush Waist Chain', price:27000, cat:'jewelry', tags:'necklace body chain waist', img:img('5b98bcf1685715236fd2fbbb1435689e_obt6fo.jpg')},
+  {name:'Gold Link Waist Chain', price:34000, cat:'jewelry', tags:'necklace body chain waist', img:img('b3927b730a2912810b62f8445add6a8b_n7n7gh.jpg')},
+  {name:'Onyx Waist Beads', price:25000, cat:'jewelry', tags:'necklace body chain waist', img:img('6f97551d6e3c93d5a2b8c45e452395df_utt6if.jpg')},
+  {name:'Ruby Gold Waist Beads', price:33000, cat:'jewelry', tags:'necklace body chain waist', img:img('ab6bea1853080ac2f31abe0bf8dcb19a_hymcd1.jpg')},
+];
+
+let allProducts = [...flashSale, ...newArrivals, ...womensPicks, ...mensPicks, ...accessories, ...moreProducts];
+
+/* ── SUPABASE: fetch ALL products and replace allProducts ──
+   Maps Supabase shape → shape renderCard() + renderGrid() expect.
+   Falls back silently to hardcoded arrays if fetch fails.
+   ──────────────────────────────────────────────────────── */
+(async function loadShopFromSupabase() {
+  try {
+    const SB_URL = 'https://drjebroujarpugwadido.supabase.co/rest/v1';
+    const SB_KEY = 'sb_publishable_0mAkL4aIqXf1nm9zlQF8Fg_yPyt-F71';
+
+    // Plain fetch to Supabase REST — no CDN library needed
+    const res = await fetch(SB_URL + '/products?select=' +
+      encodeURIComponent('*,categories(slug)') +
+      '&is_active=eq.true&order=created_at.desc', {
+      headers: { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY }
+    });
+    if (!res.ok) throw new Error('REST ' + res.status);
+    const data = await res.json();
+    if (!data || !data.length) throw new Error('No data');
+
+    // Map to the shape renderCard() expects
+    allProducts = data.map(p => {
+      const images = Array.isArray(p.images) ? p.images : [];
+      const catSlug = p.categories?.slug || '';
+      const price = parseFloat(p.sale_price || p.price) || 0;
+      const was   = p.sale_price ? parseFloat(p.price) : null;
+      return {
+        name: p.name,
+        price: price,
+        was: was,
+        cat: [catSlug, ...(p.tags || [])].join(' '),
+        categorySlug: catSlug, // REAL FIX: separate, strict category value — cat above deliberately includes tags too (for the Jewelry subpage's ?type= sub-filter), which was the confirmed real cause of "Women" showing jewelry/footwear tagged "women"
+        rating: p.rating || null,
+        reviews: p.review_count || 0,
+        img: images[0]?.url || '',
+        img2: images[1]?.url || images[0]?.url || '',
+        stockQty: p.stock_qty,
+        isOutOfStock: p.stock_qty <= 0,
+        lowStock: p.stock_qty > 0 && p.stock_qty <= (p.low_stock_alert || 5) ? p.stock_qty : null,
+        slug: p.slug,
+      };
+    });
+
+    // Re-render with live data
+    renderGrid();
+
+    // Persist cart/wish counts
+    const cartCount = JSON.parse(localStorage.getItem(agoCartKey()) || '[]').reduce((s,i)=>s+i.qty,0);
+    const wishCount = JSON.parse(localStorage.getItem(agoWishKey()) || '[]').length;
+    document.querySelectorAll('[data-cart-badge]').forEach(el => el.textContent = cartCount);
+    document.querySelectorAll('[data-wish-badge]').forEach(el => el.textContent = wishCount);
+
+  } catch(err) {
+    console.warn('Supabase fetch failed, using local data:', err);
+    // allProducts already set to hardcoded arrays above — renderGrid() runs normally
+  }
+  // Real content is on screen now — clear the splash regardless of
+  // which path (live Supabase data or local fallback) got us here
+  if (window.__agoContentReady) window.__agoContentReady();
+})();
+
+const fmt = (n) => n==null ? 'TBD' : '₦' + n.toLocaleString();
+const pct = (price, was) => was ? Math.round((1 - price/was) * 100) : null;
+const slug = (name) => name.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,'');
+
+/* Small 5-star row for product cards — outline/filled, no fake data */
+function renderCardStars(rating){
+  let out = '';
+  for (let i = 1; i <= 5; i++){
+    const filled = rating >= i - 0.25;
+    out += `<svg viewBox="0 0 24 24" width="9" height="9" style="color:${filled?'var(--accent)':'var(--text-soft)'};"><path fill="${filled?'currentColor':'none'}" stroke="currentColor" stroke-width="1.6" d="M12 2l2.9 6.6 7.1.6-5.4 4.7 1.6 7-6.2-3.8L6 21l1.6-7L2.2 9.2l7.1-.6z"/></svg>`;
+  }
+  return out;
+}
+function renderCard(p){
+  const off = pct(p.price, p.was);
+  return `
+  <a class="card" data-cat="${p.cat}" href="product.html?id=${slug(p.name)}">
+    <div class="card-media skel-loading">
+      ${off ? `<div class="sale-badge">-${off}%</div>` : ''}
+      ${p.isOutOfStock ? `<div class="stock-badge" style="color:#FF6B6B; border-color:#FF6B6B;">Out of Stock</div>` : (p.lowStock ? `<div class="stock-badge">Only ${p.lowStock} left</div>` : '')}
+      <button class="wish-btn" aria-label="Wishlist toggle">
+        <svg viewBox="0 0 24 24"><path d="M12 21s-7.5-4.6-10-9.1C.4 8.5 2 4.5 6 4c2.2-.3 4 1 6 3.5C14 5 15.8 3.7 18 4c4 .5 5.6 4.5 4 7.9C19.5 16.4 12 21 12 21z"/></svg>
+      </button>
+      <img class="img-a skel-img" src="${p.img}" alt="${p.name}">
+      <img class="img-b" src="${p.img}" alt="">
+    </div>
+    <div class="card-info">
+      <p class="card-name">${p.name}</p>
+      ${p.rating && p.reviews ? `<div class="card-rating">${renderCardStars(p.rating)}<span>${p.rating} (${p.reviews})</span></div>` : ''}
+      <p class="card-price"><span data-ngn="${p.price}">${fmt(p.price)}</span> ${p.was ? `<span class="was">${fmt(p.was)}</span>` : ''}</p>
+      <div class="card-actions">
+        <button class="btn-add" data-name="${p.name}" data-price="${p.price}" data-img="${p.img}" data-slug="${slug(p.name)}" ${p.isOutOfStock ? 'disabled style="opacity:.5; pointer-events:none;"' : ''}>${p.isOutOfStock ? 'Out of Stock' : 'Add to Cart'}</button>
+      </div>
+    </div>
+  </a>`;
+}
+
+/* ============ RENDER GRID (filter + sort) ============ */
+const shopGrid = document.getElementById('shopGrid');
+const shopCount = document.getElementById('shopCount');
+let currentFilter = 'all';
+let currentSort = 'newest';
+let currentType = null; // sub-filter from ?type=, matched against name+cat+tags (see Jewelry subpage)
+const PRODUCTS_PER_PAGE = 12; // real, standard batch size — fits cleanly into a 2-col mobile / 3-4 col desktop grid
+let visibleCount = PRODUCTS_PER_PAGE;
+
+function renderGrid(){
+  let list = allProducts.filter(p => currentFilter==='all' || (p.categorySlug || p.cat.split(' ')[0]) === currentFilter);
+  if(currentType){
+    const tokens = (p) => `${p.cat} ${p.tags||''}`.toLowerCase().split(/\s+/);
+    list = list.filter(p => tokens(p).includes(currentType));
+  }
+  if(currentSort==='price-asc') list = [...list].sort((a,b)=>(a.price??Infinity)-(b.price??Infinity));
+  if(currentSort==='price-desc') list = [...list].sort((a,b)=>(b.price??-1)-(a.price??-1));
+
+  shopCount.textContent = `${list.length} product${list.length===1?'':'s'}`;
+
+  // Real, genuine pagination — only render the current visible batch,
+  // not every product at once. visibleCount grows when Load More is tapped.
+  const visibleList = list.slice(0, visibleCount);
+  const hasMore = list.length > visibleCount;
+
+  shopGrid.innerHTML = list.length ? visibleList.map(renderCard).join('') : `
+    <div class="grid-empty">
+      <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7" stroke-width="1.4"/><path d="M21 21l-4.3-4.3" stroke-width="1.4"/></svg>
+      <p>Nothing here yet — try a different filter or browse everything.</p>
+      <a href="shop.html">View All Products</a>
+    </div>`;
+
+  // Real, explicit re-conversion — this real function runs
+  // repeatedly (filtering, Load More), so this keeps the genuinely
+  // selected currency correctly applied every time.
+  if (typeof agoApplyDisplayCurrency === 'function') agoApplyDisplayCurrency();
+
+  // Real Load More button, only shown when there's genuinely more to
+  // load — rendered as a sibling after the grid, not inside it, so
+  // it never gets treated as a product card by any grid CSS.
+  const existingLoadMore = document.getElementById('loadMoreBtn');
+  if (existingLoadMore) existingLoadMore.remove();
+  if (hasMore) {
+    const btn = document.createElement('button');
+    btn.id = 'loadMoreBtn';
+    btn.className = 'load-more-btn';
+    btn.textContent = `Load More (${list.length - visibleCount} remaining)`;
+    btn.addEventListener('click', () => {
+      visibleCount += PRODUCTS_PER_PAGE;
+      renderGrid();
+    });
+    shopGrid.insertAdjacentElement('afterend', btn);
+  }
+
+  skelInit(shopGrid);
+  renderRelated(list);
+}
+
+/* "You May Also Like" — cross-sells products sharing a tag/category
+   with the current view, excluding items already shown, so it always
+   feels like genuine discovery rather than repeating the same grid. */
+function renderRelated(currentList){
+  const relSection = document.getElementById('relatedSection');
+  const relRow = document.getElementById('relatedRow');
+
+  if (currentFilter === 'all' && !currentType){
+    relSection.style.display = 'none';
+    return;
+  }
+
+  const shownNames = new Set(currentList.map(p => p.name));
+  const refTags = new Set();
+  currentList.slice(0, 6).forEach(p => (p.cat + ' ' + (p.tags||'')).split(/\s+/).forEach(t => t && refTags.add(t)));
+
+  const scored = allProducts
+    .filter(p => !shownNames.has(p.name))
+    .map(p => {
+      const tags = (p.cat + ' ' + (p.tags||'')).toLowerCase().split(/\s+/);
+      const score = tags.filter(t => refTags.has(t)).length;
+      return { p, score };
+    })
+    .filter(r => r.score > 0)
+    .sort((a,b) => b.score - a.score)
+    .slice(0, 10)
+    .map(r => r.p);
+
+  if (!scored.length){
+    relSection.style.display = 'none';
+    return;
+  }
+
+  relSection.style.display = '';
+  relRow.innerHTML = scored.map(p => `
+    <a class="rel-card" href="product.html?id=${slug(p.name)}">
+      <div class="rel-media">
+        <img src="${p.img}" alt="${p.name}" loading="lazy" onload="this.style.opacity='1'" onerror="this.style.display='none'">
+      </div>
+      <p class="rel-name">${p.name}</p>
+      <p class="rel-price" data-ngn="${p.price}">${fmt(p.price)}</p>
+    </a>`).join('');
+}
+
+// Pre-filter from URL, e.g. shop.html?cat=women or shop.html?cat=jewelry&type=necklace
+// (how Categories tiles and the Jewelry subpage link here)
+(function(){
+  const params = new URLSearchParams(location.search);
+  const cat = params.get('cat');
+  const type = params.get('type');
+  if(cat){
+    currentFilter = cat;
+    document.querySelectorAll('.pill').forEach(p=> p.classList.toggle('active', p.dataset.filter===cat));
+  }
+  if(type) currentType = type.toLowerCase();
+  renderGrid();
+})();
+
+document.getElementById('catStrip').addEventListener('click', (e)=>{
+  const pill = e.target.closest('.pill');
+  if(!pill) return;
+  document.querySelectorAll('.pill').forEach(p=>p.classList.remove('active'));
+  pill.classList.add('active');
+  currentFilter = pill.dataset.filter;
+  visibleCount = PRODUCTS_PER_PAGE; // real reset — a new filter should start from the first batch, not an inherited count
+  renderGrid();
+});
+
+document.getElementById('sortBar').addEventListener('click', (e)=>{
+  const pill = e.target.closest('.sort-pill');
+  if(!pill) return;
+  document.querySelectorAll('.sort-pill').forEach(p=>p.classList.remove('active'));
+  pill.classList.add('active');
+  currentSort = pill.dataset.sort;
+  renderGrid();
+});
+
+/* ============ SEARCH ============ */
+let recentSearches = [];
+/* ════════════════════════════════════════════════════════════
+   NIGERIAN-MARKET SEARCH ENGINE
+   Maps everyday/local search phrasing → product tags/categories.
+   Handles: pidgin/local terms (fila, buba), occasion phrases
+   (wedding, owambe, aso ebi), gendered phrasing (handbag for
+   women), and generic → specific expansion (bag → bags cat).
+   ════════════════════════════════════════════════════════════ */
+const SYNONYM_MAP = {
+  // ── Local / Pidgin / Yoruba-Hausa terms → real tags ──
+  'fila':'caps', ' velle':'caps', 'agbada':'agbada traditional', 'buba':'women',
+  'iro':'women', 'gele':'women', 'kaftan':'kaftan', 'ankara':'ankara',
+  'aso ebi':'women ankara', 'aso-ebi':'women ankara', 'asoebi':'women ankara',
+  'owambe':'women gown ankara', 'senator':'senator men', 'jalabia':'men kaftan',
+  // ── Occasion phrasing → category + style tags ──
+  'wedding':'gown women', 'wedding guest':'gown women', 'traditional wedding':'women ankara traditional',
+  'owanbe':'women gown ankara', 'party':'gown women', 'dinner':'gown women',
+  'birthday':'gown dress women', 'anniversary':'gown women', 'church':'women gown',
+  'graduation':'gown dress women', 'engagement':'ankara traditional women',
+  // ── Generic → specific product categories ──
+  'bag':'bags', 'bags':'bags', 'handbag':'bags', 'handbags':'bags', 'purse':'bags',
+  'clutch':'bags clutch', 'clutches':'bags clutch', 'tote':'bags',
+  'shoe':'footwear', 'shoes':'footwear', 'slippers':'footwear', 'slides':'footwear',
+  'sandal':'footwear', 'sandals':'footwear', 'heels':'footwear', 'heel':'footwear',
+  'loafers':'footwear', 'boot':'footwear', 'boots':'footwear',
+  'cap':'caps', 'caps':'caps', 'hat':'caps',
+  'jewelry':'jewelry', 'jewellery':'jewelry', 'necklace':'jewelry necklace',
+  'earring':'jewelry earrings', 'earrings':'jewelry earrings', 'bracelet':'jewelry bracelet',
+  'beads':'jewelry beads', 'waist beads':'jewelry waist',
+  'dress':'dress women', 'dresses':'dress women', 'gown':'gown women', 'gowns':'gown women',
+  'jumpsuit':'jumpsuit women', 'jumpsuits':'jumpsuit women',
+  'suit':'suit men', 'blazer':'blazer men', 'shirt':'men', 'trouser':'men', 'trousers':'men',
+  'kimono':'women', 'jacket':'jacket',
+  // ── Gendered phrasing normalises to the same tag search hits ──
+  'for women':'women', 'for men':'men', 'for her':'women', 'for him':'men',
+  'womens':'women', "women's":'women', 'mens':'men', "men's":'men',
+  'ladies':'women', 'lady':'women', 'guys':'men',
+};
+
+// Terms that carry no real search signal on their own
+const STOPWORDS = new Set(['for','a','an','the','of','in','and','with','to','on','at','my','me','i','want','need','looking','find','show','get']);
+
+/* Expand a raw query into extra tokens using the synonym map.
+   Longest-phrase-first so "aso ebi" matches before "ebi" alone. */
+function expandQuery(q){
+  const lower = q.toLowerCase().trim();
+  let extra = [];
+  const phrases = Object.keys(SYNONYM_MAP).sort((a,b)=>b.length-a.length);
+  phrases.forEach(phrase => {
+    if (lower.includes(phrase)) extra.push(...SYNONYM_MAP[phrase].split(' '));
+  });
+  const rawTokens = lower.split(/\s+/).filter(t => t.length && !STOPWORDS.has(t));
+  return [...new Set([...rawTokens, ...extra])];
+}
+
+const trendingSearches = ['Handbag for wedding','Ankara dress','Fila','Owambe gown','Handbags for women','Senator kaftan','Jewelry set','Heels'];
+const searchOverlay = document.getElementById('searchOverlay');
+const searchOverlayInput = document.getElementById('searchOverlayInput');
+const searchOverlayBody = document.getElementById('searchOverlayBody');
+
+function renderSearchDefault(){
+  let html = '';
+  if(recentSearches.length){
+    html += `<div class="search-section-title">Recent Searches <span class="clear-btn" id="clearRecent">Clear All</span></div>
+    <div class="search-pills">${recentSearches.map(t=>`<button class="search-pill" data-term="${t}">${t}</button>`).join('')}</div>`;
+  }
+  html += `<div class="search-section-title">Trending Searches</div>
+  <div class="search-pills">${trendingSearches.map(t=>`<button class="search-pill" data-term="${t}">${t}</button>`).join('')}</div>`;
+  searchOverlayBody.innerHTML = html;
+}
+function searchableText(p){
+  return `${p.name} ${p.cat} ${p.tags||''}`.toLowerCase();
+}
+function tokenMatches(text, token){
+  if(text.includes(token)) return true;
+  if(token.endsWith('s') && text.includes(token.slice(0,-1))) return true;
+  if(!token.endsWith('s') && text.includes(token+'s')) return true;
+  return false;
+}
+
+/* Ranked search — products matching MORE tokens rank higher, so
+   "handbag for wedding" prioritises bags that are also gown/party
+   tagged over a random bag with none of that context. */
+function rankedSearch(query){
+  const tokens = expandQuery(query);
+  if (!tokens.length) return [];
+  const scored = allProducts.map(p => {
+    const text = searchableText(p);
+    const matchCount = tokens.filter(t => tokenMatches(text, t)).length;
+    return { p, matchCount };
+  }).filter(r => r.matchCount > 0);
+  scored.sort((a,b) => b.matchCount - a.matchCount);
+  return scored.map(r => r.p);
+}
+
+/* Live "did you mean" suggestions shown while typing — mirrors
+   Jumia/Google style autocomplete pills under the search bar. */
+function getSuggestions(query){
+  const q = query.toLowerCase().trim();
+  if (!q) return [];
+  const pool = [...trendingSearches, ...Object.keys(SYNONYM_MAP).filter(k=>k.length>3)];
+  const seen = new Set();
+  const out = [];
+  pool.forEach(term => {
+    const t = term.toLowerCase();
+    if (t.includes(q) && !seen.has(t)) { seen.add(t); out.push(term); }
+  });
+  return out.slice(0, 6);
+}
+
+function renderSearchResults(query){
+  if(!query.trim()){ renderSearchDefault(); return; }
+
+  const suggestions = getSuggestions(query);
+  const matches = rankedSearch(query);
+
+  let html = '';
+  if (suggestions.length){
+    html += `<div class="search-pills" style="margin-bottom:16px;">
+      ${suggestions.map(s => `<button class="search-pill" data-term="${s}">${s}</button>`).join('')}
+    </div>`;
+  }
+
+  if(!matches.length){
+    // No direct hits — fall back to trending picks so the search
+    // never dead-ends (mirrors Jumia's "no results, but check these out")
+    const fallback = allProducts.slice(0, 6);
+    html += `<div class="search-empty">No results for "${query}" — here's what's popular right now</div>`;
+    html += fallback.map(p => `
+      <a class="search-result-row" href="product.html?id=${slug(p.name)}">
+        <span class="search-thumb-wrap skel-loading"><img class="skel-img" src="${p.img}" alt=""></span>
+        <div class="search-result-info"><p>${p.name}</p><span data-ngn="${p.price}">${fmt(p.price)}</span></div>
+      </a>`).join('');
+    searchOverlayBody.innerHTML = html;
+    skelInit(searchOverlayBody);
+    return;
+  }
+
+  html += matches.map(p => `
+    <a class="search-result-row" href="product.html?id=${slug(p.name)}">
+      <span class="search-thumb-wrap skel-loading"><img class="skel-img" src="${p.img}" alt=""></span>
+      <div class="search-result-info"><p>${p.name}</p><span data-ngn="${p.price}">${fmt(p.price)}</span></div>
+    </a>`).join('');
+  searchOverlayBody.innerHTML = html;
+  skelInit(searchOverlayBody);
+}
+function rememberSearch(term){
+  if(!term) return;
+  recentSearches = [term, ...recentSearches.filter(t => t !== term)].slice(0, 6);
+}
+document.getElementById('navSearchTrigger').addEventListener('click', ()=>{
+  searchOverlay.classList.add('active');
+  renderSearchDefault();
+  setTimeout(()=> searchOverlayInput.focus(), 80);
+});
+document.getElementById('searchBackBtn').addEventListener('click', ()=>{
+  searchOverlay.classList.remove('active');
+  searchOverlayInput.value = '';
+});
+searchOverlayInput.addEventListener('input', (e)=> renderSearchResults(e.target.value));
+searchOverlayInput.addEventListener('keydown', (e)=>{
+  if(e.key === 'Enter' && searchOverlayInput.value.trim()) rememberSearch(searchOverlayInput.value.trim());
+});
+searchOverlayBody.addEventListener('click', (e)=>{
+  const pill = e.target.closest('.search-pill');
+  if(pill){
+    const term = pill.dataset.term;
+    searchOverlayInput.value = term;
+    rememberSearch(term);
+    renderSearchResults(term);
+    return;
+  }
+  if(e.target.id === 'clearRecent'){ recentSearches = []; renderSearchDefault(); }
+});
+
+/* ============ TOAST ============ */
+const toastEl = document.getElementById('toast');
+let toastTimer;
+function showToast(msg){
+  toastEl.textContent = msg;
+  toastEl.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(()=>toastEl.classList.remove('show'), 2200);
+}
+document.addEventListener('click', (e)=>{
+  const link = e.target.closest('.toast-link');
+  if(link){ e.preventDefault(); showToast(link.dataset.toast || 'Coming soon'); }
+});
+
+/* Announcement bar removed from Shop per request — search-bar-only header */
+
+/* ============ CART + WISHLIST ============ */
+/* Handled globally by ago-cart.js */
+
+/* ============ NEWSLETTER ============ */
+document.getElementById('newsletterForm').addEventListener('submit', (e)=>{
+  e.preventDefault();
+  showToast("You're on the list 🤍");
+  e.target.reset();
+});
+
+/* ============ HAMBURGER ============ */
+/* Hamburger removed from Shop's simplified header */
+
+/* ============ IMAGE SKELETON LOADER ============ */
+function skelInit(root){
+  (root||document).querySelectorAll('img.skel-img:not(.skel-bound)').forEach(img=>{
+    img.classList.add('skel-bound');
+    const container = img.closest('.skel-loading');
+    function done(){
+      img.classList.add('loaded');
+      if(container) container.classList.add('img-loaded');
+    }
+    if(img.complete && img.naturalWidth) done();
+    else { img.addEventListener('load', done); img.addEventListener('error', done); }
+  });
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,1175 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/x-icon" href="favicon.ico">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="theme-color" content="#0A0A0A">
+<meta name="robots" content="noindex, nofollow">
+<title>Admin — ÀGÒ LUXE</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Gentium+Plus:ital,wght@0,400;0,700;1,400;1,700&family=Newsreader:ital,wght@0,500;0,600;1,500&display=swap" rel="stylesheet">
+<script src="ago-cart.js?v=20260725a"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
+<style>
+:root[data-theme="dark"]{--bg:#0A0A0A; --surface:#141414; --text:#F9F9F9; --text-soft:#9A9A9A; --border:#222222;}
+:root[data-theme="light"]{--bg:#F9F9F9; --surface:#FFFFFF; --text:#0A0A0A; --text-soft:#6B6B6B; --border:#E8E8E8;}
+:root{--accent:#C084FC; --accent-deep:#8B5CF6; --success:#6FCF97; --danger:#FF6B6B; --warn:#F3D98B;}
+
+*{box-sizing:border-box; margin:0; padding:0;}
+html,body{background:var(--bg); color:var(--text); font-family:'Newsreader',serif; font-weight:500; -webkit-tap-highlight-color:transparent; overflow-x:hidden;}
+@keyframes page-fade-in{from{opacity:0;} to{opacity:1;}}
+body{animation:page-fade-in .25s ease;}
+img{display:block; max-width:100%;}
+a{color:inherit; text-decoration:none;}
+button{font-family:inherit; border:none; background:none; cursor:pointer; color:inherit;}
+input,select,textarea{font-family:'Newsreader',serif;}
+h1,h2,h3{font-family:'Gentium Plus',serif; font-weight:700;}
+::selection{background:var(--accent); color:#0A0A0A;}
+
+/* ============ TOP BAR (mobile) ============ */
+.topbar{position:sticky; top:0; z-index:50; background:var(--bg); border-bottom:1px solid var(--border); display:flex; align-items:center; gap:10px; padding:14px;}
+.logo{font-family:'Cinzel Decorative',serif; font-style:italic; font-weight:700; font-size:1.1rem; color:var(--text); white-space:nowrap;}
+.logo .mark{color:var(--accent);}
+.topbar-title{flex:1; text-align:center; font-family:'Gentium Plus',serif; font-style:italic; font-size:1rem; color:var(--text-soft);}
+.menu-btn{display:flex; padding:4px;}
+.menu-btn svg{width:24px; height:24px; stroke:var(--text); fill:none; stroke-width:1.6;}
+.admin-tag{font-size:.62rem; letter-spacing:.08em; text-transform:uppercase; background:var(--accent); color:#0A0A0A; padding:4px 8px; border-radius:20px; font-weight:700;}
+
+/* ============ GATE ============ */
+.gate-wrap{display:flex; flex-direction:column; align-items:center; justify-content:center; min-height:70vh; padding:40px 24px; text-align:center;}
+.gate-wrap .g-icon{width:52px; height:52px; border:1px solid var(--border); border-radius:50%; display:flex; align-items:center; justify-content:center; margin-bottom:20px;}
+.gate-wrap .g-icon svg{width:24px; height:24px; stroke:var(--accent); fill:none; stroke-width:1.6;}
+.gate-wrap h2{font-size:1.25rem; font-style:italic; margin-bottom:8px;}
+.gate-wrap p{font-size:.88rem; color:var(--text-soft); margin-bottom:22px; max-width:280px; line-height:1.6;}
+.gate-wrap a{display:inline-block; padding:13px 28px; background:var(--accent); color:#0A0A0A; font-size:.8rem; font-weight:700; letter-spacing:.06em; text-transform:uppercase;}
+
+/* ============ LAYOUT ============ */
+.admin-layout{display:flex; min-height:100vh;}
+
+.sidebar{
+  position:fixed; top:0; left:0; bottom:0; width:270px; z-index:150;
+  background:var(--surface); border-right:1px solid var(--border);
+  padding:22px 14px; overflow-y:auto;
+  transform:translateX(-100%); transition:transform .3s cubic-bezier(0.25,0.46,0.45,0.94);
+}
+.sidebar.open{transform:translateX(0);}
+.sidebar-overlay{position:fixed; inset:0; background:rgba(0,0,0,.5); z-index:140; opacity:0; pointer-events:none; transition:opacity .25s;}
+.sidebar-overlay.open{opacity:1; pointer-events:all;}
+.sidebar-logo{font-family:'Cinzel Decorative',serif; font-style:italic; font-weight:700; font-size:1.25rem; padding:6px 10px 22px; display:flex; align-items:center; justify-content:space-between;}
+.sidebar-logo .mark{color:var(--accent);}
+.side-group{margin-bottom:20px;}
+.side-group-label{font-size:.66rem; letter-spacing:.1em; text-transform:uppercase; color:var(--text-soft); padding:0 10px; margin-bottom:9px;}
+.side-link{display:flex; align-items:center; gap:12px; padding:11px 10px; border-radius:6px; font-size:.9rem; color:var(--text-soft); margin-bottom:2px; position:relative; width:100%; text-align:left;}
+.side-link svg{width:18px; height:18px; stroke:currentColor; fill:none; stroke-width:1.6; flex-shrink:0;}
+.side-link.active{background:rgba(192,132,252,.12); color:var(--accent);}
+.side-link:hover:not(.active){background:var(--bg); color:var(--text);}
+.side-badge{margin-left:auto; background:var(--danger); color:#fff; font-size:.64rem; font-weight:700; padding:2px 7px; border-radius:20px;}
+
+.main-content{flex:1; padding-bottom:40px; min-width:0;}
+.admin-panel{display:none; padding:20px 16px;}
+.admin-panel.active{display:block;}
+.panel-header{display:flex; align-items:center; justify-content:space-between; margin-bottom:20px; flex-wrap:wrap; gap:10px;}
+.panel-header h2{font-size:1.3rem; font-style:italic;}
+.btn-primary{padding:11px 20px; background:var(--accent); color:#0A0A0A; font-size:.78rem; font-weight:700; letter-spacing:.05em; text-transform:uppercase; border-radius:4px;}
+
+/* ============ STATS ============ */
+.stat-grid{display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:26px;}
+.stat-card{background:var(--surface); border:1px solid var(--border); padding:18px;}
+.stat-card .s-label{font-size:.7rem; letter-spacing:.06em; text-transform:uppercase; color:var(--text-soft); margin-bottom:9px;}
+.stat-card .s-val{font-family:'Gentium Plus',serif; font-size:1.65rem; font-weight:700;}
+.stat-card .s-sub{font-size:.72rem; color:var(--text-soft); margin-top:5px;}
+.stat-card.accent .s-val{color:var(--accent);}
+.stat-card.warn .s-val{color:var(--warn);}
+.stat-card.success .s-val{color:var(--success);}
+
+.section-title{font-family:'Gentium Plus',serif; font-size:1.1rem; font-style:italic; margin:28px 0 14px;}
+.section-title:first-child{margin-top:0;}
+
+/* ============ DATA ROWS ============ */
+.data-row{display:flex; align-items:center; gap:12px; padding:12px 0; border-bottom:1px solid var(--border); font-size:.88rem;}
+.data-row:last-child{border-bottom:none;}
+.data-row img{width:52px; height:64px; object-fit:cover; border-radius:3px; background:var(--surface); flex-shrink:0;}
+.data-row .dr-main{flex:1; min-width:0;}
+.data-row .dr-main p{overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
+.data-row .dr-sub{font-size:.75rem; color:var(--text-soft); margin-top:3px;}
+.data-row .dr-val{font-size:.8rem; font-weight:700; flex-shrink:0;}
+.data-row .dr-val.danger{color:var(--danger);}
+.data-row .dr-val.success{color:var(--success);}
+
+/* ============ SEARCH/FILTER ============ */
+.search-bar{position:relative; margin-bottom:16px;}
+.search-bar svg{position:absolute; left:14px; top:50%; transform:translateY(-50%); width:17px; height:17px; stroke:var(--text-soft); fill:none; stroke-width:1.6; pointer-events:none;}
+.search-bar input{width:100%; background:var(--surface); border:1px solid var(--border); padding:13px 14px 13px 40px; font-size:.9rem; color:var(--text); outline:none; border-radius:4px;}
+.search-bar input:focus{border-color:var(--accent);}
+.status-pills{display:flex; gap:7px; overflow-x:auto; scrollbar-width:none; margin-bottom:16px; padding-bottom:2px;}
+.status-pills::-webkit-scrollbar{display:none;}
+.status-pill{flex-shrink:0; padding:7px 15px; border:1px solid var(--border); font-size:.76rem; letter-spacing:.03em; text-transform:uppercase; color:var(--text-soft); border-radius:20px; white-space:nowrap;}
+
+/* ════════════════════════════════════════════════════════════
+   REAL, DEDICATED DETAIL-VIEW DESIGN SYSTEM — genuinely built in
+   admin.html's own CSS layer, matching the established real card,
+   spacing, and typography language used throughout the rest of
+   admin, rather than scattered, real, inline JS-generated styles.
+   ════════════════════════════════════════════════════════════ */
+.detail-back-btn{ display:flex; align-items:center; gap:6px; background:none; color:var(--text-soft); font-size:.78rem; margin-bottom:18px; padding:6px 0; }
+.detail-back-btn:hover{ color:var(--accent); }
+.detail-back-btn svg{ width:16px; height:16px; }
+
+.detail-header-card{ background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:18px; margin-bottom:16px; }
+.detail-header-name{ font-family:'Gentium Plus',serif; font-weight:700; font-size:1.05rem; margin-bottom:6px; color:var(--text); }
+.detail-header-meta{ font-size:.78rem; color:var(--text-soft); display:flex; align-items:center; gap:6px; flex-wrap:wrap; }
+.detail-header-meta .dot{ opacity:.5; }
+.detail-header-time{ font-size:.7rem; color:var(--text-soft); opacity:.7; margin-top:6px; }
+
+.detail-message-card{ background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:18px; margin-bottom:20px; font-size:.86rem; line-height:1.65; color:var(--text); white-space:pre-wrap; }
+.detail-message-card .label{ display:block; font-size:.66rem; text-transform:uppercase; letter-spacing:.08em; color:var(--text-soft); margin-bottom:10px; }
+
+.detail-reply-btn{ display:flex; align-items:center; justify-content:center; gap:8px; width:100%; padding:14px; background:var(--accent); color:#0A0A0A; font-size:.78rem; font-weight:700; letter-spacing:.04em; text-transform:uppercase; border-radius:8px; text-decoration:none; }
+.detail-reply-btn svg{ width:16px; height:16px; }
+
+/* Real, dedicated chat detail styling */
+.chat-detail-header{ display:flex; align-items:center; gap:12px; background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:14px 16px; margin-bottom:16px; }
+.chat-detail-avatar{ width:40px; height:40px; border-radius:50%; background:var(--accent); color:#0A0A0A; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:1rem; flex-shrink:0; }
+.chat-detail-name{ font-weight:700; font-size:.9rem; color:var(--text); }
+.chat-messages-panel{ display:flex; flex-direction:column; gap:10px; max-height:50vh; overflow-y:auto; padding:14px 4px; margin-bottom:14px; background:var(--bg); border-radius:10px; border:1px solid var(--border); }
+.chat-reply-row{ display:flex; gap:8px; }
+.chat-reply-input{ flex:1; padding:13px 16px; background:var(--surface); border:1px solid var(--border); border-radius:22px; color:var(--text); font-size:.85rem; }
+.chat-reply-send{ width:46px; height:46px; flex-shrink:0; border-radius:50%; background:var(--accent); display:flex; align-items:center; justify-content:center; }
+/* REAL, CONFIRMED FIX: the parent .admin-panel's own, uniform
+   20px padding was creating a genuine, real, visible gap below the
+   reply input, since chat.html's own real design pins its input bar
+   flush against a full-viewport layout admin's panel doesn't share.
+   Scoping the correction here, to this specific, real view, rather
+   than fighting the shared parent's padding globally. */
+/* REAL, ROBUST, STRUCTURAL FIX: the previous, single, fixed -20px
+   correction only canceled the real, base mobile padding — it never
+   accounted for the real, separate 960px+ desktop breakpoint's own,
+   different bottom padding (36px), leaving real, uncorrected space
+   there. Using a real CSS custom property so each real breakpoint
+   can set its own, correct, honest value in one place. */
+:root{ --admin-panel-bottom-pad: 20px; }
+#chatThreadDetailView{ margin-bottom:calc(-1 * var(--admin-panel-bottom-pad) - 15px); }
+
+
+.promo-suggestion-card{ display:block; width:100%; text-align:left; padding:12px 14px; border:1px solid var(--border); border-radius:8px; margin-bottom:8px; background:none; }
+.promo-suggestion-card:hover{ border-color:var(--accent); }
+.promo-suggestion-title{ font-size:.82rem; font-weight:700; margin-bottom:3px; }
+.promo-suggestion-body{ font-size:.76rem; color:var(--text-soft); line-height:1.4; }
+.promo-suggestion-chars{ font-size:.66rem; color:var(--text-soft); opacity:.7; margin-top:4px; }
+
+.admin-chat-bubble-row{ display:flex; }
+.admin-chat-bubble-row.admin{ justify-content:flex-end; }
+.admin-chat-bubble-row.customer{ justify-content:flex-start; }
+.admin-chat-bubble{ max-width:78%; padding:10px 14px; border-radius:16px; font-size:.85rem; line-height:1.45; }
+.admin-chat-bubble-row.admin .admin-chat-bubble{ background:var(--accent); color:#0A0A0A; border-bottom-right-radius:4px; }
+.admin-chat-bubble-row.customer .admin-chat-bubble{ background:var(--surface); border:1px solid var(--border); color:var(--text); border-bottom-left-radius:4px; }
+.chat-thread-card{ display:block; width:100%; text-align:left; padding:14px; border-bottom:1px solid var(--border); background:none; }
+.chat-thread-card.unread{ background:rgba(192,132,252,.06); }
+.chat-thread-name{ font-size:.85rem; font-weight:700; margin-bottom:3px; }
+.chat-thread-preview{ font-size:.78rem; color:var(--text-soft); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.chat-thread-time{ font-size:.68rem; color:var(--text-soft); opacity:.7; margin-top:4px; }
+.status-pill.active{border-color:var(--accent); color:var(--text); background:rgba(192,132,252,.08);}
+
+/* REAL, swipeable chat thread row — swipe left to reveal a real,
+   quick action (mark read/unread), matching the established,
+   left-reveal pattern already used in categories.html's swipe
+   navigation, adapted here for a real, scrollable list of rows
+   rather than fixed panels. */
+.chat-thread-swipe-wrap{ position:relative; overflow:hidden; border-bottom:1px solid var(--border); }
+.chat-thread-action{ position:absolute; top:0; right:0; bottom:0; width:84px; display:flex; align-items:center; justify-content:center; background:var(--accent); color:#0A0A0A; font-size:.68rem; font-weight:700; text-transform:uppercase; }
+.chat-thread-swipe-wrap .chat-thread-card{ position:relative; background:var(--bg); border-bottom:none; transition:transform .25s cubic-bezier(0.22,1,0.36,1); touch-action:pan-y; }
+.chat-thread-swipe-wrap.swiped .chat-thread-card{ transform:translateX(-84px); }
+
+/* ============ ORDER / PRODUCT CARDS ============ */
+.order-card, .prod-row{background:var(--surface); border:1px solid var(--border); padding:16px; margin-bottom:11px; cursor:pointer;}
+.order-card-top{display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:9px;}
+.order-num{font-family:'Gentium Plus',serif; font-size:1rem;}
+.order-date{font-size:.75rem; color:var(--text-soft); margin-top:3px;}
+.order-cust{font-size:.85rem; color:var(--text-soft); margin-bottom:7px;}
+.order-total{font-size:.98rem; font-weight:700;}
+.status-pill-sm{font-size:.66rem; font-weight:700; letter-spacing:.04em; text-transform:uppercase; padding:5px 10px; border-radius:20px; white-space:nowrap;}
+.status-pill-sm.pending{background:rgba(243,217,139,.12); color:var(--warn);}
+.status-pill-sm.paid{background:rgba(111,207,151,.12); color:var(--success);}
+.status-pill-sm.processing{background:rgba(192,132,252,.12); color:var(--accent);}
+.status-pill-sm.shipped{background:rgba(139,92,246,.12); color:var(--accent-deep);}
+.status-pill-sm.delivered{background:rgba(111,207,151,.18); color:var(--success);}
+.status-pill-sm.cancelled, .status-pill-sm.failed{background:rgba(255,107,107,.12); color:var(--danger);}
+
+.prod-row{display:flex; align-items:center; gap:14px; cursor:default;}
+.prod-row img{width:64px; height:80px; object-fit:cover; border-radius:3px; background:var(--bg); flex-shrink:0;}
+.prod-row .pr-info{flex:1; min-width:0;}
+.prod-row .pr-name{font-size:.92rem; line-height:1.35; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; margin-bottom:4px;}
+.prod-row .pr-meta{font-size:.78rem; color:var(--text-soft);}
+.prod-row .pr-stock{font-size:.76rem; font-weight:700;}
+.prod-row .pr-stock.low{color:var(--danger);}
+.prod-row .pr-stock.ok{color:var(--success);}
+.prod-row .pr-edit{color:var(--accent); font-size:.74rem; letter-spacing:.04em; text-transform:uppercase; border-bottom:1px solid var(--accent); padding-bottom:2px; flex-shrink:0;}
+
+/* ============ SHEET ============ */
+.sheet-overlay{position:fixed; inset:0; z-index:200; background:rgba(10,10,10,.7); backdrop-filter:blur(3px); opacity:0; pointer-events:none; transition:opacity .25s ease;}
+.sheet-overlay.open{opacity:1; pointer-events:all;}
+.sheet{position:fixed; left:0; right:0; bottom:0; z-index:201; background:var(--bg); border-top:1px solid var(--border); border-radius:16px 16px 0 0; padding:24px 20px calc(24px + env(safe-area-inset-bottom)); transform:translateY(100%); transition:transform .3s cubic-bezier(0.25,0.46,0.45,0.94); max-height:88vh; overflow-y:auto;}
+/* Product Edit can be opened FROM other sheets (e.g. Category
+   Detail, Inventory, Low Stock) — it shares the same base
+   .sheet-overlay z-index as everything else, so without this
+   override, DOM source order decided which one visually won, which
+   is why it could get trapped underneath a sheet that was defined
+   later in the HTML even though it was technically open. This
+   forces it to always render on top of any other sheet. */
+/* ── SHEET STACKING ORDER ──────────────────────────────────────
+   Several sheets can open ON TOP of another sheet, not just on top
+   of the page (e.g. Category Detail → Product Edit → Remove Image
+   confirmation). All sheets share the same base .sheet-overlay
+   z-index by default, which meant DOM source order silently decided
+   which one visually won — not which one was actually opened last.
+   This gives each "can be nested" sheet a deliberately higher tier,
+   so the natural open-from-another-sheet flow always stacks
+   correctly regardless of where each sheet happens to sit in the HTML. */
+#productEditOverlay{z-index:220;}
+#productEditOverlay .sheet{z-index:221;}
+#removeImageOverlay{z-index:230;} /* opens FROM product edit — must always win over it */
+#removeImageOverlay .sheet{z-index:231;}
+#deleteProductOverlay{z-index:230;} /* also opens FROM product edit */
+#deleteProductOverlay .sheet{z-index:231;}
+#refundOrderOverlay{z-index:230;} /* opens FROM order detail — same tier as the other "opens from a sheet" cases above */
+#refundOrderOverlay .sheet{z-index:231;}
+#deleteDeliveryFeeOverlay{z-index:230;} /* opens FROM the delivery fee edit sheet */
+#deleteDeliveryFeeOverlay .sheet{z-index:231;}
+.sheet-overlay.open .sheet{transform:translateY(0);}
+.sheet-handle{width:36px; height:4px; background:var(--border); border-radius:2px; margin:0 auto 20px;}
+.sheet h3{font-size:1.15rem; font-style:italic; margin-bottom:5px;}
+.sheet .sub{font-size:.85rem; color:var(--text-soft); margin-bottom:20px;}
+.sheet-close{position:absolute; top:20px; right:20px; color:var(--text-soft);}
+.sheet-field{margin-bottom:16px;}
+.sheet-field label{display:block; font-size:.72rem; letter-spacing:.08em; text-transform:uppercase; color:var(--text-soft); margin-bottom:7px;}
+.sheet-field input, .sheet-field select, .sheet-field textarea{width:100%; background:var(--surface); border:1px solid var(--border); padding:13px 14px; font-size:.9rem; color:var(--text); outline:none; transition:border-color .2s;}
+.sheet-field input:focus, .sheet-field select:focus, .sheet-field textarea:focus{border-color:var(--accent);}
+.sheet-field textarea{resize:vertical; min-height:76px;}
+.sheet-row{display:flex; gap:11px;}
+.sheet-row .sheet-field{flex:1; min-width:0;} /* min-width:0 is the actual fix — without it, flex children refuse to shrink below their content's natural width, which was forcing this page wider than the viewport and shifting everything left */
+.sheet-submit{width:100%; padding:15px; background:var(--accent); color:#0A0A0A; font-size:.82rem; font-weight:700; letter-spacing:.06em; text-transform:uppercase; margin-top:8px;}
+.sheet-submit:disabled{opacity:.4; pointer-events:none;}
+.sheet-hint{font-size:.72rem; color:var(--text-soft); margin-top:7px; line-height:1.55;}
+
+/* ============ APPEARANCE — FONT OPTIONS ============ */
+.ap-font-option{
+  display:flex; flex-direction:column; gap:3px;
+  padding:14px; border:1px solid var(--border); border-radius:6px;
+  cursor:pointer; transition:border-color .2s;
+  min-width:0; overflow-wrap:break-word;
+}
+.ap-font-option:has(input:checked){border-color:var(--accent); background:rgba(192,132,252,.06);}
+.ap-font-option{position:relative;} /* establishes a positioning context so the absolutely-positioned input below is contained here, not wherever the nearest ancestor with `position` set happens to be (which was .admin-layout, 1280px — the actual root cause of the horizontal overflow on Appearance and Page Content) */
+.ap-font-option input{position:absolute; inset:0; width:100%; height:100%; margin:0; opacity:0; pointer-events:none;}
+.afo-name{font-size:.95rem;}
+.afo-desc{font-size:.72rem; color:var(--text-soft);}
+
+.od-items{margin:16px 0;}
+.od-item{display:flex; gap:12px; padding:10px 0; border-bottom:1px solid var(--border); font-size:.85rem;}
+.od-item:last-child{border-bottom:none;}
+.od-item img{width:42px; height:52px; object-fit:cover; border-radius:3px; background:var(--surface); flex-shrink:0;}
+.od-item .odi-name{flex:1;}
+.od-timeline{margin-top:18px;}
+.od-event{display:flex; gap:11px; padding:8px 0; font-size:.8rem; color:var(--text-soft);}
+.od-event .oe-dot{width:6px; height:6px; border-radius:50%; background:var(--accent); margin-top:6px; flex-shrink:0;}
+.status-select-row{display:flex; gap:9px; margin-top:18px;}
+.status-select-row select{flex:1;}
+
+/* ============ IMAGE UPLOAD (drag-reorder grid) ============ */
+.img-upload-grid{display:grid; grid-template-columns:repeat(auto-fill, minmax(84px, 1fr)); gap:10px; margin-bottom:11px; min-width:0; max-width:100%;}
+.img-thumb{
+  position:relative; aspect-ratio:3/4; border-radius:6px; overflow:hidden;
+  background:var(--surface); border:1px solid var(--border); cursor:grab;
+}
+.img-thumb.dragging{opacity:.4;}
+.img-thumb.drag-over{border-color:var(--accent); box-shadow:0 0 0 2px var(--accent) inset;}
+.img-thumb img{width:100%; height:100%; object-fit:cover;}
+.img-thumb .it-remove{
+  position:absolute; top:4px; right:4px; width:22px; height:22px; border-radius:50%;
+  background:rgba(10,10,10,.75); color:#fff; display:flex; align-items:center; justify-content:center; font-size:.95rem;
+}
+.img-thumb .it-main-tag{
+  position:absolute; bottom:0; left:0; right:0; background:var(--accent); color:#0A0A0A;
+  font-size:.58rem; font-weight:700; letter-spacing:.04em; text-transform:uppercase; text-align:center; padding:3px 0;
+}
+.img-thumb.uploading{display:flex; align-items:center; justify-content:center;}
+.img-thumb .it-spinner{width:20px; height:20px; border:2px solid var(--border); border-top-color:var(--accent); border-radius:50%; animation:it-spin .7s linear infinite;}
+@keyframes it-spin{to{transform:rotate(360deg);}}
+.img-thumb.upload-failed{border-color:var(--danger); display:flex; align-items:center; justify-content:center; flex-direction:column; gap:4px; padding:6px; text-align:center;}
+.img-thumb.upload-failed .it-fail-text{font-size:.6rem; color:var(--danger);}
+
+.img-upload-btn{
+  display:flex; align-items:center; justify-content:center; gap:9px;
+  width:100%; padding:16px; border:1px dashed var(--border); border-radius:6px;
+  font-size:.82rem; color:var(--text-soft); cursor:pointer; transition:border-color .2s, color .2s;
+}
+.img-upload-btn:hover{border-color:var(--accent); color:var(--accent);}
+.img-upload-btn svg{width:18px; height:18px; stroke:currentColor; fill:none; stroke-width:1.6;}
+.img-upload-btn.uploading{pointer-events:none; opacity:.6;}
+
+.toast{position:fixed; bottom:20px; left:50%; transform:translateX(-50%) translateY(20px); background:var(--text); color:var(--bg); padding:13px 19px; border-radius:14px; font-size:.85rem; line-height:1.45; opacity:0; transition:all .3s ease; z-index:300; max-width:min(88vw,380px); width:max-content; white-space:normal; text-align:center; pointer-events:none; box-shadow:0 8px 24px rgba(0,0,0,.35);}
+.toast.show{opacity:1; transform:translateX(-50%) translateY(0);}
+.toast.error{background:#B3261E; color:#fff;}
+.toast.success{background:#2E7D4F; color:#fff;}
+
+.empty-state{text-align:center; padding:56px 20px; color:var(--text-soft); font-size:.88rem;}
+
+/* ============ HOME SECTION MANAGER ============ */
+.section-row{display:flex; align-items:center; gap:12px; background:var(--surface); border:1px solid var(--border); padding:14px; margin-bottom:9px; transition:opacity .15s;}
+
+/* ============ COUPONS ============ */
+.coupon-row{background:var(--surface); border:1px solid var(--border); padding:16px; margin-bottom:11px; cursor:pointer;}
+.coupon-row-top{display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:8px;}
+.coupon-code{font-family:'Gentium Plus',serif; font-size:1.05rem; letter-spacing:.02em;}
+.coupon-discount{font-size:.85rem; color:var(--accent); font-weight:700; margin-top:2px;}
+.coupon-meta{font-size:.74rem; color:var(--text-soft); margin-top:6px; line-height:1.6;}
+.coupon-status-pill{font-size:.62rem; font-weight:700; letter-spacing:.04em; text-transform:uppercase; padding:4px 9px; border-radius:20px; white-space:nowrap; flex-shrink:0;}
+.coupon-status-pill.active{background:rgba(111,207,151,.12); color:var(--success);}
+.coupon-status-pill.inactive{background:rgba(255,107,107,.12); color:var(--danger);}
+.coupon-status-pill.expired{background:rgba(154,154,154,.15); color:var(--text-soft);}
+.coupon-status-pill.used-up{background:rgba(243,217,139,.12); color:var(--warn);}
+
+/* ============ BANNERS ============ */
+.banner-row{display:flex; align-items:center; gap:12px; background:var(--surface); border:1px solid var(--border); padding:14px; margin-bottom:9px; cursor:pointer;}
+.banner-row img{width:52px; height:34px; object-fit:cover; border-radius:3px; background:var(--bg); flex-shrink:0;}
+.banner-row .br-info{flex:1; min-width:0;}
+.banner-row .br-title{font-size:.86rem; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
+.banner-row .br-sub{font-size:.72rem; color:var(--text-soft); margin-top:2px;}
+
+/* ============ HERO CAROUSEL SLIDE EDITOR ============ */
+.slide-card{background:var(--surface); border:1px solid var(--border); border-radius:6px; padding:16px; margin-bottom:14px;}
+.slide-card-title{font-family:'Gentium Plus',serif; font-style:italic; font-size:.95rem; margin-bottom:14px;}
+.slide-card .img-upload-grid{margin-bottom:10px;}
+.slide-card-save{width:100%; padding:11px; background:var(--accent); color:#0A0A0A; font-size:.74rem; font-weight:700; letter-spacing:.05em; text-transform:uppercase; border-radius:4px; margin-top:10px;}
+.section-row.dragging{opacity:.35;}
+.sr-drag-handle{cursor:grab; color:var(--text-soft); flex-shrink:0; touch-action:none;}
+.sr-drag-handle:active{cursor:grabbing;}
+.sr-drag-handle svg{width:16px; height:16px; stroke:currentColor; fill:currentColor;}
+.section-row.hidden-section{opacity:.5;}
+.sr-order-btns{display:flex; flex-direction:column; gap:2px;}
+.sr-order-btns button{width:26px; height:20px; display:flex; align-items:center; justify-content:center; color:var(--text-soft); border:1px solid var(--border);}
+.sr-order-btns button:disabled{opacity:.25; pointer-events:none;}
+.sr-order-btns svg{width:12px; height:12px; stroke:currentColor; fill:none; stroke-width:2;}
+.sr-info{flex:1; min-width:0; cursor:pointer;}
+.sr-info .sr-name{font-size:.9rem; margin-bottom:2px;}
+.sr-info .sr-sub{font-size:.72rem; color:var(--text-soft); overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
+.sr-edit-tag{font-size:.68rem; color:var(--accent); letter-spacing:.03em; text-transform:uppercase; flex-shrink:0;}
+
+@media(min-width:960px){
+  .topbar{display:none;}
+  .sidebar{transform:translateX(0); position:sticky; top:0; height:100vh;}
+  .sidebar-overlay{display:none;}
+  .admin-panel{max-width:1100px; margin:0 auto; padding:36px 44px;}
+  :root{ --admin-panel-bottom-pad: 36px; }
+  .stat-grid{grid-template-columns:repeat(4,1fr);}
+  .sheet{max-width:560px; left:50%; transform:translateX(-50%) translateY(100%); border-radius:16px; bottom:5%;}
+  .sheet-overlay.open .sheet{transform:translateX(-50%) translateY(0);}
+}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <button class="menu-btn" id="menuBtn"><svg viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
+  <div class="topbar-title" id="topbarTitle">Overview</div>
+  <span class="admin-tag">Admin</span>
+</header>
+
+<div id="gateScreen" style="display:none;">
+  <div class="gate-wrap">
+    <div class="g-icon"><svg viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="10" rx="1"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg></div>
+    <h2>Admin Access Required</h2>
+    <p>This area is restricted to store administrators. Sign in with an admin account to continue.</p>
+    <a href="account.html?redirect=admin.html">Sign In</a>
+  </div>
+</div>
+
+<div id="adminApp" style="display:none;">
+<div class="admin-layout">
+
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+  <nav class="sidebar" id="sidebar">
+    <div class="sidebar-logo"><span><span class="mark">ÀGÒ</span> LUXE</span></div>
+
+    <div class="side-group">
+      <div class="side-group-label">Site</div>
+      <a href="index.html" class="side-link"><svg viewBox="0 0 24 24"><path d="M3 11l9-8 9 8M5 10v10h14V10"/></svg>View Home Page</a>
+      <button class="side-link" data-tab="home"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="5"/><rect x="14" y="12" width="7" height="9"/><rect x="3" y="16" width="7" height="5"/></svg>Homepage Layout</button>
+    </div>
+
+    <div class="side-group">
+      <div class="side-group-label">Overview</div>
+      <button class="side-link active" data-tab="overview"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="5"/><rect x="14" y="12" width="7" height="9"/><rect x="3" y="16" width="7" height="5"/></svg>Dashboard</button>
+      <button class="side-link" data-tab="visitors"><svg viewBox="0 0 24 24"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z"/><circle cx="12" cy="12" r="3"/></svg>Visitors</button>
+    </div>
+
+    <div class="side-group">
+      <div class="side-group-label">Sales</div>
+      <button class="side-link" data-tab="orders"><svg viewBox="0 0 24 24"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>Orders <span class="side-badge" id="pendingOrdersBadge" style="display:none;">0</span><span class="side-badge" id="newOrdersBadge" style="display:none; background:var(--accent);" title="New orders you haven't viewed yet">0</span></button>
+      <button class="side-link" data-tab="coupons"><svg viewBox="0 0 24 24"><path d="M20.59 13.41L13.42 20.58a2 2 0 0 1-2.83 0L2.59 12.58a2 2 0 0 1 0-2.83l7.17-7.17a2 2 0 0 1 2.83 0l7.99 7.99a2 2 0 0 1 .01 2.84z"/><circle cx="8.5" cy="8.5" r="1.5"/></svg>Coupons</button>
+      <button class="side-link" data-tab="deliveryFees"><svg viewBox="0 0 24 24"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>Delivery Fees</button>
+      <button class="side-link" data-tab="activityLog"><svg viewBox="0 0 24 24"><path d="M12 8v4l3 3"/><circle cx="12" cy="12" r="10"/></svg>Activity Log</button>
+      <button class="side-link" data-tab="abandonedCarts"><svg viewBox="0 0 24 24" stroke-width="1.6"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/><line x1="4" y1="4" x2="20" y2="20" stroke="#B3261E"/></svg>Abandoned Carts <span class="side-badge" id="abandonedCartsBadge" style="display:none;">0</span></button>
+      <button class="side-link" data-tab="banners"><svg viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="12" rx="2"/><line x1="6" y1="6" x2="6" y2="18"/></svg>Banners</button>
+    </div>
+
+    <div class="side-group">
+      <div class="side-group-label">Catalog</div>
+      <button class="side-link" data-tab="products"><svg viewBox="0 0 24 24"><path d="M20 7L9 18l-5-5"/><path d="M3 3h18v4H3z"/></svg>All Products</button>
+      <button class="side-link" data-tab="addProduct"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Add Product</button>
+      <button class="side-link" data-tab="categories"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>Categories</button>
+      <button class="side-link" data-tab="inventory"><svg viewBox="0 0 24 24"><path d="M20.59 13.41L13.42 20.58a2 2 0 0 1-2.83 0L2.59 12.58a2 2 0 0 1 0-2.83l7.17-7.17a2 2 0 0 1 2.83 0l7.99 7.99a2 2 0 0 1 .01 2.84z"/></svg>Inventory <span class="side-badge" id="lowStockBadge" style="display:none;">0</span></button>
+      <button class="side-link" data-tab="salesHistory"><svg viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="M18.7 8l-5.1 5.1-4-4L3 15.5"/></svg>Sales History</button>
+    </div>
+
+    <div class="side-group">
+      <div class="side-group-label">People</div>
+      <button class="side-link" data-tab="customers"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>Customers</button>
+      <button class="side-link" data-tab="messages"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>Messages <span class="side-badge" id="newMessagesBadge" style="display:none;">0</span></button>
+    </div>
+
+    <div class="side-group">
+      <div class="side-group-label">Settings</div>
+      <button class="side-link" data-tab="appearance"><svg viewBox="0 0 24 24"><circle cx="13.5" cy="6.5" r=".5"/><circle cx="17.5" cy="10.5" r=".5"/><circle cx="8.5" cy="7.5" r=".5"/><circle cx="6.5" cy="12.5" r=".5"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.9 0 1.6-.7 1.6-1.6 0-.4-.2-.8-.4-1.1-.3-.3-.4-.7-.4-1.1 0-.9.7-1.6 1.6-1.6h1.9c3 0 5.4-2.4 5.4-5.4C22 6 17.5 2 12 2z"/></svg>Appearance</button>
+      <button class="side-link" data-tab="siteContent"><svg viewBox="0 0 24 24"><path d="M4 4h16v16H4z"/><path d="M4 9h16M9 4v16"/></svg>Page Content</button>
+    </div>
+  </nav>
+
+  <div class="main-content">
+    <div class="admin-panel" id="panelHome">
+      <div class="panel-header"><h2>Homepage Layout</h2></div>
+      <p style="font-size:.82rem; color:var(--text-soft); line-height:1.6; margin-bottom:22px;">Reorder sections with the arrows, toggle visibility, or tap a section to edit its text. Changes go live immediately.</p>
+      <div id="homeSectionsList"><p class="empty-state">Loading…</p></div>
+    </div>
+
+    <div class="admin-panel active" id="panelOverview">
+      <div class="panel-header"><h2>Dashboard</h2></div>
+      <div class="stat-grid">
+        <div class="stat-card accent"><div class="s-label">Total Revenue</div><div class="s-val" id="statRevenue">₦0</div><div class="s-sub">Paid orders</div></div>
+        <div class="stat-card"><div class="s-label">Orders</div><div class="s-val" id="statOrders">0</div><div class="s-sub" id="statOrdersSub">0 pending</div></div>
+        <div class="stat-card"><div class="s-label">Conversion</div><div class="s-val" id="statConversion">0%</div><div class="s-sub">Visits → paid orders</div></div>
+        <div class="stat-card"><div class="s-label">Customers</div><div class="s-val" id="statCustomers">0</div><div class="s-sub">Registered accounts</div></div>
+      </div>
+      <h3 class="section-title">Recent Orders</h3>
+      <div id="recentOrdersList"><p class="empty-state">Loading…</p></div>
+      <h3 class="section-title">Low Stock Alerts</h3>
+      <div id="lowStockList"><p class="empty-state">Loading…</p></div>
+    </div>
+
+    <div class="admin-panel" id="panelVisitors">
+      <div class="panel-header"><h2>Visitors</h2></div>
+      <p style="font-size:.8rem; color:var(--text-soft); line-height:1.6; margin-bottom:20px;">Location is based on the visitor's IP address (city-level, not exact address). Email only shows for visitors who were signed in.</p>
+      <div class="stat-grid">
+        <div class="stat-card"><div class="s-label">Total Visits</div><div class="s-val" id="statTotalVisits">0</div><div class="s-sub">Last 30 days</div></div>
+        <div class="stat-card"><div class="s-label">Unique Sessions</div><div class="s-val" id="statUniqueSessions">0</div><div class="s-sub">Distinct visitors</div></div>
+        <div class="stat-card success"><div class="s-label">Completed Payment</div><div class="s-val" id="statPaidVisitors">0</div><div class="s-sub">Sessions that paid</div></div>
+        <div class="stat-card"><div class="s-label">Identified</div><div class="s-val" id="statIdentifiedVisitors">0</div><div class="s-sub">Signed-in visits</div></div>
+      </div>
+      <h3 class="section-title">Top Locations (by timezone)</h3>
+      <div id="topLocationsList"><p class="empty-state">Loading…</p></div>
+      <h3 class="section-title">Recent Visitors</h3>
+      <div id="recentVisitorsList"><p class="empty-state">Loading…</p></div>
+    </div>
+
+    <div class="admin-panel" id="panelOrders">
+      <div class="panel-header">
+        <h2>Orders</h2>
+        <div style="display:flex; gap:8px;">
+          <button id="exportOrdersCsvBtn" style="padding:8px 16px; font-size:.7rem; letter-spacing:.04em; text-transform:uppercase; border:1px solid var(--border); border-radius:4px; background:none; color:var(--text); cursor:pointer;">Export CSV</button>
+          <button id="exportOrdersPdfBtn" style="padding:8px 16px; font-size:.7rem; letter-spacing:.04em; text-transform:uppercase; border:1px solid var(--border); border-radius:4px; background:none; color:var(--text); cursor:pointer;">Export PDF</button>
+        </div>
+      </div>
+      <div class="search-bar"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg><input type="text" id="orderSearchInput" placeholder="Search order #, name, email…"></div>
+      <div class="status-pills" id="orderStatusPills">
+        <button class="status-pill active" data-status="all">All</button>
+        <button class="status-pill" data-status="pending">Pending</button>
+        <button class="status-pill" data-status="paid">Paid</button>
+        <button class="status-pill" data-status="confirmed">Confirmed</button>
+        <button class="status-pill" data-status="processing">Processing</button>
+        <button class="status-pill" data-status="shipped">Shipped</button>
+        <button class="status-pill" data-status="delivered">Delivered</button>
+        <button class="status-pill" data-status="cancelled">Cancelled</button>
+        <button class="status-pill" data-status="abandoned">Abandoned</button>
+      </div>
+      <div id="ordersList"><p class="empty-state">Loading…</p></div>
+    </div>
+
+    <div class="admin-panel" id="panelCoupons">
+      <div class="panel-header">
+        <h2>Coupons</h2>
+        <button class="btn-primary" id="openCreateCouponBtn">+ New Coupon</button>
+      </div>
+      <div id="couponsList"><p class="empty-state">Loading…</p></div>
+    </div>
+
+    <div class="admin-panel" id="panelDeliveryFees">
+      <div class="panel-header">
+        <h2>Delivery Fees</h2>
+        <button class="btn-primary" id="openCreateDeliveryFeeBtn">+ Add LGA Fee</button>
+      </div>
+      <p style="font-size:.78rem; color:var(--text-soft); margin-bottom:20px;">Set real delivery fees per LGA. Any LGA without a specific fee here uses the site-wide default (₦3,500, free above ₦50,000) automatically — you don't need to price every LGA individually.</p>
+      <div class="search-bar"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg><input type="text" id="deliveryFeeSearchInput" placeholder="Search state or LGA…"></div>
+      <div id="deliveryFeesList"><p class="empty-state">Loading…</p></div>
+    </div>
+
+    <div class="admin-panel" id="panelActivityLog">
+      <div class="panel-header">
+        <h2>Activity Log</h2>
+        <button id="openActivityDateFilterBtn" style="padding:8px 16px; font-size:.7rem; letter-spacing:.04em; text-transform:uppercase; border:1px solid var(--border); border-radius:4px; background:none; color:var(--text); cursor:pointer; display:flex; align-items:center; gap:6px;">
+          <svg width="14" height="14" viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          <span id="activityDateFilterLabel">All Time</span>
+        </button>
+      </div>
+      <p style="font-size:.78rem; color:var(--text-soft); margin-bottom:16px;">A real, permanent record of admin changes — products, coupons, banners, orders, delivery fees, and page content. Every action is stored individually and can never be edited or removed, only added to.</p>
+      <div class="status-pills" id="activityLogFilterPills">
+        <button class="status-pill active" data-entity="all">All</button>
+        <button class="status-pill" data-entity="product">Products</button>
+        <button class="status-pill" data-entity="coupon">Coupons</button>
+        <button class="status-pill" data-entity="banner">Banners</button>
+        <button class="status-pill" data-entity="order">Orders</button>
+        <button class="status-pill" data-entity="delivery_fee">Delivery Fees</button>
+        <button class="status-pill" data-entity="site_content">Page Content</button>
+      </div>
+      <div id="activityLogList"><p class="empty-state">Loading…</p></div>
+    </div>
+
+    <div class="admin-panel" id="panelAbandonedCarts">
+      <div class="panel-header"><h2>Abandoned Carts</h2></div>
+      <p style="font-size:.78rem; color:var(--text-soft); margin-bottom:20px;">Signed-in customers with real items sitting in their cart for over an hour, who haven't completed a paid order since. A real, automatic push notification now goes out once per genuinely abandoned cart (2–24 hours since last touched, never repeated for the same cart within 7 days) to any customer with notifications enabled — no domain or email needed for this. You can still follow up manually (WhatsApp, a call) using the contact info shown, especially for customers without push enabled.</p>
+      <div id="abandonedCartsList"><p class="empty-state">Loading…</p></div>
+    </div>
+
+    <div class="admin-panel" id="panelBanners">
+      <div class="panel-header">
+        <h2>Banners</h2>
+        <button class="btn-primary" id="openCreateBannerBtn">+ New Banner</button>
+      </div>
+      <p style="font-size:.78rem; color:var(--text-soft); line-height:1.6; margin-bottom:22px;"><strong>Announcement</strong> banners are live now — they rotate in the bar at the top of the homepage. <strong>Hero</strong> and <strong>Featured</strong> banners are saved here for future use but don't have a placement on the site yet.</p>
+
+      <h3 class="section-title">Announcement Bar (live)</h3>
+      <div id="bannersAnnouncementList"><p class="empty-state">Loading…</p></div>
+
+      <h3 class="section-title">Hero</h3>
+      <div id="bannersHeroList"><p class="empty-state">Loading…</p></div>
+
+      <h3 class="section-title">Featured</h3>
+      <div id="bannersFeaturedList"><p class="empty-state">Loading…</p></div>
+
+      <h3 class="section-title" style="margin-top:32px;">Promotional Push Notification</h3>
+      <p style="font-size:.78rem; color:var(--text-soft); line-height:1.6; margin-bottom:16px;">Sent to every real, currently-subscribed device. Limited to 3 per week to protect customers from notification fatigue — <span id="promoPushRemaining">checking…</span>.</p>
+
+      <div class="sheet-field"><label>What's the message about?</label><input type="text" id="promoIdeaInput" placeholder="e.g. footwear sale, new arrivals, Valentine's collection"></div>
+      <button id="genSuggestionsBtn" style="width:100%; margin-bottom:16px; padding:12px; background:none; border:1px solid var(--accent); color:var(--accent); font-size:.76rem; font-weight:700; letter-spacing:.04em; text-transform:uppercase; border-radius:6px;">✨ Suggest Messages</button>
+      <div id="promoSuggestionsList" style="display:none; margin-bottom:20px;"></div>
+
+      <div class="sheet-field"><label>Title</label><input type="text" id="promoPushTitle" placeholder="e.g. 20% Off Footwear"></div>
+      <div class="sheet-field"><label>Message</label><textarea id="promoPushBody" rows="2" placeholder="e.g. This weekend only — shop the sale now."></textarea></div>
+      <div class="sheet-field"><label>Link (optional — where tapping the notification goes)</label><input type="text" id="promoPushUrl" placeholder="/shop.html?cat=footwear"></div>
+      <p id="promoPushCharCount" style="font-size:.72rem; color:var(--text-soft); margin-bottom:12px;">0 / 100 characters</p>
+      <button class="btn-primary" id="sendPromoPushBtn">Send Push Notification</button>
+    </div>
+
+    <div class="admin-panel" id="panelProducts">
+      <div class="panel-header"><h2>All Products</h2></div>
+      <div class="search-bar"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg><input type="text" id="productSearchInput" placeholder="Search products by name…"></div>
+      <div id="productsList"><p class="empty-state">Loading…</p></div>
+    </div>
+
+    <div class="admin-panel" id="panelAddProduct">
+      <div class="panel-header"><h2>Add New Product</h2></div>
+      <div class="sheet-field"><label>Product Name</label><input type="text" id="npName" placeholder="e.g. Emerald Ankara Gown"></div>
+      <div class="sheet-field"><label>Description</label><textarea id="npDescription" placeholder="Fabric, fit, styling notes…"></textarea></div>
+      <div class="sheet-row">
+        <div class="sheet-field"><label>Price (₦)</label><input type="number" id="npPrice"></div>
+        <div class="sheet-field"><label>Sale Price (₦)</label><input type="number" id="npSalePrice" placeholder="Optional"></div>
+      </div>
+      <div class="sheet-row">
+        <div class="sheet-field"><label>Stock Quantity</label><input type="number" id="npStock" value="10"></div>
+        <div class="sheet-field"><label>Category</label><select id="npCategory"><option value="">Loading…</option></select></div>
+      </div>
+      <div class="sheet-field">
+        <label>Tags (comma-separated)</label>
+        <input type="text" id="npTags" placeholder="e.g. women, gown, new">
+        <p class="sheet-hint">Tags power search and "New Arrivals" — include <strong>new</strong> as a tag to feature it there.</p>
+      </div>
+      <div class="sheet-field">
+        <label>Product Images</label>
+        <div class="img-upload-grid" id="npImageGrid"></div>
+        <label for="npFileInput" class="img-upload-btn" id="npUploadBtn">
+          <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+          <span id="npUploadBtnText">Tap to upload photos</span>
+        </label>
+        <input type="file" id="npFileInput" accept="image/*" multiple style="display:none;">
+        <p class="sheet-hint">Uploads go straight to your Cloudinary library. The first photo becomes the main product image — drag to reorder.</p>
+      </div>
+      <div class="sheet-field" style="display:flex; align-items:center; gap:11px;"><input type="checkbox" id="npActive" checked style="width:auto;"><label style="margin:0; text-transform:none; letter-spacing:normal; font-size:.88rem;">Publish immediately</label></div>
+      <div class="sheet-field" style="display:flex; align-items:center; gap:11px;"><input type="checkbox" id="npFeatured" style="width:auto;"><label style="margin:0; text-transform:none; letter-spacing:normal; font-size:.88rem;">Feature on homepage</label></div>
+      <button class="sheet-submit" id="npSubmitBtn">Create Product</button>
+    </div>
+
+    <div class="admin-panel" id="panelCategories">
+      <div class="panel-header"><h2>Categories</h2></div>
+      <div id="categoriesList"><p class="empty-state">Loading…</p></div>
+    </div>
+
+    <div class="admin-panel" id="panelInventory">
+      <div class="panel-header"><h2>Inventory</h2></div>
+      <div class="status-pills" id="inventoryPills">
+        <button class="status-pill active" data-inv="low">Low / Out of Stock</button>
+        <button class="status-pill" data-inv="new">New Arrivals</button>
+        <button class="status-pill" data-inv="all">All Products</button>
+      </div>
+      <div id="inventoryList"><p class="empty-state">Loading…</p></div>
+    </div>
+
+    <div class="admin-panel" id="panelSalesHistory">
+      <div class="panel-header"><h2>Sales History</h2></div>
+      <p style="font-size:.78rem; color:var(--text-soft); margin-bottom:16px;">Real units sold per product, from actual paid orders — this is what tells you a product is genuinely moving, or genuinely not.</p>
+      <div class="status-pills" id="salesHistorySortPills">
+        <button class="status-pill active" data-sort="units">Most Sold</button>
+        <button class="status-pill" data-sort="revenue">Highest Revenue</button>
+        <button class="status-pill" data-sort="recent">Recently Sold</button>
+      </div>
+      <div class="search-bar"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg><input type="text" id="salesHistorySearchInput" placeholder="Search product…"></div>
+      <div id="salesHistoryList"><p class="empty-state">Loading…</p></div>
+    </div>
+
+    <div class="admin-panel" id="panelCustomers">
+      <div class="panel-header"><h2>Customers</h2></div>
+      <div class="status-pills" id="customerSegmentPills">
+        <button class="status-pill active" data-segment="all">All</button>
+        <button class="status-pill" data-segment="VIP">VIP</button>
+        <button class="status-pill" data-segment="One-Time Buyer">One-Time Buyer</button>
+        <button class="status-pill" data-segment="At Risk">At Risk</button>
+        <button class="status-pill" data-segment="No Orders Yet">No Orders Yet</button>
+      </div>
+      <div class="search-bar"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg><input type="text" id="customerSearchInput" placeholder="Search by name or email…"></div>
+      <div id="customersList"><p class="empty-state">Loading…</p></div>
+    </div>
+
+    <div class="admin-panel" id="panelMessages">
+      <div class="panel-header"><h2>Messages</h2></div>
+      <div class="status-pills" id="messagesTypePills">
+        <button class="status-pill active" data-msgtype="contact">Contact Form</button>
+        <button class="status-pill" data-msgtype="chat">Live Chat <span class="side-badge" id="chatTabBadge" style="display:none;">0</span></button>
+      </div>
+
+      <div id="contactMessagesSection">
+        <div id="contactListView">
+          <p style="font-size:.78rem; color:var(--text-soft); margin-bottom:20px;">From the Contact Us page. Unread messages are highlighted.</p>
+          <div id="messagesList"><p class="empty-state">Loading…</p></div>
+        </div>
+        <div id="contactDetailView" style="display:none;">
+          <button id="contactBackToList" class="detail-back-btn">
+            <svg viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="2"><path d="M19 12H5M11 18l-6-6 6-6"/></svg>
+            All messages
+          </button>
+          <div id="contactDetailContent"></div>
+        </div>
+      </div>
+
+      <div id="chatMessagesSection" style="display:none;">
+        <div id="chatThreadListView">
+          <p style="font-size:.78rem; color:var(--text-soft); margin-bottom:20px;">Real, live conversations with customers.</p>
+          <div id="chatThreadsList"><p class="empty-state">Loading…</p></div>
+        </div>
+        <div id="chatThreadDetailView" style="display:none;">
+          <button id="chatBackToThreads" class="detail-back-btn">
+            <svg viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="2"><path d="M19 12H5M11 18l-6-6 6-6"/></svg>
+            All conversations
+          </button>
+          <div class="chat-detail-header">
+            <div class="chat-detail-avatar" id="chatDetailAvatar"></div>
+            <p class="chat-detail-name" id="chatDetailCustomerName"></p>
+          </div>
+          <div id="adminChatMessages" class="chat-messages-panel"></div>
+          <div class="chat-reply-row">
+            <input id="adminChatInput" type="text" placeholder="Type a reply…" class="chat-reply-input">
+            <button id="adminChatSendBtn" class="chat-reply-send">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="#0A0A0A"><path d="M2 21l21-9L2 3v7l15 2-15 2z"/></svg>
+            </button>
+          </div>
+          <p style="text-align:center; font-size:.6rem; color:var(--text-soft); opacity:.5; margin-top:4px;">build 20260725-chat-v2</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="admin-panel" id="panelAppearance">
+      <div class="panel-header"><h2>Appearance</h2></div>
+      <p style="font-size:.82rem; color:var(--text-soft); line-height:1.6; margin-bottom:24px;">Changes apply site-wide immediately after saving — every page reads these settings on load.</p>
+
+      <div class="sheet-field">
+        <label>Store Name</label>
+        <input type="text" id="apBrandName" placeholder="ÀGÒ LUXE">
+      </div>
+
+      <div class="sheet-field">
+        <label>Accent Color</label>
+        <div style="display:flex; gap:10px; align-items:center; min-width:0;">
+          <input type="color" id="apAccentColor" style="width:52px; height:44px; padding:2px; cursor:pointer; flex-shrink:0;">
+          <input type="text" id="apAccentColorHex" placeholder="#C084FC" style="flex:1; min-width:0;">
+        </div>
+        <p class="sheet-hint">Used for buttons, links, highlights, and active states across the whole site.</p>
+      </div>
+
+      <div class="sheet-field">
+        <label>Font Style</label>
+        <div id="apFontOptions" style="display:flex; flex-direction:column; gap:10px;">
+          <label class="ap-font-option" data-font="classic">
+            <input type="radio" name="apFont" value="classic">
+            <span class="afo-name" style="font-family:'Gentium Plus',serif; font-style:italic;">Classic — Gentium + Cinzel</span>
+            <span class="afo-desc">Elegant serif, the current ÀGÒ LUXE look</span>
+          </label>
+          <label class="ap-font-option" data-font="modern">
+            <input type="radio" name="apFont" value="modern">
+            <span class="afo-name" style="font-family:Arial,sans-serif;">Modern — Clean Sans-Serif</span>
+            <span class="afo-desc">Minimal, contemporary, high readability</span>
+          </label>
+          <label class="ap-font-option" data-font="editorial">
+            <input type="radio" name="apFont" value="editorial">
+            <span class="afo-name" style="font-family:Georgia,serif;">Editorial — Bold Serif Headlines</span>
+            <span class="afo-desc">Magazine-style, strong headline presence</span>
+          </label>
+          <label class="ap-font-option" data-font="bold">
+            <input type="radio" name="apFont" value="bold">
+            <span class="afo-name" style="font-family:'Trebuchet MS',sans-serif; font-weight:700;">Bold — Statement Sans</span>
+            <span class="afo-desc">Confident, streetwear-adjacent energy</span>
+          </label>
+        </div>
+      </div>
+
+      <button class="sheet-submit" id="apSaveBtn">Save Appearance</button>
+    </div>
+
+    <div class="admin-panel" id="panelSiteContent">
+      <div class="panel-header"><h2>Page Content</h2><button type="button" style="font-size:.68rem; letter-spacing:.05em; text-transform:uppercase; color:var(--accent); border:1px solid var(--accent); border-radius:20px; padding:6px 12px;" onclick="window.__agoDiagnoseWidth && window.__agoDiagnoseWidth()">Diagnose Width</button></div>
+      <p style="font-size:.82rem; color:var(--text-soft); line-height:1.6; margin-bottom:24px;">Swap the images and text used across Home, Categories, Cart, Wishlist, and Checkout. Layout stays the same — only the content shown changes.</p>
+
+      <h3 class="section-title">Homepage Hero</h3>
+      <div class="sheet-field">
+        <label>Hero Style</label>
+        <div style="display:flex; gap:10px; min-width:0;">
+          <label class="ap-font-option" style="flex:1; min-width:0; align-items:center; flex-direction:row; gap:8px;" data-hero-mode-option="carousel">
+            <input type="radio" name="scHeroMode" value="carousel">
+            <span class="afo-name" style="font-size:.85rem;">Carousel (3 slides)</span>
+          </label>
+          <label class="ap-font-option" style="flex:1; min-width:0; align-items:center; flex-direction:row; gap:8px;" data-hero-mode-option="single">
+            <input type="radio" name="scHeroMode" value="single">
+            <span class="afo-name" style="font-size:.85rem;">Single Image</span>
+          </label>
+        </div>
+      </div>
+      <div class="sheet-field" id="scHeroImageField" style="display:none;">
+        <label>Hero Image</label>
+        <div class="img-upload-grid" id="scHeroImageGrid"></div>
+        <label for="scHeroImageInput" class="img-upload-btn" id="scHeroImageUploadBtn">
+          <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+          <span id="scHeroImageUploadBtnText">Upload hero image</span>
+        </label>
+        <input type="file" id="scHeroImageInput" accept="image/*" style="display:none;">
+      </div>
+      <button class="sheet-submit" id="scHeroSaveBtn">Save Hero Style</button>
+
+      <div id="scHeroCarouselField" style="display:none;">
+        <p style="font-size:.78rem; color:var(--text-soft); margin:20px 0 4px;">Each slide's photo and text can be changed independently. Saves per slide.</p>
+        <div id="scHeroSlidesContainer"></div>
+      </div>
+
+      <h3 class="section-title">Categories Page — Tile Images</h3>
+      <div id="scCategoriesFields"></div>
+
+      <h3 class="section-title">Cart &amp; Wishlist — Empty State Text</h3>
+      <div id="scCartWishlistFields"></div>
+
+      <h3 class="section-title">Checkout — Order Success Message</h3>
+      <div id="scCheckoutFields"></div>
+
+      <button class="sheet-submit" id="scTextSaveBtn" style="margin-top:10px;">Save All Text Changes</button>
+    </div>
+
+  </div>
+
+</div>
+</div>
+
+<div class="sheet-overlay" id="orderDetailOverlay">
+  <div class="sheet">
+    <button class="sheet-close" id="orderDetailClose"><svg width="20" height="20" viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="1.8"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    <div class="sheet-handle"></div>
+    <h3 id="odOrderNum">Order</h3>
+    <p class="sub" id="odOrderDate"></p>
+    <p style="font-size:.85rem; color:var(--text-soft); margin-bottom:5px;" id="odCustomer"></p>
+    <p style="font-size:.85rem; color:var(--text-soft); margin-bottom:16px;" id="odAddress"></p>
+    <div class="od-items" id="odItems"></div>
+    <div class="sheet-field"><label>Subtotal / Total</label><p style="font-size:.92rem; font-weight:700;" id="odTotal"></p></div>
+    <div class="sheet-field"><label>Tracking Number</label><input type="text" id="odTracking" placeholder="e.g. GIG-2026-00891"></div>
+    <div class="sheet-field"><label>Estimated Delivery Date (optional)</label><input type="date" id="odDeliveryDate"></div>
+    <div class="status-select-row">
+      <select id="odStatusSelect"><option value="pending">Pending</option><option value="paid">Paid</option><option value="confirmed">Confirmed</option><option value="processing">Processing</option><option value="shipped">Shipped</option><option value="arrived">Arrived</option><option value="delivered">Delivered</option><option value="cancelled">Cancelled</option></select>
+    </div>
+    <button class="sheet-submit" id="odUpdateBtn">Update Order</button>
+    <button id="odWhatsAppBtn" style="display:none; width:100%; margin-top:10px; padding:13px; background:#25D366; color:#fff; font-size:.78rem; font-weight:700; letter-spacing:.05em; text-transform:uppercase; border-radius:4px; cursor:pointer; align-items:center; justify-content:center; gap:8px;">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 2C6.477 2 2 6.477 2 12c0 1.89.525 3.66 1.438 5.168L2 22l4.955-1.408A9.947 9.947 0 0012 22c5.523 0 10-4.477 10-10S17.523 2 12 2zm0 18.5c-1.657 0-3.213-.46-4.545-1.257l-.326-.194-3.375.96.985-3.293-.212-.338A8.454 8.454 0 013.5 12c0-4.687 3.813-8.5 8.5-8.5s8.5 3.813 8.5 8.5-3.813 8.5-8.5 8.5z"/></svg>
+      Send WhatsApp Message
+    </button>
+    <button id="odRefundBtn" style="width:100%; margin-top:10px; padding:13px; background:none; border:1px solid #B3261E; color:#B3261E; font-size:.78rem; font-weight:700; letter-spacing:.05em; text-transform:uppercase; border-radius:4px; cursor:pointer;">Refund Order</button>
+    <div class="od-timeline" id="odTimeline"></div>
+  </div>
+</div>
+
+<div class="sheet-overlay" id="productEditOverlay">
+  <div class="sheet">
+    <button class="sheet-close" id="productEditClose"><svg width="20" height="20" viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="1.8"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    <div class="sheet-handle"></div>
+    <h3>Edit Product</h3>
+    <p class="sub" id="peProductName"></p>
+    <div class="sheet-field">
+      <label>Product Images</label>
+      <div class="img-upload-grid" id="peImageGrid"></div>
+      <label for="peFileInput" class="img-upload-btn" id="peUploadBtn">
+        <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+        <span id="peUploadBtnText">Add more photos</span>
+      </label>
+      <input type="file" id="peFileInput" accept="image/*" multiple style="display:none;">
+    </div>
+    <div class="sheet-field"><label>Description</label><textarea id="peProdDescription"></textarea></div>
+    <div class="sheet-row">
+      <div class="sheet-field"><label>Price (₦)</label><input type="number" id="peProdPrice"></div>
+      <div class="sheet-field"><label>Sale Price (₦)</label><input type="number" id="peProdSalePrice" placeholder="Optional"></div>
+    </div>
+    <div class="sheet-row">
+      <div class="sheet-field"><label>Stock Qty</label><input type="number" id="peProdStock"></div>
+      <div class="sheet-field"><label>Low Stock Alert</label><input type="number" id="peProdLowStock"></div>
+    </div>
+    <div class="sheet-field"><label>Tags (comma-separated)</label><input type="text" id="peProdTags"></div>
+    <div class="sheet-field" style="display:flex; align-items:center; gap:11px;"><input type="checkbox" id="peProdActive" style="width:auto;"><label style="margin:0; text-transform:none; letter-spacing:normal; font-size:.88rem;">Active (visible on site)</label></div>
+    <div class="sheet-field" style="display:flex; align-items:center; gap:11px;"><input type="checkbox" id="peProdFeatured" style="width:auto;"><label style="margin:0; text-transform:none; letter-spacing:normal; font-size:.88rem;">Featured product</label></div>
+    <button class="sheet-submit" id="peSaveBtn">Save Changes</button>
+    <button class="sheet-submit" id="peDeleteBtn" style="background:none; border:1px solid var(--danger); color:var(--danger); margin-top:10px;">Delete Product</button>
+  </div>
+</div>
+
+<div class="sheet-overlay" id="customerDetailOverlay">
+  <div class="sheet">
+    <button class="sheet-close" id="customerDetailClose"><svg width="20" height="20" viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="1.8"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    <div class="sheet-handle"></div>
+    <h3 id="cdName">Customer</h3>
+    <p class="sub" id="cdEmail"></p>
+    <div class="stat-grid" style="grid-template-columns:1fr 1fr; margin-bottom:20px;">
+      <div class="stat-card"><div class="s-label">Total Orders</div><div class="s-val" id="cdOrderCount">0</div></div>
+      <div class="stat-card accent"><div class="s-label">Total Spent</div><div class="s-val" id="cdTotalSpent">₦0</div></div>
+    </div>
+    <h3 class="section-title" style="margin-top:6px;">Order History</h3>
+    <div id="cdOrdersList"><p class="empty-state">Loading…</p></div>
+  </div>
+</div>
+
+<div class="sheet-overlay" id="bannerEditOverlay">
+  <div class="sheet">
+    <button class="sheet-close" id="bannerEditClose"><svg width="20" height="20" viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="1.8"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    <div class="sheet-handle"></div>
+    <h3 id="beSheetTitle">New Banner</h3>
+
+    <div class="sheet-field">
+      <label>Position</label>
+      <select id="bePosition">
+        <option value="announcement">Announcement Bar</option>
+        <option value="hero">Hero</option>
+        <option value="featured">Featured</option>
+      </select>
+    </div>
+
+    <div class="sheet-field">
+      <label>Title</label>
+      <input type="text" id="beTitle" placeholder="e.g. Free delivery on orders above ₦50,000">
+    </div>
+
+    <div class="sheet-field">
+      <label>Subtitle <span style="text-transform:none; letter-spacing:normal;">(optional)</span></label>
+      <input type="text" id="beSubtitle">
+    </div>
+
+    <div class="sheet-field" id="beImageField">
+      <label>Banner Image <span style="text-transform:none; letter-spacing:normal;">(hero/featured only)</span></label>
+      <div class="img-upload-grid" id="beImageGrid"></div>
+      <label for="beImageInput" class="img-upload-btn" id="beImageUploadBtn">
+        <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+        <span id="beImageUploadBtnText">Upload image</span>
+      </label>
+      <input type="file" id="beImageInput" accept="image/*" style="display:none;">
+    </div>
+
+    <div class="sheet-row">
+      <div class="sheet-field">
+        <label>Button Text <span style="text-transform:none; letter-spacing:normal;">(optional)</span></label>
+        <input type="text" id="beCtaText" placeholder="Shop Now">
+      </div>
+      <div class="sheet-field">
+        <label>Button Link</label>
+        <input type="text" id="beCtaUrl" placeholder="shop.html">
+      </div>
+    </div>
+
+    <div class="sheet-row">
+      <div class="sheet-field">
+        <label>Starts <span style="text-transform:none; letter-spacing:normal;">(optional)</span></label>
+        <input type="date" id="beStartsAt">
+      </div>
+      <div class="sheet-field">
+        <label>Ends <span style="text-transform:none; letter-spacing:normal;">(optional)</span></label>
+        <input type="date" id="beEndsAt">
+      </div>
+    </div>
+
+    <div class="sheet-field" style="display:flex; align-items:center; gap:11px;">
+      <input type="checkbox" id="beActive" checked style="width:auto;">
+      <label style="margin:0; text-transform:none; letter-spacing:normal; font-size:.88rem;">Active</label>
+    </div>
+
+    <button class="sheet-submit" id="beSaveBtn">Create Banner</button>
+    <button class="sheet-submit" id="beDeleteBtn" style="background:none; border:1px solid var(--danger); color:var(--danger); margin-top:10px; display:none;">Delete Banner</button>
+  </div>
+</div>
+
+<div class="sheet-overlay" id="deliveryFeeEditOverlay">
+  <div class="sheet">
+    <button class="sheet-close" id="deliveryFeeEditClose"><svg width="20" height="20" viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="1.8"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    <div class="sheet-handle"></div>
+    <h3 id="deliveryFeeSheetTitle">Add LGA Fee</h3>
+    <div class="sheet-row">
+      <div class="sheet-field">
+        <label>State</label>
+        <select id="dfState"></select>
+      </div>
+      <div class="sheet-field">
+        <label>LGA</label>
+        <select id="dfLga"><option value="">Select a state first</option></select>
+      </div>
+    </div>
+    <div class="sheet-field">
+      <label>Delivery Fee (₦)</label>
+      <input type="number" id="dfFee" min="0" step="1">
+    </div>
+    <div class="sheet-field">
+      <label>Free Delivery Above (₦) — optional</label>
+      <input type="number" id="dfFreeMin" min="0" step="1" placeholder="Leave blank to use the site-wide default (₦50,000)">
+    </div>
+    <button class="sheet-submit" id="dfSaveBtn">Save Fee</button>
+    <button id="dfDeleteBtn" style="width:100%; margin-top:10px; padding:13px; background:none; border:1px solid #B3261E; color:#B3261E; font-size:.78rem; font-weight:700; letter-spacing:.05em; text-transform:uppercase; border-radius:4px; cursor:pointer; display:none;">Delete This Fee</button>
+  </div>
+</div>
+
+<div class="sheet-overlay" id="couponEditOverlay">
+  <div class="sheet">
+    <button class="sheet-close" id="couponEditClose"><svg width="20" height="20" viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="1.8"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    <div class="sheet-handle"></div>
+    <h3 id="ceSheetTitle">New Coupon</h3>
+    <p class="sub">Code is what customers type at checkout — automatically uppercased.</p>
+
+    <div class="sheet-field">
+      <label>Coupon Code</label>
+      <input type="text" id="ceCode" placeholder="e.g. SUMMER20" style="text-transform:uppercase;">
+    </div>
+
+    <div class="sheet-row">
+      <div class="sheet-field">
+        <label>Discount Type</label>
+        <select id="ceType">
+          <option value="percent">Percentage Off</option>
+          <option value="fixed">Fixed Amount Off</option>
+        </select>
+      </div>
+      <div class="sheet-field">
+        <label id="ceValueLabel">Percent Off (%)</label>
+        <input type="number" id="ceValue" placeholder="10">
+      </div>
+    </div>
+
+    <div class="sheet-row">
+      <div class="sheet-field">
+        <label>Minimum Order (₦)</label>
+        <input type="number" id="ceMinOrder" placeholder="0">
+      </div>
+      <div class="sheet-field">
+        <label>Max Uses <span style="text-transform:none; letter-spacing:normal;">(blank = unlimited)</span></label>
+        <input type="number" id="ceMaxUses" placeholder="Unlimited">
+      </div>
+    </div>
+
+    <div class="sheet-field">
+      <label>Expires On <span style="text-transform:none; letter-spacing:normal;">(blank = never)</span></label>
+      <input type="date" id="ceExpiresAt">
+    </div>
+
+    <div class="sheet-field" style="display:flex; align-items:center; gap:11px;">
+      <input type="checkbox" id="ceActive" checked style="width:auto;">
+      <label style="margin:0; text-transform:none; letter-spacing:normal; font-size:.88rem;">Active (customers can use this code now)</label>
+    </div>
+
+    <button class="sheet-submit" id="ceSaveBtn">Create Coupon</button>
+    <button class="sheet-submit" id="ceDeleteBtn" style="background:none; border:1px solid var(--danger); color:var(--danger); margin-top:10px; display:none;">Delete Coupon</button>
+  </div>
+</div>
+
+<div class="sheet-overlay" id="sectionEditOverlay">
+  <div class="sheet">
+    <button class="sheet-close" id="sectionEditClose"><svg width="20" height="20" viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="1.8"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    <div class="sheet-handle"></div>
+    <h3 id="seSectionTitle">Edit Section</h3>
+    <p class="sub">Update the text shown in this section.</p>
+    <div id="seFieldsContainer"></div>
+    <button class="sheet-submit" id="seSaveBtn">Save Changes</button>
+  </div>
+</div>
+
+<div class="sheet-overlay" id="deleteProductOverlay">
+  <div class="sheet" style="max-height:none; text-align:center;">
+    <div class="sheet-handle"></div>
+    <h3>Delete This Product?</h3>
+    <p class="sub" id="dpProductName" style="margin-bottom:24px;"></p>
+    <p style="font-size:.82rem; color:var(--text-soft); margin-bottom:24px; line-height:1.6;">This removes it permanently from your store. This can't be undone.</p>
+    <button class="sheet-submit" id="dpCancelBtn" style="background:none; border:1px solid var(--border); color:var(--text);">Keep Product</button>
+    <button class="sheet-submit" id="dpConfirmBtn" style="background:var(--danger); color:#fff; margin-top:10px;">Delete Permanently</button>
+  </div>
+</div>
+
+<div class="sheet-overlay" id="deleteCouponOverlay">
+  <div class="sheet" style="max-height:none; text-align:center;">
+    <div class="sheet-handle"></div>
+    <h3>Delete This Coupon?</h3>
+    <p class="sub" id="dcCouponCode" style="margin-bottom:24px;"></p>
+    <p style="font-size:.82rem; color:var(--text-soft); margin-bottom:24px; line-height:1.6;">Customers will no longer be able to use this code. This can't be undone.</p>
+    <button class="sheet-submit" id="dcCancelBtn" style="background:none; border:1px solid var(--border); color:var(--text);">Keep Coupon</button>
+    <button class="sheet-submit" id="dcConfirmBtn" style="background:var(--danger); color:#fff; margin-top:10px;">Delete Permanently</button>
+  </div>
+</div>
+
+<div class="sheet-overlay" id="refundOrderOverlay">
+  <div class="sheet">
+    <button class="sheet-close" id="refundOrderClose"><svg width="20" height="20" viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="1.8"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    <div class="sheet-handle"></div>
+    <h3>Refund Order</h3>
+    <p class="sheet-hint" style="margin-bottom:16px;">Refunds credit the customer's ÀGÒ LUXE wallet directly — there's no live card reversal wired in, so this is the real, working refund path.</p>
+    <div class="sheet-field">
+      <label>Order</label>
+      <p id="refundOrderNumber" style="font-size:.9rem; font-weight:700;"></p>
+    </div>
+    <div class="sheet-field">
+      <label>Refund Amount (₦)</label>
+      <input type="number" id="refundAmount" min="1" step="1">
+    </div>
+    <div class="sheet-field">
+      <label>Reason</label>
+      <textarea id="refundReason" placeholder="e.g. Customer requested cancellation, item out of stock…"></textarea>
+    </div>
+    <div class="sheet-field" style="display:flex; align-items:center; gap:11px;">
+      <input type="checkbox" id="refundRestoreStock" checked style="width:auto;">
+      <label style="margin:0; text-transform:none; letter-spacing:normal; font-size:.85rem;">Restore item(s) to inventory</label>
+    </div>
+    <button class="sheet-submit" id="refundConfirmBtn" style="background:#B3261E;">Confirm Refund</button>
+  </div>
+</div>
+
+<div class="sheet-overlay" id="activityDateFilterOverlay">
+  <div class="sheet">
+    <button class="sheet-close" id="activityDateFilterClose"><svg width="20" height="20" viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="1.8"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    <div class="sheet-handle"></div>
+    <h3>Filter by Date</h3>
+
+    <div class="status-pills" id="dateFilterTabPills" style="margin-bottom:20px;">
+      <button class="status-pill active" data-tab="month">Month</button>
+      <button class="status-pill" data-tab="timeframe">Time Frame</button>
+    </div>
+
+    <!-- MONTH TAB — single point selection: one specific month + year -->
+    <div id="dateFilterMonthTab">
+      <div class="sheet-row">
+        <div class="sheet-field">
+          <label>Month</label>
+          <select id="dfMonthSelect">
+            <option value="0">January</option><option value="1">February</option><option value="2">March</option>
+            <option value="3">April</option><option value="4">May</option><option value="5">June</option>
+            <option value="6">July</option><option value="7">August</option><option value="8">September</option>
+            <option value="9">October</option><option value="10">November</option><option value="11">December</option>
+          </select>
+        </div>
+        <div class="sheet-field">
+          <label>Year</label>
+          <select id="dfYearSelect"></select>
+        </div>
+      </div>
+    </div>
+
+    <!-- TIME FRAME TAB — range selection: presets + custom start/end -->
+    <div id="dateFilterTimeframeTab" style="display:none;">
+      <div class="status-pills" id="dateFilterPresetPills" style="margin-bottom:16px;">
+        <button class="status-pill" data-preset="3m">Last 3 Months</button>
+        <button class="status-pill" data-preset="6m">Last 6 Months</button>
+      </div>
+      <div class="sheet-field">
+        <label>Start Date</label>
+        <input type="date" id="dfStartDate">
+      </div>
+      <div class="sheet-field">
+        <label>End Date</label>
+        <input type="date" id="dfEndDate">
+      </div>
+    </div>
+
+    <button id="dfClearBtn" style="width:100%; margin-top:10px; padding:13px; background:none; border:1px solid var(--border); color:var(--text-soft); font-size:.74rem; font-weight:600; letter-spacing:.04em; text-transform:uppercase; border-radius:4px; cursor:pointer;">Clear (Show All Time)</button>
+    <button class="sheet-submit" id="dfConfirmBtn" style="margin-top:10px;">Confirm</button>
+  </div>
+</div>
+
+<div class="sheet-overlay" id="deleteDeliveryFeeOverlay">
+  <div class="sheet" style="max-height:none; text-align:center;">
+    <div class="sheet-handle"></div>
+    <h3>Remove This Fee?</h3>
+    <p class="sub" id="ddfLgaName" style="margin-bottom:24px;"></p>
+    <p style="font-size:.82rem; color:var(--text-soft); margin-bottom:24px; line-height:1.6;">This LGA will fall back to the site-wide default delivery fee.</p>
+    <button class="sheet-submit" id="ddfCancelBtn" style="background:none; border:1px solid var(--border); color:var(--text);">Keep Fee</button>
+    <button class="sheet-submit" id="ddfConfirmBtn" style="background:var(--danger); color:#fff; margin-top:10px;">Remove Fee</button>
+  </div>
+</div>
+
+<div class="sheet-overlay" id="deleteBannerOverlay">
+  <div class="sheet" style="max-height:none; text-align:center;">
+    <div class="sheet-handle"></div>
+    <h3>Delete This Banner?</h3>
+    <p class="sub" id="dbBannerTitle" style="margin-bottom:24px;"></p>
+    <p style="font-size:.82rem; color:var(--text-soft); margin-bottom:24px; line-height:1.6;">This can't be undone.</p>
+    <button class="sheet-submit" id="dbCancelBtn" style="background:none; border:1px solid var(--border); color:var(--text);">Keep Banner</button>
+    <button class="sheet-submit" id="dbConfirmBtn" style="background:var(--danger); color:#fff; margin-top:10px;">Delete Permanently</button>
+  </div>
+</div>
+
+<div class="sheet-overlay" id="removeImageOverlay">
+  <div class="sheet" style="max-height:none; text-align:center;">
+    <div class="sheet-handle"></div>
+    <h3>Remove This Photo?</h3>
+    <p style="font-size:.82rem; color:var(--text-soft); margin-bottom:24px; line-height:1.6;">It'll be taken off this product immediately once you confirm.</p>
+    <button class="sheet-submit" id="removeImageCancel" style="background:none; border:1px solid var(--border); color:var(--text);">Keep Photo</button>
+    <button class="sheet-submit" id="removeImageConfirm" style="background:var(--danger); color:#fff; margin-top:10px;">Remove Photo</button>
+  </div>
+</div>
+
+<div class="sheet-overlay" id="categoryDetailOverlay">
+  <div class="sheet">
+    <button class="sheet-close" id="categoryDetailClose"><svg width="20" height="20" viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="1.8"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    <div class="sheet-handle"></div>
+    <h3 id="cgName">Category</h3>
+    <p class="sub" id="cgSlug"></p>
+    <div id="cgProductsList"><p class="empty-state">Loading…</p></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="admin.js?v=20260725a"></script>
+</body>
+</html>

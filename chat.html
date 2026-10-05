@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/x-icon" href="favicon.ico">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="theme-color" content="#0A0A0A">
+<title>Chat — ÀGÒ LUXE</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Gentium+Plus:ital,wght@0,400;0,700;1,400;1,700&family=Newsreader:ital,wght@0,500;0,600;1,500&display=swap" rel="stylesheet">
+<script src="ago-cart.js?v=20260724c"></script>
+<script src="install-prompt.js?v=20260722"></script>
+<style>
+:root[data-theme="dark"]{ --bg:#0A0A0A; --surface:#141414; --text:#F9F9F9; --text-soft:#9A9A9A; --border:#222222; }
+:root[data-theme="light"]{ --bg:#F9F9F9; --surface:#FFFFFF; --text:#0A0A0A; --text-soft:#6B6B6B; --border:#E8E8E8; }
+:root{ --accent:#C084FC; --accent-deep:#8B5CF6; }
+*{box-sizing:border-box; margin:0; padding:0;}
+html, body{ height:100%; }
+body{ background:var(--bg); color:var(--text); font-family:'Gentium Plus', serif; display:flex; flex-direction:column; }
+.top-bar{ position:sticky; top:0; z-index:50; background:var(--bg); border-bottom:1px solid var(--border); display:flex; align-items:center; gap:10px; padding:14px; flex-shrink:0; }
+.back-btn{ display:flex; padding:4px; background:transparent; border:none; border-radius:0; box-shadow:none; }
+.back-btn svg{ width:20px; height:20px; stroke:var(--text); fill:none; stroke-width:1.8; }
+.top-bar h1{ font-family:'Newsreader', serif; font-size:1rem; font-weight:600; }
+.top-bar p{ font-size:.7rem; color:var(--text-soft); }
+#chatMessages{ flex:1; overflow-y:auto; padding:16px; display:flex; flex-direction:column; gap:10px; -webkit-overflow-scrolling:touch; }
+.chat-bubble-row{ display:flex; }
+.chat-bubble-row.customer{ justify-content:flex-end; }
+.chat-bubble-row.admin{ justify-content:flex-start; }
+.chat-bubble{ max-width:78%; padding:10px 14px; border-radius:16px; font-size:.85rem; line-height:1.45; }
+.chat-bubble-row.customer .chat-bubble{ background:var(--accent); color:#0A0A0A; border-bottom-right-radius:4px; }
+.chat-bubble-row.admin .chat-bubble{ background:var(--surface); border:1px solid var(--border); color:var(--text); border-bottom-left-radius:4px; }
+.chat-bubble-time{ font-size:.62rem; color:var(--text-soft); margin-top:4px; opacity:.7; }
+.chat-bubble-row.customer .chat-bubble-time{ text-align:right; }
+.chat-input-bar{ display:flex; gap:8px; padding:12px 14px; border-top:1px solid var(--border); background:var(--bg); flex-shrink:0; padding-bottom:calc(12px + env(safe-area-inset-bottom)); }
+#chatInput{ flex:1; padding:12px 14px; background:var(--surface); border:1px solid var(--border); border-radius:20px; color:var(--text); font-size:.85rem; }
+#chatSendBtn{ width:44px; height:44px; flex-shrink:0; border-radius:50%; background:var(--accent); display:flex; align-items:center; justify-content:center; }
+#chatSendBtn:disabled{ opacity:.5; }
+.chat-empty{ text-align:center; padding:60px 20px; color:var(--text-soft); font-size:.85rem; }
+.ago-typing-dot{ width:6px; height:6px; border-radius:50%; background:var(--text-soft); animation:agoTypingBounce 1.2s infinite ease-in-out; }
+.ago-typing-dot:nth-child(2){ animation-delay:.15s; }
+.ago-typing-dot:nth-child(3){ animation-delay:.3s; }
+@keyframes agoTypingBounce{ 0%,60%,100%{ transform:translateY(0); opacity:.4; } 30%{ transform:translateY(-4px); opacity:1; } }
+</style>
+</head>
+<body>
+
+<div class="top-bar">
+  <button class="back-btn" onclick="history.length > 1 ? history.back() : location.href='account.html'" aria-label="Back">
+    <svg viewBox="0 0 24 24"><path d="M19 12H5M11 18l-6-6 6-6"/></svg>
+  </button>
+  <div>
+    <h1>ÀGÒ LUXE</h1>
+    <p>We usually reply within a few hours</p>
+  </div>
+</div>
+
+<div id="chatMessages"><p class="chat-empty">Loading…</p></div>
+
+<div class="chat-input-bar">
+  <input id="chatInput" type="text" placeholder="Type a message…">
+  <button id="chatSendBtn">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="#0A0A0A"><path d="M2 21l21-9L2 3v7l15 2-15 2z"/></svg>
+  </button>
+</div>
+
+<script>
+const SB_REST = 'https://drjebroujarpugwadido.supabase.co/rest/v1';
+const SB_KEY = 'sb_publishable_0mAkL4aIqXf1nm9zlQF8Fg_yPyt-F71';
+
+function escHtml(s){ return String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
+function authHeaders(){
+  const raw = localStorage.getItem('ago_auth_session');
+  const session = raw ? JSON.parse(raw) : null;
+  return { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + (session?.access_token || SB_KEY), 'Content-Type': 'application/json' };
+}
+function currentUserId(){
+  const raw = localStorage.getItem('ago_auth_session');
+  const session = raw ? JSON.parse(raw) : null;
+  return session?.user?.id || null;
+}
+
+let currentThreadId = null;
+let pollTimer = null;
+let typingPollTimer = null;
+
+// REAL, genuine typing indicator — shows only while admin_typing_at
+// is genuinely recent (within the last 4 real seconds). This
+// deliberate expiry means a real, stalled or closed admin tab can
+// never leave a stuck "typing…" bubble showing forever — it fades
+// on its own once admin actually stops.
+function updateTypingIndicator(adminTypingAt){
+  const el = document.getElementById('chatMessages');
+  const existing = document.getElementById('agoTypingBubble');
+  const isRecent = adminTypingAt && (Date.now() - new Date(adminTypingAt).getTime()) < 4000;
+
+  if (isRecent && !existing) {
+    const bubble = document.createElement('div');
+    bubble.id = 'agoTypingBubble';
+    bubble.className = 'chat-bubble-row admin';
+    bubble.innerHTML = `<div class="chat-bubble" style="display:flex; gap:4px; padding:12px 16px;">
+      <span class="ago-typing-dot"></span><span class="ago-typing-dot"></span><span class="ago-typing-dot"></span>
+    </div>`;
+    el.appendChild(bubble);
+    el.scrollTop = el.scrollHeight;
+  } else if (!isRecent && existing) {
+    existing.remove();
+  }
+}
+
+async function loadChat(){
+  const uid = currentUserId();
+  if (!uid) {
+    document.getElementById('chatMessages').innerHTML = '<p class="chat-empty">Please sign in to chat with us.</p>';
+    return;
+  }
+
+  try {
+    // Real, existing thread — same real table the tested backend
+    // functions (send_customer_message / send_admin_message) already write to.
+    const threadRes = await fetch(`${SB_REST}/chat_threads?user_id=eq.${uid}&select=id,admin_typing_at&order=created_at.desc&limit=1`, { headers: authHeaders() });
+    const threads = threadRes.ok ? await threadRes.json() : [];
+
+    const el = document.getElementById('chatMessages');
+
+    if (!threads.length) {
+      currentThreadId = null;
+      el.innerHTML = '<p class="chat-empty">Say hello — we’re here to help with any real question or issue.</p>';
+      return;
+    }
+    currentThreadId = threads[0].id;
+
+    const msgRes = await fetch(`${SB_REST}/chat_messages?thread_id=eq.${currentThreadId}&select=*&order=created_at.asc`, { headers: authHeaders() });
+    const messages = msgRes.ok ? await msgRes.json() : [];
+
+    if (!messages.length) {
+      el.innerHTML = '<p class="chat-empty">Say hello — we’re here to help with any real question or issue.</p>';
+    } else {
+      const wasNearBottom = el.scrollHeight - el.scrollTop - el.clientHeight < 60;
+      el.innerHTML = messages.map(m => `
+        <div class="chat-bubble-row ${m.sender_type}">
+          <div>
+            <div class="chat-bubble">${escHtml(m.body)}</div>
+            <p class="chat-bubble-time">${new Date(m.created_at).toLocaleTimeString('en-NG', {hour:'numeric', minute:'2-digit'})}</p>
+          </div>
+        </div>`).join('');
+      if (wasNearBottom) el.scrollTop = el.scrollHeight;
+    }
+
+    updateTypingIndicator(threads[0].admin_typing_at);
+
+    // Real, honest mark-as-read
+    fetch(`${SB_REST}/chat_threads?id=eq.${currentThreadId}`, {
+      method: 'PATCH', headers: authHeaders(), body: JSON.stringify({ customer_unread_count: 0 }),
+    }).catch(() => {});
+  } catch(e){
+    document.getElementById('chatMessages').innerHTML = '<p class="chat-empty">Could not load your messages — check your connection.</p>';
+  }
+}
+
+async function sendChatMessage(){
+  const input = document.getElementById('chatInput');
+  const body = input.value.trim();
+  if (!body) return;
+  const btn = document.getElementById('chatSendBtn');
+  btn.disabled = true;
+  input.value = '';
+  try {
+    const res = await fetch(`${SB_REST}/rpc/send_customer_message`, {
+      method: 'POST', headers: authHeaders(),
+      body: JSON.stringify({ p_body: body, p_order_id: null }),
+    });
+    if (!res.ok) throw new Error('Message failed to send');
+    const el = document.getElementById('chatMessages');
+    el.scrollTop = el.scrollHeight + 1000;
+    await loadChat();
+    document.getElementById('chatMessages').scrollTop = document.getElementById('chatMessages').scrollHeight;
+  } catch(e){
+    input.value = body;
+    alert('Could not send — check your connection');
+  } finally {
+    btn.disabled = false;
+    input.focus();
+  }
+}
+
+document.getElementById('chatSendBtn').addEventListener('click', sendChatMessage);
+document.getElementById('chatInput').addEventListener('keydown', e => { if (e.key === 'Enter') sendChatMessage(); });
+
+loadChat().then(() => {
+  const el = document.getElementById('chatMessages');
+  el.scrollTop = el.scrollHeight;
+});
+
+// Real, simple polling — genuinely refreshes so an admin reply shows
+// up without the customer needing to manually reload. Only runs
+// while this real tab is actually visible, to avoid needless real
+// network calls when it's in the background.
+pollTimer = setInterval(() => {
+  if (document.visibilityState === 'visible') loadChat();
+}, 8000);
+
+// Real, dedicated, faster poll — genuinely lighter than the full
+// message reload above (fetches only one small field), so the
+// typing indicator can feel live without a real, excessive network cost.
+typingPollTimer = setInterval(async () => {
+  if (document.visibilityState !== 'visible' || !currentThreadId) return;
+  try {
+    const res = await fetch(`${SB_REST}/chat_threads?id=eq.${currentThreadId}&select=admin_typing_at`, { headers: authHeaders() });
+    const data = res.ok ? await res.json() : [];
+    if (data.length) updateTypingIndicator(data[0].admin_typing_at);
+  } catch(e){ /* real, honest, silent fail — next poll tries again */ }
+}, 2000);
+
+window.addEventListener('beforeunload', () => { clearInterval(pollTimer); clearInterval(typingPollTimer); });
+</script>
+</body>
+</html>

@@ -1,0 +1,1233 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- ── FAVICON ── -->
+<link rel="icon" type="image/x-icon" href="favicon.ico">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="theme-color" content="#0A0A0A">
+
+<!-- ── SOCIAL PREVIEW (Open Graph + Twitter) ── -->
+<meta name="description" content="Premium Nigerian men & women ready-to-wear. Made in Nigeria. Worn worldwide.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="ÀGÒ LUXE">
+<meta property="og:title" content="ÀGÒ LUXE — Luxury Nigerian Ready-to-Wear">
+<meta property="og:description" content="Premium Nigerian men & women ready-to-wear. Made in Nigeria. Worn worldwide.">
+<meta property="og:image" content="https://ago-luxeclothing.netlify.app/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="ÀGÒ LUXE — Luxury Nigerian Ready-to-Wear">
+<meta name="twitter:description" content="Premium Nigerian men & women ready-to-wear. Made in Nigeria. Worn worldwide.">
+<meta name="twitter:image" content="https://ago-luxeclothing.netlify.app/og-image.png">
+
+<title>ÀGÒ LUXE — Heritage Worn as Power</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Gentium+Plus:ital,wght@0,400;0,700;1,400;1,700&family=Newsreader:ital,wght@0,500;0,600;1,500&display=swap" rel="stylesheet">
+<script>window.__agoPageName = 'home';</script>
+<script src="ago-cart.js?v=20260724g"></script>
+<script src="install-prompt.js?v=20260722"></script>
+<style>
+/* ============ TOKENS ============ */
+:root[data-theme="dark"]{
+  --bg:#0A0A0A; --surface:#141414; --text:#F9F9F9; --text-soft:#9A9A9A; --border:#222222;
+}
+:root[data-theme="light"]{
+  --bg:#F9F9F9; --surface:#FFFFFF; --text:#0A0A0A; --text-soft:#6B6B6B; --border:#E8E8E8;
+}
+:root{ --accent:#C084FC; --accent-deep:#8B5CF6; }
+
+/* ============ IMAGE SKELETON LOADER (poor-network loading state) ============ */
+@keyframes skel-shimmer{0%{background-position:-500px 0;}100%{background-position:500px 0;}}
+.skel-loading{background-image:linear-gradient(90deg, var(--surface) 25%, #2a2a2a 37%, var(--surface) 63%) !important; background-size:600px 100% !important; animation:skel-shimmer 1.4s linear infinite !important;}
+.skel-loading.img-loaded{animation:none !important; background-image:none !important;}
+img.skel-img{opacity:0 !important; transition:opacity .4s ease;}
+img.skel-img.loaded{opacity:1 !important;}
+
+*{box-sizing:border-box; margin:0; padding:0;}
+html,body{background:var(--bg); color:var(--text); font-family:var(--theme-font-body, 'Newsreader', serif); font-weight:500; -webkit-tap-highlight-color:transparent;}
+@keyframes page-fade-in{from{opacity:0;} to{opacity:1;}}
+body{animation:page-fade-in .25s ease;}
+img{display:block; max-width:100%;}
+a{color:inherit; text-decoration:none;}
+button{font-family:inherit; border:none; background:none; cursor:pointer; color:inherit;}
+ul{list-style:none;}
+h1,h2,h3{font-family:'Gentium Plus',serif; font-weight:700;}
+::selection{background:var(--accent); color:#0A0A0A;}
+body{padding-bottom:64px;} /* clears bottom nav */
+
+.eyebrow{font-family:'Newsreader',serif; font-style:italic; letter-spacing:.14em; text-transform:uppercase; font-size:.72rem; color:var(--accent);}
+.section-head{display:flex; align-items:baseline; justify-content:space-between; padding:0 16px; margin-bottom:14px;}
+.section-head h2{font-size:1.3rem; font-style:italic;}
+.section-head .see-all{font-size:.78rem; color:var(--text-soft); border-bottom:1px solid var(--text-soft); padding-bottom:1px;}
+section{padding:40px 0;}
+
+/* ============ ANNOUNCEMENT BAR ============ */
+.announce{position:relative; background:#C084FC; height:34px; overflow:hidden; transition:background-color .6s ease;}
+.announce-track{position:relative; height:34px; width:100%;}
+.announce-track div{position:absolute; top:0; left:0; right:0; height:34px; display:flex; align-items:center; justify-content:center; font-size:.7rem; font-weight:700; letter-spacing:.05em; color:#0A0A0A; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; padding:0 36px; opacity:0; transition:opacity .5s ease;}
+/* On narrow phones, a long admin-entered message can genuinely
+   exceed what fits on one line even at this font size. Rather than
+   silently truncate real content, let it wrap up to 2 lines and
+   grow the bar's height to match — absolute positioning (needed for
+   the crossfade rotation between messages) stays intact. */
+@media (max-width:380px){
+  .announce-track, .announce-track div{height:44px;}
+  .announce-track div{
+    white-space:normal; text-overflow:clip; line-height:1.3;
+    padding:4px 30px; text-align:center;
+    display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical;
+  }
+}
+.announce-track div.active{opacity:1;}
+
+/* ============ NAVBAR ============ */
+.navbar{position:sticky; top:0; z-index:50; background:var(--bg); border-bottom:1px solid var(--border); display:flex; align-items:center; gap:10px; padding:12px 14px;}
+.logo{font-family:var(--theme-font-heading, 'Cinzel Decorative', serif); font-style:italic; font-weight:700; font-size:1.15rem; color:var(--text); white-space:nowrap; letter-spacing:.02em;}
+.logo .mark{color:var(--accent);}
+.nav-search{flex:1; display:flex; align-items:center; gap:6px; background:var(--surface); border:1px solid var(--border); border-radius:20px; padding:7px 12px;}
+.nav-search input{background:none; border:none; outline:none; color:var(--text); font-family:'Newsreader',serif; font-size:.85rem; width:100%;}
+.nav-search svg{width:15px; height:15px; stroke:var(--text-soft); flex-shrink:0;}
+.nav-icons{display:flex; align-items:center; gap:14px;}
+.nav-icons button{position:relative; display:flex;}
+.nav-icons svg{width:20px; height:20px; stroke:var(--text); fill:none; stroke-width:1.6;}
+.badge{position:absolute; top:-6px; right:-7px; background:var(--accent); color:#0A0A0A; font-size:.6rem; font-weight:700; width:15px; height:15px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-family:'Newsreader',serif;}
+.hamburger{display:flex; flex-direction:column; gap:4px; width:20px;}
+.hamburger span{height:1.4px; background:var(--text); width:100%;}
+
+/* ============ HERO ============ */
+.hero{position:relative; height:78vh; min-height:520px; overflow:hidden; background:var(--bg);}
+.hero-slide{position:absolute; inset:0; opacity:0; transition:opacity 1.1s ease;}
+.hero-slide.active{opacity:1;}
+.hero-bg{position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:center 18%;}
+.hero-overlay{position:absolute; inset:0; background:linear-gradient(0deg,rgba(10,10,10,.88) 0%,rgba(10,10,10,.35) 45%,rgba(10,10,10,.15) 100%);}
+.hero-copy{position:absolute; left:20px; right:20px; bottom:100px; max-width:340px; z-index:2; background:rgba(8,8,10,.5); backdrop-filter:blur(6px); border-radius:10px; padding:18px 20px;}
+.hero-copy .eyebrow{display:block; margin-bottom:8px;}
+.hero-copy h1{font-size:2.1rem; line-height:1.08; color:#F9F9F9;}
+.hero-copy h1 em{font-style:italic; font-weight:400; color:var(--accent); display:block;}
+.hero-copy p{font-family:'Newsreader',serif; font-size:.85rem; color:#D8D0E0; margin-top:10px; max-width:240px; line-height:1.5;}
+.hero-cta{display:inline-block; margin-top:16px; background:var(--accent); color:#0A0A0A; font-size:.78rem; font-weight:700; letter-spacing:.04em; text-transform:uppercase; padding:11px 20px; border-radius:2px;}
+.featured-look{position:absolute; right:14px; top:16px; background:rgba(20,20,20,.85); backdrop-filter:blur(6px); border:1px solid rgba(255,255,255,.12); border-radius:10px; padding:8px; display:flex; gap:8px; align-items:center; width:158px; z-index:3; color:var(--fl-text-color, #F9F9F9);}
+.featured-look.pos-top-left{right:auto; left:14px;}
+.featured-look.pos-bottom-right{top:auto; bottom:16px;}
+.featured-look.pos-bottom-left{right:auto; left:14px; top:auto; bottom:16px;}
+.featured-look.pos-hidden{display:none;}
+.featured-look img{width:46px; height:58px; object-fit:cover; border-radius:4px;}
+.featured-look .fl-text{font-size:.68rem; line-height:1.3;}
+.featured-look .fl-text b{display:block; font-size:.72rem; font-weight:600;}
+.featured-look .fl-text span{color:var(--accent);}
+
+/* ============ CATEGORY STRIP ============ */
+.cat-strip{display:flex; gap:8px; overflow-x:auto; padding:14px 16px; scrollbar-width:none; border-bottom:1px solid var(--border);}
+.cat-strip::-webkit-scrollbar{display:none;}
+.pill{flex-shrink:0; padding:8px 16px; border-radius:30px; border:1px solid var(--border); font-size:.78rem; color:var(--text-soft); white-space:nowrap;}
+.pill.active{background:var(--accent); color:#0A0A0A; border-color:var(--accent); font-weight:600;}
+
+/* ============ PRODUCT GRID / CARD ============ */
+.grid-2{display:grid; grid-template-columns:1fr 1fr; gap:10px; padding:0 14px;}
+.card{display:block; position:relative; animation:card-fade-in .45s ease both;}
+@keyframes card-fade-in{from{opacity:0; transform:translateY(10px);} to{opacity:1; transform:translateY(0);}}
+.card-media{position:relative; aspect-ratio:3/4; overflow:hidden; background:var(--surface); border-radius:2px;}
+.card-media img{width:100%; height:100%; object-fit:cover; position:absolute; inset:0; transition:opacity .4s ease, transform .5s ease;}
+.card-media .img-b{opacity:0;}
+.card:hover .img-b{opacity:1;}
+.card:hover .img-a, .card:active .img-a{transform:scale(1.06);}
+.wish-btn{position:absolute; top:8px; right:8px; width:28px; height:28px; border-radius:50%; background:rgba(10,10,10,.4); backdrop-filter:blur(3px); display:flex; align-items:center; justify-content:center; z-index:2;}
+.wish-btn svg{width:14px; height:14px; stroke:#fff; fill:none; stroke-width:1.6;}
+.wish-btn.active svg{fill:var(--accent); stroke:var(--accent);}
+.wish-btn.pop svg{animation:heart-pop .38s ease;}
+@keyframes heart-pop{0%{transform:scale(1);} 40%{transform:scale(1.35);} 100%{transform:scale(1);}}
+.sale-badge{position:absolute; top:8px; left:8px; background:var(--accent); color:#0A0A0A; font-size:.64rem; font-weight:700; padding:3px 7px; border-radius:2px; z-index:2;}
+.stock-badge{position:absolute; bottom:8px; left:8px; background:#0A0A0A; color:#F4E04D; border:1px solid #F4E04D; font-size:.62rem; font-weight:700; padding:3px 7px; border-radius:2px; z-index:2;}
+.card-info{padding-top:7px;}
+.card-name{font-size:.78rem; line-height:1.25;}
+.card-rating{display:flex; align-items:center; gap:4px; font-size:.68rem; color:var(--text-soft); margin-top:3px;}
+.card-rating svg{color:var(--accent); flex-shrink:0;}
+.card-rating span{color:var(--text-soft);}
+.card-price{font-size:.8rem; margin-top:3px; display:flex; gap:6px; align-items:baseline; flex-wrap:wrap;}
+
+/* REAL skeleton grid — same real defensive purpose as shop.html:
+   ensures these product sections never show genuinely blank while
+   real data (fallback or Supabase) is being prepared. */
+.skel-card{ display:block; }
+.skel-card .skel-media{
+  aspect-ratio:3/4; border-radius:2px;
+  background-image:linear-gradient(90deg, var(--surface) 25%, #2a2a2a 37%, var(--surface) 63%);
+  background-size:600px 100%; animation:skel-shimmer 1.4s linear infinite;
+}
+.skel-card.tall .skel-media{ aspect-ratio:2/5; } /* matches .grid-irregular .card.tall exactly */
+.skel-card .skel-line{
+  height:11px; border-radius:2px; margin-top:8px;
+  background-image:linear-gradient(90deg, var(--surface) 25%, #2a2a2a 37%, var(--surface) 63%);
+  background-size:600px 100%; animation:skel-shimmer 1.4s linear infinite;
+}
+.skel-card .skel-line.name{ width:80%; }
+.skel-card .skel-line.price{ width:45%; margin-top:6px; height:12px; }
+.card-price .was{color:var(--text-soft); text-decoration:line-through; font-size:.7rem;}
+.card-actions{display:flex; flex-direction:column; gap:5px; margin-top:8px;}
+.btn-add{font-size:.68rem; letter-spacing:.04em; text-transform:uppercase; background:var(--text); color:var(--bg); padding:8px; text-align:center; font-weight:600;}
+.qty-stepper{display:flex; align-items:center; justify-content:space-between; background:var(--text); color:var(--bg); padding:6px 4px;}
+.qty-stepper button{width:24px; font-size:.9rem; font-weight:700; color:var(--bg);}
+.qty-stepper .qty-val{font-size:.78rem; font-weight:600;}
+.flying-thumb{position:fixed; z-index:999; border-radius:50%; object-fit:cover; pointer-events:none;}
+
+/* ============ FLASH SALE ============ */
+.split-wrap{padding:0;}
+.split-text{padding:0 16px; margin-bottom:14px;}
+.flash-head-row{display:flex; align-items:center; justify-content:space-between; gap:10px; margin-top:6px;}
+.split-copy{font-size:.8rem; color:var(--text-soft); margin-top:8px; max-width:280px; line-height:1.5;}
+.split-text .see-all{font-size:.78rem; color:var(--text-soft); border-bottom:1px solid var(--text-soft); padding-bottom:1px; white-space:nowrap;}
+.countdown{display:flex; gap:6px;}
+.countdown div{background:var(--surface); border:1px solid var(--border); border-radius:3px; padding:5px 8px; font-size:.78rem; font-variant-numeric:tabular-nums; text-align:center; min-width:38px;}
+.countdown div span{display:block; font-size:.55rem; color:var(--text-soft); margin-top:1px;}
+
+/* ============ FEATURED BANNER ============ */
+.banner{position:relative; height:46vh; min-height:320px; overflow:hidden; margin:30px 0;}
+.banner img{position:absolute; top:-10%; left:0; width:100%; height:120%; object-fit:cover; will-change:transform;}
+.banner-copy{position:absolute; inset:0; display:flex; flex-direction:column; align-items:flex-start; justify-content:flex-end; padding:28px 18px; background:linear-gradient(0deg,rgba(0,0,0,.55) 0%,transparent 55%);}
+.banner-copy h2{color:#fff; font-size:1.5rem; font-style:italic; max-width:240px; line-height:1.15;}
+.banner-copy a{margin-top:12px; font-size:.74rem; letter-spacing:.06em; text-transform:uppercase; color:#fff; border-bottom:1px solid #fff; padding-bottom:2px;}
+
+/* ============ IRREGULAR GRID (Women's Picks) — uniform on mobile, irregular from desktop up ============ */
+.grid-irregular{display:grid; grid-template-columns:1fr 1fr; gap:10px; padding:0 14px;}
+
+/* ============ ACCESSORIES SCROLL ============ */
+.scroll-row{display:flex; gap:10px; overflow-x:auto; padding:0 14px; scrollbar-width:none;}
+.scroll-row::-webkit-scrollbar{display:none;}
+.scroll-row .card{flex-shrink:0; width:140px;}
+
+/* ============ BRAND STATEMENT ============ */
+.brand-statement{text-align:center; padding:60px 24px;}
+.brand-statement .flank{color:var(--accent); font-size:.85rem; letter-spacing:.3em; display:block; margin-bottom:18px;}
+.brand-statement p{font-family:'Gentium Plus',serif; font-style:italic; font-size:1.3rem; line-height:1.5; max-width:320px; margin:0 auto;}
+
+/* ============ NEWSLETTER ============ */
+.newsletter{background:var(--surface); border-top:1px solid var(--border); border-bottom:1px solid var(--border); padding:36px 20px; text-align:center;}
+.newsletter h3{font-size:1.1rem; font-style:italic; margin-bottom:6px;}
+.newsletter p{font-size:.8rem; color:var(--text-soft); margin-bottom:16px;}
+.newsletter-form{display:flex; max-width:340px; margin:0 auto; border:1px solid var(--border);}
+.newsletter-form input{flex:1; background:none; border:none; outline:none; color:var(--text); padding:11px 12px; font-family:'Newsreader',serif; font-size:.82rem;}
+.newsletter-form button{background:var(--accent); color:#0A0A0A; padding:0 16px; font-size:.74rem; font-weight:700; text-transform:uppercase; letter-spacing:.04em;}
+
+/* ============ FOOTER ============ */
+footer{padding:36px 18px 20px;}
+.footer-grid{display:grid; grid-template-columns:1fr 1fr; gap:24px; margin-bottom:30px;}
+.footer-grid h4{font-size:.72rem; text-transform:uppercase; letter-spacing:.08em; color:var(--text-soft); margin-bottom:12px;}
+.footer-grid li{margin-bottom:8px; font-size:.8rem;}
+.payment-section{margin-bottom:16px;}
+.payment-section h4{font-size:.72rem; text-transform:uppercase; letter-spacing:.08em; color:var(--text-soft); margin-bottom:12px;}
+.payment-row{display:grid; grid-template-columns:1fr 1fr; gap:10px;}
+.payment-row img{width:100%; height:52px; background:#fff; border-radius:0; padding:10px 16px; object-fit:contain;}
+.copyright{font-size:.68rem; color:var(--text-soft); border-top:1px solid var(--border); padding-top:16px;}
+
+/* ============ BOTTOM NAV ============ */
+.bottom-nav{position:fixed; bottom:0; left:0; right:0; z-index:60; background:var(--bg); border-top:1px solid var(--border); display:flex; justify-content:space-around; padding:9px 0 11px;}
+.bottom-nav a{display:flex; flex-direction:column; align-items:center; gap:3px; font-size:.6rem; color:var(--text-soft); position:relative;}
+.bottom-nav a.active{color:var(--accent);}
+.bottom-nav svg{width:19px; height:19px; stroke:currentColor; fill:none; stroke-width:1.6;}
+.bottom-nav .badge{top:-4px; right:-8px;}
+
+/* ============ TOAST ============ */
+.toast{position:fixed; bottom:78px; left:50%; transform:translateX(-50%) translateY(20px); background:var(--text); color:var(--bg); padding:10px 18px; border-radius:30px; font-size:.78rem; opacity:0; transition:all .3s ease; z-index:200; white-space:nowrap;}
+.toast.show{opacity:1; transform:translateX(-50%) translateY(0);}
+
+/* ============ SEARCH OVERLAY (dedicated page, not a dropdown) ============ */
+.search-overlay{position:fixed; inset:0; background:var(--bg); z-index:300; display:none; flex-direction:column;}
+
+/* ============ MENU DRAWER ============ */
+.menu-scrim{position:fixed; inset:0; background:rgba(0,0,0,.55); z-index:400; opacity:0; pointer-events:none; transition:opacity .3s ease;}
+.menu-scrim.active{opacity:1; pointer-events:auto;}
+.menu-drawer{position:fixed; top:0; left:0; bottom:0; width:82%; max-width:340px; background:var(--bg); border-right:1px solid var(--border); z-index:401; transform:translateX(-100%); transition:transform .35s cubic-bezier(.3,.7,.3,1); display:flex; flex-direction:column; overflow-y:auto; -webkit-overflow-scrolling:touch;}
+.menu-drawer.active{transform:translateX(0);}
+.menu-drawer-top{display:flex; align-items:center; justify-content:space-between; padding:16px 18px; border-bottom:1px solid var(--border);}
+.menu-drawer-top .logo{font-size:1.1rem;}
+.menu-close{display:flex; padding:4px;}
+.menu-close svg{width:20px; height:20px; stroke:var(--text); fill:none; stroke-width:1.8;}
+.menu-section{padding:16px 18px;}
+.menu-section h4{font-size:.68rem; text-transform:uppercase; letter-spacing:.1em; color:var(--text-soft); margin-bottom:10px;}
+.menu-section a{display:block; padding:9px 0; font-size:.92rem; border-bottom:1px solid var(--border);}
+.menu-section a:last-child{border-bottom:none;}
+.menu-section + .menu-section{border-top:1px solid var(--border);}
+.search-overlay.active{display:flex;}
+.search-overlay-top{display:flex; align-items:center; gap:10px; padding:12px 14px; border-bottom:1px solid var(--border); flex-shrink:0;}
+.search-back{display:flex; padding:4px;}
+.search-back svg{width:20px; height:20px; stroke:var(--text); fill:none; stroke-width:1.8;}
+.search-overlay-input{flex:1; display:flex; align-items:center; gap:8px; background:var(--surface); border:1px solid var(--border); border-radius:20px; padding:9px 14px;}
+.search-overlay-input svg{width:15px; height:15px; stroke:var(--text-soft); flex-shrink:0;}
+.search-overlay-input input{flex:1; background:none; border:none; outline:none; color:var(--text); font-family:'Newsreader',serif; font-size:.9rem;}
+.search-overlay-body{flex:1; overflow-y:auto; padding:20px 16px; -webkit-overflow-scrolling:touch;}
+.search-section-title{display:flex; justify-content:space-between; align-items:center; font-size:.7rem; text-transform:uppercase; letter-spacing:.06em; color:var(--text-soft); margin-bottom:10px;}
+.search-section-title .clear-btn{color:var(--accent); text-transform:none; letter-spacing:0; font-size:.75rem;}
+.search-pills{display:flex; flex-wrap:wrap; gap:8px; margin-bottom:26px;}
+.search-pill{padding:8px 14px; border-radius:20px; border:1px solid var(--border); font-size:.78rem; color:var(--text);}
+.search-result-row{display:flex; gap:12px; align-items:center; padding:10px 0; border-bottom:1px solid var(--border);}
+.search-result-row img{width:100%; height:100%; object-fit:cover; display:block;}
+.search-thumb-wrap{width:48px; height:60px; border-radius:4px; flex-shrink:0; overflow:hidden; display:block; background:var(--surface);}
+.search-result-info p{font-size:.82rem; margin-bottom:3px;}
+.search-result-info span{font-size:.76rem; color:var(--text-soft);}
+.search-empty{text-align:center; color:var(--text-soft); font-size:.85rem; padding:50px 0;}
+
+/* ============ DESKTOP ============ */
+.desktop-nav-links{display:none;}
+@media (min-width:860px){
+  .grid-2{grid-template-columns:repeat(4,1fr); max-width:1320px; margin:0 auto;}
+  .grid-irregular{grid-template-columns:repeat(3,1fr); grid-auto-flow:dense; grid-auto-rows:auto; max-width:1320px; margin:0 auto;}
+  .grid-irregular .card.tall{grid-row:span 2;}
+  .grid-irregular .card.tall .card-media{aspect-ratio:2/5;}
+  .scroll-row{max-width:1320px; margin:0 auto;}
+  .hero-copy{max-width:560px; padding:32px 38px; left:60px; right:auto; bottom:140px;}
+  .hero-copy .eyebrow{font-size:.85rem;}
+  .hero-copy h1{font-size:3.6rem;}
+  .hero-copy p{font-size:1.05rem; max-width:440px;}
+  .hero-cta{font-size:.85rem; padding:14px 26px;}
+  .bottom-nav{display:none;}
+  body{padding-bottom:0;}
+  .navbar{padding:16px 40px; flex-wrap:wrap;}
+  .desktop-nav-links{display:flex; gap:26px; width:100%; padding-top:14px; border-top:1px solid var(--border); margin-top:14px; justify-content:center;}
+  .desktop-nav-links a{font-size:.78rem; letter-spacing:.04em; text-transform:uppercase; color:var(--text-soft);}
+  .desktop-nav-links a:hover{color:var(--accent);}
+  .section-head{padding:0 40px; max-width:1320px; margin-left:auto; margin-right:auto;}
+  .split-wrap{display:flex; gap:36px; align-items:flex-start; max-width:1320px; margin:0 auto; padding:0 40px;}
+  .split-text{flex:0 0 260px; padding:0; margin-bottom:0;}
+  .split-copy{max-width:none;}
+  .split-grid{display:flex; gap:14px; overflow-x:auto; flex:1; padding:0 0 8px; scrollbar-width:none; grid-template-columns:none;}
+  .split-grid::-webkit-scrollbar{display:none;}
+  .split-grid .card{flex:0 0 220px;}
+  .payment-row{grid-template-columns:repeat(4,1fr); max-width:520px;}
+  footer{padding:48px 40px 24px;}
+  .footer-grid{grid-template-columns:repeat(4,1fr);}
+}
+</style>
+</head>
+<body>
+
+<!-- ============ 1. ANNOUNCEMENT BAR ============ -->
+<div class="announce"><div class="announce-track" id="announceTrack">
+  <div data-bg="#C084FC">FREE DELIVERY OVER ₦150,000!!</div>
+  <div data-bg="#E5B567">NEW: THE HERITAGE EDIT IS LIVE!!</div>
+  <div data-bg="#6FCFC0">INSTANT PAYMENTS WITH PAYSTACK!!</div>
+</div></div>
+
+<!-- ============ 2. NAVBAR ============ -->
+<header class="navbar">
+  <button class="hamburger" id="hamburgerBtn" aria-label="Menu"><span></span><span></span><span></span></button>
+  <span class="logo"><span class="mark">ÀGÒ</span> LUXE</span>
+  <div class="nav-search" id="navSearchTrigger">
+    <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7" stroke="currentColor" fill="none" stroke-width="1.8"/><path d="M21 21l-4.3-4.3" stroke="currentColor" stroke-width="1.8"/></svg>
+    <input type="text" placeholder="Search products…" readonly>
+  </div>
+  <div class="nav-icons">
+    <button id="cartNavBtn" aria-label="Cart">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+      <span class="badge" id="cartBadge">0</span>
+    </button>
+  </div>
+  <div class="desktop-nav-links">
+    <a href="index.html">Home</a>
+    <a href="categories.html">Categories</a>
+    <a href="shop.html?cat=women">Women</a>
+    <a href="shop.html?cat=men">Men</a>
+    <a href="jewelry.html">Jewelry</a>
+    <a href="shop.html?cat=bags">Bags</a>
+    <a href="shop.html?cat=footwear">Footwear</a>
+    <a href="shop.html?cat=caps">Caps</a>
+    <a href="cart.html">Cart</a>
+    <a href="wishlist.html">Wishlist</a>
+    <a href="account.html" data-account-link>Account</a>
+  </div>
+</header>
+
+<!-- ============ 3. HERO ============ -->
+<section class="hero" id="hero" data-section-type="hero">
+  <div class="hero-slide active skel-loading" data-slide="0">
+    <img class="hero-bg skel-img" data-content-key="hero_slide1_image" src="https://res.cloudinary.com/dikyzpmqi/image/upload/v1782747671/3d56eb7d7f5ac627934d7c18ee9df757_binyt7.jpg" alt="">
+    <div class="hero-overlay"></div>
+    <div class="hero-copy">
+      <span class="eyebrow" data-content-key="hero_slide1_eyebrow">New Season</span>
+      <h1><span data-content-key="hero_slide1_headline">Owambe</span><em data-content-key="hero_slide1_headline_em">Ready.</em></h1>
+      <p data-content-key="hero_slide1_subtext">Custom-fit pieces that move with you.</p>
+      <a href="#womensPicks" class="hero-cta" data-content-key="hero_slide1_cta_text" data-content-href-key="hero_slide1_cta_url">Shop Women</a>
+    </div>
+    <div class="featured-look" id="heroFeaturedLook">
+      <img data-content-key="hero_featured_look_image" src="https://res.cloudinary.com/dikyzpmqi/image/upload/v1782849699/aa4bcc2750ef050914e1a6283b9a300d_a7c3dp.jpg" alt="">
+      <div class="fl-text"><b data-content-key="hero_featured_look_title">Featured Look</b><span data-content-key="hero_featured_look_subtitle">Shop the edit</span></div>
+    </div>
+  </div>
+  <div class="hero-slide skel-loading" data-slide="1">
+    <img class="hero-bg skel-img" data-content-key="hero_slide2_image" src="https://res.cloudinary.com/dikyzpmqi/image/upload/v1782747672/d2e263f5edb434c7dbcb15da98505626_tbidqh.jpg" alt="">
+    <div class="hero-overlay"></div>
+    <div class="hero-copy">
+      <span class="eyebrow" data-content-key="hero_slide2_eyebrow">Heritage Collection</span>
+      <h1><span data-content-key="hero_slide2_headline">Carry Your</span><em data-content-key="hero_slide2_headline_em">Crown.</em></h1>
+      <p data-content-key="hero_slide2_subtext">Agbada and gele, cut sharp for now.</p>
+      <a href="#mensPicks" class="hero-cta" data-content-key="hero_slide2_cta_text" data-content-href-key="hero_slide2_cta_url">Shop The Collection</a>
+    </div>
+  </div>
+  <div class="hero-slide skel-loading" data-slide="2">
+    <img class="hero-bg skel-img" data-content-key="hero_slide3_image" src="https://res.cloudinary.com/dikyzpmqi/image/upload/v1782747672/3586e45c877e71cce70eeb32b384106c_iixrnx.jpg" alt="">
+    <div class="hero-overlay"></div>
+    <div class="hero-copy">
+      <span class="eyebrow" data-content-key="hero_slide3_eyebrow">The Edit</span>
+      <h1><span data-content-key="hero_slide3_headline">His & Hers,</span><em data-content-key="hero_slide3_headline_em">Same Standard.</em></h1>
+      <p data-content-key="hero_slide3_subtext">Ankara, agbada, everything between.</p>
+      <a href="#newArrivals" class="hero-cta" data-content-key="hero_slide3_cta_text" data-content-href-key="hero_slide3_cta_url">Shop New In</a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 4. CATEGORY STRIP ============ -->
+<nav class="cat-strip" id="catStrip" data-section-type="category_strip">
+  <button class="pill active" data-filter="all">All</button>
+  <button class="pill" data-filter="women">Women</button>
+  <button class="pill" data-filter="men">Men</button>
+  <button class="pill" data-filter="jewelry">Jewelry</button>
+  <button class="pill" data-filter="bags">Bags</button>
+  <button class="pill" data-filter="footwear">Footwear</button>
+  <button class="pill" data-filter="caps">Caps</button>
+  <button class="pill" data-filter="sale">Sale</button>
+</nav>
+
+<!-- ============ 5. FLASH SALE ============ -->
+<section id="flashSale" data-section-type="flash_sale">
+  <div class="split-wrap">
+    <div class="split-text">
+      <span class="eyebrow" data-field="eyebrow">Limited Time</span>
+      <div class="flash-head-row">
+        <h2 style="font-style:italic;font-size:1.3rem;" data-field="heading">Flash Sale</h2>
+        <div class="countdown" id="countdown">
+          <div id="cdH">00<span>hrs</span></div>
+          <div id="cdM">00<span>min</span></div>
+          <div id="cdS">00<span>sec</span></div>
+        </div>
+      </div>
+      <p class="split-copy" data-field="copy">Prices this good don't last — grab them before the timer runs out.</p>
+    </div>
+    <div class="grid-2 split-grid" id="flashGrid"></div>
+  </div>
+</section>
+
+<!-- ============ 6. NEW ARRIVALS ============ -->
+<section id="newArrivals" data-section-type="new_arrivals">
+  <div class="split-wrap">
+    <div class="split-text">
+      <span class="eyebrow" data-field="eyebrow">Just In</span>
+      <div class="flash-head-row">
+        <h2 style="font-style:italic;font-size:1.3rem;" data-field="heading">New Arrivals</h2>
+        <a href="shop.html" class="see-all">See All</a>
+      </div>
+      <p class="split-copy" data-field="copy">The latest additions to the edit.</p>
+    </div>
+    <div class="grid-2 split-grid" id="newArrivalsGrid"></div>
+  </div>
+</section>
+
+<!-- ============ 7. FEATURED BANNER ============ -->
+<div class="banner skel-loading" id="banner" data-section-type="featured_banner">
+  <img id="bannerImg" class="skel-img" src="https://res.cloudinary.com/dikyzpmqi/image/upload/v1782747668/b1e97f62a6aa08f5dd6b953f0adb170b_skhsxr.jpg" alt="">  <div class="banner-copy">
+    <h2 data-field="heading">The Heritage Edit</h2>
+    <a href="about.html" data-field="link">Explore the story</a>
+  </div>
+</div>
+
+<!-- ============ 8. WOMEN'S PICKS (irregular grid) ============ -->
+<section id="womensPicks" data-section-type="womens_picks">
+  <div class="section-head"><h2 data-field="heading">Women's Picks</h2><a href="shop.html?cat=women" class="see-all">See All</a></div>
+  <div class="grid-irregular" id="womensGrid"></div>
+</section>
+
+<!-- ============ 9. MEN'S PICKS ============ -->
+<section id="mensPicks" data-section-type="mens_picks">
+  <div class="section-head"><h2 data-field="heading">Men's Picks</h2><a href="shop.html?cat=men" class="see-all">See All</a></div>
+  <div class="grid-irregular" id="mensGrid"></div>
+</section>
+
+<!-- ============ 10. ACCESSORIES ROW ============ -->
+<section id="accessories" data-section-type="accessories">
+  <div class="section-head"><h2 data-field="heading">Accessories</h2><a href="shop.html" class="see-all">See All</a></div>
+  <div class="scroll-row" id="accessoriesRow"></div>
+</section>
+
+<!-- ============ 11. BRAND STATEMENT ============ -->
+<div class="brand-statement" data-section-type="brand_statement">
+  <span class="flank">✦ · — »</span>
+  <p data-field="text">Rooted in heritage, cut for the room you're about to walk into.</p>
+</div>
+
+<!-- ============ 12. NEWSLETTER ============ -->
+<div class="newsletter" data-section-type="newsletter">
+  <h3 data-field="heading">Join the inner circle</h3>
+  <p data-field="subtext">Early access to drops, restocks, and the Heritage archive.</p>
+  <form class="newsletter-form" id="newsletterForm">
+    <input type="email" placeholder="Your email address" required>
+    <button type="submit">Join</button>
+  </form>
+</div>
+
+<!-- ============ 13. FOOTER ============ -->
+<footer id="siteFooter">
+  <div class="footer-grid">
+    <div><h4>Shop</h4><ul>
+      <li><a href="shop.html?cat=women">Women</a></li>
+      <li><a href="shop.html?cat=men">Men</a></li>
+      <li><a href="jewelry.html">Jewelry</a></li>
+      <li><a href="shop.html?cat=sale">Sale</a></li>
+    </ul></div>
+    <div><h4>Help</h4><ul>
+      <li><a href="shipping.html">Shipping & Returns</a></li>
+      <li><a href="size-guide.html">Size Guide</a></li>
+      <li><a href="contact.html">Contact Us</a></li>
+      <li><a href="track-order.html">Track Order</a></li>
+    </ul></div>
+    <div><h4>Company</h4><ul>
+      <li><a href="about.html">About ÀGÒ LUXE</a></li>
+      <li><a href="terms.html">Terms of Service</a></li>
+      <li><a href="privacy.html">Privacy Policy</a></li>
+    </ul></div>
+    <div><h4>Connect</h4><ul>
+      <li><a href="#" class="toast-link" data-toast="Instagram link coming soon">Instagram</a></li>
+      <li><a href="#" class="toast-link" data-toast="WhatsApp link coming soon">WhatsApp</a></li>
+      <li><a href="#" class="toast-link" data-toast="TikTok link coming soon">TikTok</a></li>
+    </ul></div>
+  </div>
+  <div class="payment-section">
+    <h4>Accepted Payments</h4>
+    <div class="payment-row">
+      <img src="https://res.cloudinary.com/dikyzpmqi/image/upload/v1782905659/Paystack_idSL4BuSLF_1_ihbzpo.png" alt="Paystack">
+      <img src="https://res.cloudinary.com/dikyzpmqi/image/upload/v1782905701/Visa_Inc-_idDUM8TcN7_1_y6azxr.png" alt="Visa">
+      <img src="https://res.cloudinary.com/dikyzpmqi/image/upload/v1782905614/MClogo-c823e495c5cf455c89ddfb0e17fc7978_j60mjl.jpg" alt="Mastercard">
+      <img src="https://res.cloudinary.com/dikyzpmqi/image/upload/v1782905615/Verve_Image_nraa6w.png" alt="Verve">
+    </div>
+  </div>
+  <p class="copyright">© 2026 ÀGÒ LUXE. All rights reserved.</p>
+</footer>
+
+<!-- ============ 14. BOTTOM NAV (mobile) ============ -->
+<nav class="bottom-nav">
+  <a href="index.html" class="active">
+    <svg viewBox="0 0 24 24"><path d="M3 11l9-8 9 8M5 10v10h14V10" stroke-width="1.6"/></svg>Home
+  </a>
+  <a href="categories.html">
+    <svg viewBox="0 0 24 24"><rect x="3" y="3" width="8" height="8" stroke-width="1.6"/><rect x="13" y="3" width="8" height="8" stroke-width="1.6"/><rect x="3" y="13" width="8" height="8" stroke-width="1.6"/><rect x="13" y="13" width="8" height="8" stroke-width="1.6"/></svg>Categories
+  </a>
+  <a href="cart.html">
+    <svg viewBox="0 0 24 24" stroke-width="1.6"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>Cart
+    <span class="badge" id="cartBadgeNav">0</span>
+  </a>
+  <a href="wishlist.html">
+    <svg viewBox="0 0 24 24" stroke-width="1.6"><path d="M12 21s-7.5-4.6-10-9.1C.4 8.5 2 4.5 6 4c2.2-.3 4 1 6 3.5C14 5 15.8 3.7 18 4c4 .5 5.6 4.5 4 7.9C19.5 16.4 12 21 12 21z"/></svg>Wishlist
+    <span class="badge" id="wishBadgeNav">0</span>
+  </a>
+  <a href="account.html">
+    <svg viewBox="0 0 24 24" stroke-width="1.6"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-6 8-6s8 2 8 6"/></svg>Account
+  </a>
+</nav>
+
+<!-- ============ SEARCH OVERLAY ============ -->
+<!-- ============ MENU DRAWER ============ -->
+<div class="menu-scrim" id="menuScrim"></div>
+<nav class="menu-drawer" id="menuDrawer">
+  <div class="menu-drawer-top">
+    <span class="logo"><span class="mark">ÀGÒ</span> LUXE</span>
+    <button class="menu-close" id="menuCloseBtn" aria-label="Close menu">
+      <svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+  </div>
+  <div class="menu-section">
+    <h4>Shop</h4>
+    <a href="index.html">Home</a>
+    <a href="categories.html">Categories</a>
+    <a href="shop.html?cat=women">Women</a>
+    <a href="shop.html?cat=men">Men</a>
+    <a href="jewelry.html">Jewelry</a>
+    <a href="shop.html?cat=bags">Bags</a>
+    <a href="shop.html?cat=footwear">Footwear</a>
+    <a href="shop.html?cat=caps">Caps</a>
+    <a href="shop.html?cat=sale">Sale</a>
+  </div>
+  <div class="menu-section">
+    <h4>My Account</h4>
+    <a href="cart.html">Cart</a>
+    <a href="wishlist.html">Wishlist</a>
+    <a href="account.html" data-account-link>Account</a>
+  </div>
+  <div class="menu-section">
+    <h4>Help</h4>
+    <a href="shipping.html">Shipping & Returns</a>
+    <a href="size-guide.html">Size Guide</a>
+    <a href="contact.html">Contact Us</a>
+    <a href="track-order.html">Track Order</a>
+  </div>
+  <div class="menu-section">
+    <h4>Company</h4>
+    <a href="about.html">About ÀGÒ LUXE</a>
+    <a href="our-craft.html">Our Craft</a>
+    <a href="careers.html">Careers</a>
+  </div>
+  <div class="menu-section">
+    <h4>Connect</h4>
+    <a href="#" class="toast-link" data-toast="Instagram link coming soon">Instagram</a>
+    <a href="#" class="toast-link" data-toast="WhatsApp link coming soon">WhatsApp</a>
+    <a href="#" class="toast-link" data-toast="TikTok link coming soon">TikTok</a>
+  </div>
+</nav>
+
+<div class="search-overlay" id="searchOverlay">
+  <div class="search-overlay-top">
+    <button class="search-back" id="searchBackBtn" aria-label="Close search">
+      <svg viewBox="0 0 24 24"><path d="M19 12H5M11 18l-6-6 6-6" stroke="currentColor" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+    <div class="search-overlay-input">
+      <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7" stroke="currentColor" fill="none" stroke-width="1.8"/><path d="M21 21l-4.3-4.3" stroke="currentColor" stroke-width="1.8"/></svg>
+      <input type="text" id="searchOverlayInput" placeholder="Search products…">
+    </div>
+  </div>
+  <div class="search-overlay-body" id="searchOverlayBody"></div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// REAL, defensive skeleton — same purpose as shop.html: renders a
+// genuine placeholder grid in every real product section the
+// instant this script runs, before the hardcoded fallback arrays or
+// the async Supabase fetch below have populated anything. Two of
+// these sections use "tall" cards (2:5 ratio) — the skeleton
+// genuinely matches that too, not just the standard 3:4 shape.
+(function renderHomeSkeletons(){
+  const standardCard = () => `
+    <div class="skel-card">
+      <div class="skel-media"></div>
+      <div class="skel-line name"></div>
+      <div class="skel-line price"></div>
+    </div>`;
+  const tallCard = () => `
+    <div class="skel-card tall">
+      <div class="skel-media"></div>
+      <div class="skel-line name"></div>
+      <div class="skel-line price"></div>
+    </div>`;
+
+  const fill = (id, count, cardFn) => {
+    const el = document.getElementById(id);
+    if (el) el.innerHTML = Array.from({ length: count }, cardFn).join('');
+  };
+
+  fill('flashGrid', 4, standardCard);
+  fill('newArrivalsGrid', 4, standardCard);
+  fill('womensGrid', 4, tallCard);
+  fill('mensGrid', 4, tallCard);
+})();
+
+/* ====================================================================
+   VERIFY: every image URL below is REAL and LIVE on your Cloudinary
+   account (dikyzpmqi) — confirmed via the Cloudinary API, nothing here
+   is a guessed or broken link.
+
+   What is NOT verified: which exact garment/piece each photo shows.
+   Your library has 100+ hash-named files and I can't open hosted
+   images to inspect them pixel-by-pixel, so names/prices below are
+   placeholders ("Look 01", "₦TBD"). Swap them for the real name +
+   price from your master list — the easiest way is to open each
+   placeholder's image URL, see what it is, then edit the matching
+   `name` / `price` field here. Search "VERIFY:" to jump between
+   every section that needs your pass.
+==================================================================== */
+
+const CLD = 'https://res.cloudinary.com/dikyzpmqi/image/upload/';
+const img = (id) => CLD + id;
+
+// VERIFY: flash sale — simplified names, seeded ratings (placeholder
+// numbers per your call — swap for real ratings once reviews come in)
+const flashSale = [
+  {name:'Swan Clutch', price:165000, was:230000, cat:'bags sale', img:img('v1782849704/dc55f4aff5112269fad9f63c395db3f0_sgwihl.jpg')},
+  {name:'Butterfly Clutch', price:178000, was:225000, cat:'bags sale', img:img('v1782849703/794a978cdb44067a86e2aaede3c432e6_dqr9wm.jpg')},
+  {name:'Coral Beads', price:142000, was:185000, cat:'jewelry sale', tags:'earrings necklace women', img:img('v1782849702/6dc008b044df08b80897ea79cd6abfe9_hwe0h2.jpg')},
+  {name:'Teak Beads', price:98000, was:135000, cat:'jewelry sale', tags:'earrings necklace women', img:img('v1782849700/9e636dcb6bea730e1d4aed43c4c69c89_efu5cd.jpg')},
+];
+
+// VERIFY: new arrivals — no ratings here on purpose, too new for reviews
+const newArrivals = [
+  {name:'Onyx Beads', price:215000, was:null, cat:'women jewelry', tags:'earrings necklace', img:img('v1782849699/aa4bcc2750ef050914e1a6283b9a300d_a7c3dp.jpg')},
+  {name:'Couples Beads', price:135000, was:null, cat:'women men jewelry', tags:'earrings necklace', img:img('v1782849699/7450f2c762cf60ef56d9605d5cfaa304_unmfab.jpg')},
+  {name:'Coral Bangles', price:175000, was:null, cat:'women men jewelry', img:img('v1782849697/3aeea5d8c54d810af111544a842fa7ff_ehbuyg.jpg')},
+  {name:'Leather Slides', price:92000, was:null, cat:'footwear', img:img('v1782849696/84731995c8bd7129c75edeb13ed4ea3c_ayrkzt.jpg')},
+];
+
+// VERIFY: women's picks — irregular grid, every 4th tile renders tall.
+// "Monochrome Embroidered Kaftan" confirmed menswear — moved to Men's
+// Picks below as "Black Senator Kaftan".
+const womensPicks = [
+  {name:'Scarlet Jumpsuit', price:88000, was:null, cat:'women', img:img('v1782746593/e1149b114ea6ea2c4178c501a71f8b63_fdhe8c.jpg')},
+  {name:'Amethyst Jumpsuit', price:210000, was:250000, cat:'women sale', img:img('v1782746591/6c1505ebaec007b71cd571ccac3da06c_l4u5nc.jpg')},
+  {name:'Emerald Ankara Gown', price:105000, was:null, cat:'women', img:img('v1782746590/06501624e5456fe54f9eca0009a72388_nlqnkz.jpg')},
+  {name:'Cobalt Print Gown', price:58000, was:null, cat:'women', img:img('v1782746589/cb768a27175fb5aa67c12c8060d2afd1_rlqg0m.jpg')},
+];
+
+// VERIFY: men's picks — simplified names + ratings, Black Senator Kaftan
+// added in (was sitting in Women's Picks unconfirmed, now confirmed)
+const mensPicks = [
+  {name:'Leopard Jacket', price:92000, was:null, cat:'men', img:img('v1782746552/e7b17b33f633f5074c615f2165bd21c6_hvgdgn.jpg')},
+  {name:'Cobalt Ankara Blazer', price:205000, was:230000, cat:'men sale', img:img('v1782746554/bdf7bf7da6e1600d0b74db2fd9fb38eb_ak2pni.jpg')},
+  {name:'Wine Senator Set', price:78000, was:null, cat:'men', tags:'agbada traditional wear', img:img('v1782746555/c2604902ddb147512d6797538887a1f3_hnkk2x.jpg')},
+  {name:'Adire Jacket', price:225000, was:null, cat:'men', img:img('v1782746557/3d03638680542e5fdfd41428a7bf4342_euiaco.jpg')},
+  {name:'Onyx Shorts Set', price:65000, was:null, cat:'men', img:img('v1782746557/6add607f8db7b347d695561408fb9c40_j3nwas.jpg')},
+  {name:'Mono Stripe Shirt', price:135000, was:null, cat:'men', img:img('v1782746561/402a3eb66b0fefc1a71cc39e8826d024_imljuh.jpg')},
+  {name:'Ankara Baggy Pants', price:195000, was:225000, cat:'men sale', img:img('v1782746561/1d1f8b1bbac1d7e588f2f2b3d8fd77a3_coh70i.jpg')},
+  {name:'Onyx Senator Kaftan', price:185000, was:null, cat:'men', tags:'agbada traditional wear set', img:img('v1782746552/4d09d117003b9ad5d2994a001f760d97_wm3bpp.jpg')},
+];
+
+// VERIFY: accessories — simplified names, no ratings (kept "some not
+// all" per your call)
+const accessories = [
+  {name:'Beaded Clutch', price:85000, cat:'bags', img:img('v1782849704/99f27c8a79b90d2ccc2657406e57ac27_nra67m.jpg')},
+  {name:'Black Leather Slides', price:45000, cat:'footwear', img:img('v1782849695/86e9ddd81e81b2a8ba32deffd122390e_te6tm1.jpg')},
+  {name:'Emerald Heels', price:68000, cat:'footwear', img:img('v1782849691/1679c51648278a114cc2f901fcaae914_dqblsx.jpg')},
+  {name:'Cross Slides', price:38000, cat:'footwear', img:img('v1782849695/a00d4325ce9c80525bb249e7f96009d2_msn2f8.jpg')},
+  {name:'Fur Heels', price:72000, cat:'footwear', img:img('v1782849692/89ca53a97de3f2f8068594be2857468c_dfku21.jpg')},
+  {name:'Crystal Bow Heels', price:95000, was:null, cat:'footwear', lowStock:2, img:img('v1782849690/b7129b13ac00b174bfec8d0c300b6b7a_vsq4ej.jpg')},
+  {name:'Patent Loafers', price:58000, cat:'footwear', img:img('v1782849688/831bae2cfeed040db658e10e95b00fb6_kpt10p.jpg')},
+  {name:'Bridal Slippers', price:32000, cat:'footwear', img:img('v1782849686/f98f8c2ce4c5c373876bc4d0358dbdeb_hvlqld.jpg')},
+];
+
+// CAPS — live now. 6 of 7 confirmed with real Cloudinary URLs. Still
+// missing: the brown/black/tan striped Yoruba fila and the black
+// pinstripe garrison cap — I found their thumbnails in your batch but
+// couldn't pin down the exact file hash. Re-send those 2 filenames
+// specifically and I'll add them in.
+accessories.push(
+  {name:'Silk Yoruba Purple Cap', price:18000, was:null, cat:'caps men yoruba', img:img('v1782746562/c901b61204a30284648f177e202e01c0_wrxadq.jpg')},
+  {name:'Woven Yoruba Green Cap', price:16000, was:20000, cat:'caps men yoruba sale', img:img('v1782849679/7d9df9f360c9469d5cce9b0a34b70d69_prqck6.jpg')},
+  {name:'Embroidered Hausa Black Cap', price:22000, cat:'caps men hausa', img:img('v1782849676/f36fe6e78bced0b89cecda694f470c67_ztugcm.jpg')},
+  {name:'Embroidered Hausa Teal Cap', price:22000, cat:'caps men hausa', img:img('v1782849681/7a51e7d1a0cb4508de5ad68ffc4c2b5e_zraq1c.jpg')},
+  {name:'Woven Black & White Cap', price:19000, cat:'caps men', img:img('v1782849672/3d8ed78617e1240e7970c538c88fa106_xri7sz.jpg')},
+  {name:'Woven Maroon Stripe Cap', price:17000, cat:'caps men yoruba', img:img('v1782849682/8f74f0ec894ffc226245d3f8c61b4290_yw6svw.jpg')}
+);
+
+const fmt = (n) => n==null ? 'TBD' : '₦' + n.toLocaleString();
+const pct = (price, was) => was ? Math.round((1 - price/was) * 100) : null;
+const slug = (name) => name.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,'');
+
+/* Small 5-star row for product cards — outline/filled, no fake data */
+function renderCardStars(rating){
+  let out = '';
+  for (let i = 1; i <= 5; i++){
+    const filled = rating >= i - 0.25;
+    out += `<svg viewBox="0 0 24 24" width="9" height="9" style="color:${filled?'var(--accent)':'var(--text-soft)'};"><path fill="${filled?'currentColor':'none'}" stroke="currentColor" stroke-width="1.6" d="M12 2l2.9 6.6 7.1.6-5.4 4.7 1.6 7-6.2-3.8L6 21l1.6-7L2.2 9.2l7.1-.6z"/></svg>`;
+  }
+  return out;
+}
+function renderCard(p, idx, tall){
+  const off = pct(p.price, p.was);
+  return `
+  <a class="card ${tall?'tall':''}" data-cat="${p.cat}" href="product.html?id=${slug(p.name)}">
+    <div class="card-media skel-loading">
+      ${off ? `<div class="sale-badge">-${off}%</div>` : ''}
+      ${p.isOutOfStock ? `<div class="stock-badge" style="color:#FF6B6B; border-color:#FF6B6B;">Out of Stock</div>` : (p.lowStock ? `<div class="stock-badge">Only ${p.lowStock} left</div>` : '')}
+      <button class="wish-btn" aria-label="Wishlist toggle">
+        <svg viewBox="0 0 24 24"><path d="M12 21s-7.5-4.6-10-9.1C.4 8.5 2 4.5 6 4c2.2-.3 4 1 6 3.5C14 5 15.8 3.7 18 4c4 .5 5.6 4.5 4 7.9C19.5 16.4 12 21 12 21z"/></svg>
+      </button>
+      <img class="img-a skel-img" src="${p.img}" alt="${p.name}">
+      <img class="img-b" src="${p.img}" alt="">
+    </div>
+    <div class="card-info">
+      <p class="card-name">${p.name}</p>
+      ${p.rating && p.reviews ? `<div class="card-rating">${renderCardStars(p.rating)}<span>${p.rating} (${p.reviews})</span></div>` : ''}
+      <p class="card-price"><span data-ngn="${p.price}">${fmt(p.price)}</span> ${p.was ? `<span class="was">${fmt(p.was)}</span>` : ''}</p>
+      <div class="card-actions">
+        <button class="btn-add" data-name="${p.name}" data-price="${p.price}" data-img="${p.img}" data-slug="${slug(p.name)}" ${p.isOutOfStock ? 'disabled style="opacity:.5; pointer-events:none;"' : ''}>${p.isOutOfStock ? 'Out of Stock' : 'Add to Cart'}</button>
+      </div>
+    </div>
+  </a>`;
+}
+
+/* ── SUPABASE LIVE DATA ───────────────────────────────────
+   Fetches from Supabase and maps to the exact shape
+   renderCard() already expects. Falls back to the
+   hardcoded arrays above if anything fails.
+   ──────────────────────────────────────────────────────── */
+/* ════════════════════════════════════════════════════════════
+   HOMEPAGE SECTION CONTROL
+   Applies admin-configured order, visibility, and text content to
+   the sections below — sourced from homepage_sections in Supabase.
+   Runs BEFORE the product-loading IIFE so grids populate into
+   sections that are already correctly ordered/visible. Fails
+   silently to the existing hardcoded layout if the fetch fails —
+   the homepage should never break because this table is empty or
+   unreachable.
+   ════════════════════════════════════════════════════════════ */
+
+/* Featured Look badge on hero slide 1 — visibility and position are
+   now admin-controlled via site_content (home / hero_featured_look_*),
+   applied once the shared site-content loader (ago-cart.js) fires
+   its ready event. Defaults to visible, top-right if unset. */
+document.addEventListener('agoSiteContentReady', () => {
+  const el = document.getElementById('heroFeaturedLook');
+  if (!el) return;
+  const content = window.__agoSiteContent || {};
+  const visible = content.hero_featured_look_visible !== 'false'; // default true
+  const position = content.hero_featured_look_position || 'top-right';
+
+  el.classList.remove('pos-top-left','pos-bottom-right','pos-bottom-left','pos-hidden');
+  if (!visible) {
+    el.classList.add('pos-hidden');
+  } else if (position !== 'top-right') {
+    el.classList.add('pos-' + position);
+  }
+
+  // Text color is set separately per theme, so switching dark/light
+  // mode (AgoTheme, from ago-cart.js) shows the right one automatically.
+  function applyFeaturedLookColor(){
+    const isDark = document.documentElement.getAttribute('data-theme') !== 'light';
+    const color = isDark
+      ? (content.hero_featured_look_text_color_dark || '#F9F9F9')
+      : (content.hero_featured_look_text_color_light || '#0A0A0A');
+    el.style.setProperty('--fl-text-color', color);
+  }
+  applyFeaturedLookColor();
+  // Re-apply whenever the theme toggle changes, so the color updates
+  // live without needing a page reload.
+  const themeObserver = new MutationObserver(applyFeaturedLookColor);
+  themeObserver.observe(document.documentElement, { attributes:true, attributeFilter:['data-theme'] });
+});
+
+(async function applyHomepageSections(){
+  try {
+    const res = await fetch(
+      'https://drjebroujarpugwadido.supabase.co/rest/v1/homepage_sections?select=*&order=sort_order.asc',
+      { headers: {
+          'apikey': 'sb_publishable_0mAkL4aIqXf1nm9zlQF8Fg_yPyt-F71',
+          'Authorization': 'Bearer sb_publishable_0mAkL4aIqXf1nm9zlQF8Fg_yPyt-F71',
+      }}
+    );
+    if (!res.ok) return; // silent fallback — hardcoded layout stays as-is
+    const sections = await res.json();
+    if (!sections.length) return;
+
+    // Only sections marked visible reach this point (RLS already
+    // filters to is_visible=true for public/anon reads), so anything
+    // NOT in this list should be hidden.
+    const visibleTypes = new Set(sections.map(s => s.type));
+    document.querySelectorAll('[data-section-type]').forEach(el => {
+      if (!visibleTypes.has(el.dataset.sectionType)) el.style.display = 'none';
+    });
+
+    // Apply each section's editable text content to its [data-field]
+    // elements (heading, eyebrow, copy, subtext, link text/url).
+    sections.forEach(section => {
+      const el = document.querySelector(`[data-section-type="${section.type}"]`);
+      if (!el || !section.content) return;
+      Object.entries(section.content).forEach(([field, value]) => {
+        if (field === 'link_url'){
+          const linkEl = el.querySelector('[data-field="link"]');
+          if (linkEl) linkEl.setAttribute('href', value);
+          return;
+        }
+        if (field === 'link_text'){
+          const linkEl = el.querySelector('[data-field="link"]');
+          if (linkEl) linkEl.textContent = value;
+          return;
+        }
+        const fieldEl = el.querySelector(`[data-field="${field}"]`);
+        if (fieldEl) fieldEl.textContent = value;
+      });
+    });
+
+    // Reorder the DOM to match sort_order. Insert each section
+    // immediately before the footer — NOT appendChild to end of
+    // <body>, which was the actual bug: appendChild always moves to
+    // the true end of <body>, past the footer/bottom-nav/overlays
+    // that already live there, which is exactly why the footer used
+    // to jump above the hero after this ran.
+    const footer = document.getElementById('siteFooter');
+    if (footer){
+      sections.forEach(section => {
+        const el = document.querySelector(`[data-section-type="${section.type}"]`);
+        if (el) footer.parentElement.insertBefore(el, footer);
+      });
+    }
+  } catch(e){
+    console.warn('Homepage section control failed, using default layout:', e);
+    if (window.__agoLogError) window.__agoLogError('applyHomepageSections failed', e);
+  }
+})();
+
+(async function() {
+  const CLD = 'https://res.cloudinary.com/dikyzpmqi/image/upload/';
+
+  function toCard(p) {
+    const imgs = Array.isArray(p.images) ? p.images : [];
+    return {
+      name:     p.name,
+      price:    p.sale_price || p.price,
+      was:      p.sale_price ? p.price : null,
+      cat:      (p.tags || []).join(' '),
+      rating:   p.rating || null,
+      reviews:  p.review_count || 0,
+      img:      imgs[0]?.url || '',
+      stockQty: p.stock_qty,
+      isOutOfStock: p.stock_qty <= 0,
+      lowStock: (p.stock_qty > 0 && p.stock_qty <= (p.low_stock_alert||5)) ? p.stock_qty : null,
+      slug:     p.slug,
+    };
+  }
+
+  try {
+    // Plain fetch to Supabase REST — no CDN library needed
+    const res = await fetch('https://drjebroujarpugwadido.supabase.co/rest/v1/products?select=' +
+      encodeURIComponent('*,categories(slug)') + '&is_active=eq.true', {
+      headers: {
+        'apikey': 'sb_publishable_0mAkL4aIqXf1nm9zlQF8Fg_yPyt-F71',
+        'Authorization': 'Bearer sb_publishable_0mAkL4aIqXf1nm9zlQF8Fg_yPyt-F71'
+      }
+    });
+    if (!res.ok) throw new Error('fetch failed ' + res.status);
+    const data = await res.json();
+    if (!data?.length) throw new Error('no data');
+
+    // Split into sections matching your existing layout
+    const byCat = (slug) => data.filter(p => p.categories?.slug === slug).map(toCard);
+    const byTag = (tag)  => data.filter(p => (p.tags||[]).includes(tag)).map(toCard);
+    const onSale = ()    => data.filter(p => p.sale_price).map(toCard);
+
+    const flashData = onSale().slice(0, 4);
+    const newData   = byTag('new').slice(0, 4);
+    const womenData = byCat('women').slice(0, 4);
+    const menData   = byCat('men').slice(0, 8);
+    const accData   = [...byCat('footwear'), ...byCat('caps'), ...byCat('bags')].slice(0, 14);
+
+    // Use live data if available, else fall back to hardcoded
+    const fl = flashData.length ? flashData : flashSale;
+    const nw = newData.length   ? newData   : newArrivals;
+    const wo = womenData.length ? womenData : womensPicks;
+    const mn = menData.length   ? menData   : mensPicks;
+    const ac = accData.length   ? accData   : accessories;
+
+    document.getElementById('flashGrid').innerHTML       = fl.map((p,i)=>renderCard(p,i,false)).join('');
+    document.getElementById('newArrivalsGrid').innerHTML = nw.map((p,i)=>renderCard(p,i,false)).join('');
+    document.getElementById('womensGrid').innerHTML      = wo.map((p,i)=>renderCard(p,i,i%4===0)).join('');
+    document.getElementById('mensGrid').innerHTML        = mn.map((p,i)=>renderCard(p,i,i%4===0)).join('');
+    document.getElementById('accessoriesRow').innerHTML  = ac.map((p,i)=>renderCard(p,i,false)).join('');
+
+  } catch(e) {
+    // Silent fallback — hardcoded arrays render as normal
+    document.getElementById('flashGrid').innerHTML       = flashSale.map((p,i)=>renderCard(p,i,false)).join('');
+    document.getElementById('newArrivalsGrid').innerHTML = newArrivals.map((p,i)=>renderCard(p,i,false)).join('');
+    document.getElementById('womensGrid').innerHTML      = womensPicks.map((p,i)=>renderCard(p,i,i%4===0)).join('');
+    document.getElementById('mensGrid').innerHTML        = mensPicks.map((p,i)=>renderCard(p,i,i%4===0)).join('');
+    document.getElementById('accessoriesRow').innerHTML  = accessories.map((p,i)=>renderCard(p,i,false)).join('');
+  }
+
+  // Real, explicit re-conversion — these real, dynamic grids render
+  // after the initial page-load pass, so this ensures a genuinely
+  // selected currency still applies to them.
+  if (typeof agoApplyDisplayCurrency === 'function') agoApplyDisplayCurrency();
+
+  skelInit(document);
+  if (window.__agoContentReady) window.__agoContentReady();
+})();
+
+/* ── CART & WISH: persist across pages via localStorage ─── */
+(function() {
+  const cart = JSON.parse(localStorage.getItem(agoCartKey()) || '[]');
+  const wish = JSON.parse(localStorage.getItem(agoWishKey()) || '[]');
+  const cartN = cart.reduce((s,i) => s + (i.qty||1), 0);
+  document.getElementById('cartBadge')?.setAttribute('data-count', cartN);
+  document.getElementById('cartBadgeNav')?.setAttribute('data-count', cartN);
+  if (cartN > 0) {
+    document.getElementById('cartBadge').textContent = cartN;
+    document.getElementById('cartBadgeNav').textContent = cartN;
+  }
+  if (wish.length > 0) {
+    document.getElementById('wishBadgeNav').textContent = wish.length;
+  }
+})();
+
+/* ============ SEARCH — dedicated overlay page, recent/trending pills, live results ============ */
+const allProducts = [...flashSale, ...newArrivals, ...womensPicks, ...mensPicks, ...accessories];
+let recentSearches = [];
+const trendingSearches = ['Ankara Gown','Senator Kaftan','Beads','Heels','Fila Cap','Jumpsuit'];
+
+const searchOverlay = document.getElementById('searchOverlay');
+const searchOverlayInput = document.getElementById('searchOverlayInput');
+const searchOverlayBody = document.getElementById('searchOverlayBody');
+
+function renderSearchDefault(){
+  let html = '';
+  if(recentSearches.length){
+    html += `<div class="search-section-title">Recent Searches <span class="clear-btn" id="clearRecent">Clear All</span></div>
+    <div class="search-pills">${recentSearches.map(t=>`<button class="search-pill" data-term="${t}">${t}</button>`).join('')}</div>`;
+  }
+  html += `<div class="search-section-title">Trending Searches</div>
+  <div class="search-pills">${trendingSearches.map(t=>`<button class="search-pill" data-term="${t}">${t}</button>`).join('')}</div>`;
+  searchOverlayBody.innerHTML = html;
+}
+
+const STOPWORDS = new Set(['for','a','an','the','of','in','and','with','to']);
+
+function searchableText(p){
+  return `${p.name} ${p.cat} ${p.tags||''}`.toLowerCase();
+}
+function tokenMatches(text, token){
+  if(text.includes(token)) return true;
+  if(token.endsWith('s') && text.includes(token.slice(0,-1))) return true;
+  if(!token.endsWith('s') && text.includes(token+'s')) return true;
+  return false;
+}
+
+function renderSearchResults(query){
+  const q = query.trim().toLowerCase();
+  if(!q){ renderSearchDefault(); return; }
+  const tokens = q.split(/\s+/).filter(t => t.length && !STOPWORDS.has(t));
+  const matches = allProducts.filter(p => {
+    const text = searchableText(p);
+    return tokens.every(t => tokenMatches(text, t));
+  });
+  if(!matches.length){
+    searchOverlayBody.innerHTML = `<div class="search-empty">No results for "${query}"</div>`;
+    return;
+  }
+  searchOverlayBody.innerHTML = matches.map(p => `
+    <a class="search-result-row" href="product.html?id=${slug(p.name)}">
+      <span class="search-thumb-wrap skel-loading"><img class="skel-img" src="${p.img}" alt=""></span>
+      <div class="search-result-info">
+        <p>${p.name}</p>
+        <span data-ngn="${p.price}">${fmt(p.price)}</span>
+      </div>
+    </a>`).join('');
+  skelInit(searchOverlayBody);
+}
+
+function rememberSearch(term){
+  if(!term) return;
+  recentSearches = [term, ...recentSearches.filter(t => t !== term)].slice(0, 6);
+}
+
+document.getElementById('navSearchTrigger').addEventListener('click', ()=>{
+  searchOverlay.classList.add('active');
+  renderSearchDefault();
+  setTimeout(()=> searchOverlayInput.focus(), 80);
+});
+
+document.getElementById('searchBackBtn').addEventListener('click', ()=>{
+  searchOverlay.classList.remove('active');
+  searchOverlayInput.value = '';
+});
+
+searchOverlayInput.addEventListener('input', (e)=> renderSearchResults(e.target.value));
+
+searchOverlayInput.addEventListener('keydown', (e)=>{
+  if(e.key === 'Enter' && searchOverlayInput.value.trim()) rememberSearch(searchOverlayInput.value.trim());
+});
+
+searchOverlayBody.addEventListener('click', (e)=>{
+  const pill = e.target.closest('.search-pill');
+  if(pill){
+    const term = pill.dataset.term;
+    searchOverlayInput.value = term;
+    rememberSearch(term);
+    renderSearchResults(term);
+    return;
+  }
+  if(e.target.id === 'clearRecent'){ recentSearches = []; renderSearchDefault(); }
+});
+
+/* ============ TOAST ============ */
+const toastEl = document.getElementById('toast');
+let toastTimer;
+function showToast(msg){
+  toastEl.textContent = msg;
+  toastEl.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(()=>toastEl.classList.remove('show'), 2200);
+}
+document.addEventListener('click', (e)=>{
+  const link = e.target.closest('.toast-link');
+  if(link){ e.preventDefault(); showToast(link.dataset.toast || 'Coming soon'); }
+});
+
+/* ============ ANNOUNCEMENT BAR ROTATION ============ */
+/* Pulls real, admin-managed announcement banners from Supabase
+   (position='announcement', is_active=true, and within any
+   scheduled start/end window). Falls back to the original 3
+   hardcoded messages if the fetch fails or returns nothing —
+   the announcement bar should never end up empty. */
+(async function(){
+  const announce = document.querySelector('.announce');
+  const track = document.getElementById('announceTrack');
+
+  try {
+    const res = await fetch(
+      'https://drjebroujarpugwadido.supabase.co/rest/v1/banners?position=eq.announcement&is_active=eq.true&select=*&order=sort_order.asc',
+      { headers: {
+          'apikey': 'sb_publishable_0mAkL4aIqXf1nm9zlQF8Fg_yPyt-F71',
+          'Authorization': 'Bearer sb_publishable_0mAkL4aIqXf1nm9zlQF8Fg_yPyt-F71',
+      }}
+    );
+    if (res.ok) {
+      const banners = await res.json();
+      const now = new Date();
+      // Respect optional scheduling windows — a banner with
+      // starts_at/ends_at set only shows within that window.
+      const liveBanners = banners.filter(b => {
+        if (b.starts_at && new Date(b.starts_at) > now) return false;
+        if (b.ends_at && new Date(b.ends_at) < now) return false;
+        return true;
+      });
+      if (liveBanners.length) {
+        const palette = ['#C084FC', '#E5B567', '#6FCFC0'];
+        track.innerHTML = liveBanners.map((b, i) =>
+          `<div data-bg="${palette[i % palette.length]}">${(b.title || '').toUpperCase()}</div>`
+        ).join('');
+      }
+      // If liveBanners is empty, track keeps its original hardcoded
+      // children from the HTML — nothing to do, that's the fallback.
+    }
+  } catch(e) {
+    console.warn('Could not load announcement banners, using defaults:', e);
+  }
+
+  const slides = Array.from(track.children);
+  if (!slides.length) { announce.style.display = 'none'; return; }
+  let i = 0;
+  slides.forEach((el,idx)=> el.classList.toggle('active', idx===0));
+  announce.style.backgroundColor = slides[0].dataset.bg;
+  setInterval(()=>{
+    slides[i].classList.remove('active');
+    i = (i+1) % slides.length;
+    slides[i].classList.add('active');
+    announce.style.backgroundColor = slides[i].dataset.bg;
+  }, 3500);
+})();
+
+/* ============ HERO CAROUSEL (invisible — no dots) ============ */
+/* Respects the admin's Hero Style setting (site_content: home /
+   hero_mode). 'carousel' = current rotating behavior, unchanged.
+   'single' = freeze on one image — either the admin-uploaded
+   hero_single_image, or just the first slide if none was set. */
+(function(){
+  const slides = document.querySelectorAll('.hero-slide');
+  let i = 0;
+  let rotationTimer = null;
+
+  function startCarousel(){
+    rotationTimer = setInterval(()=>{
+      slides[i].classList.remove('active');
+      i = (i+1) % slides.length;
+      slides[i].classList.add('active');
+    }, 6000);
+  }
+
+  function applyHeroMode(){
+    const content = window.__agoSiteContent || {};
+    const mode = content.hero_mode || 'carousel';
+    if (mode === 'single'){
+      if (rotationTimer) clearInterval(rotationTimer);
+      slides.forEach((s,idx) => s.classList.toggle('active', idx===0));
+      if (content.hero_single_image){
+        const img = slides[0].querySelector('img');
+        if (img) img.src = content.hero_single_image;
+        else slides[0].style.backgroundImage = `url('${content.hero_single_image}')`;
+      }
+    } else if (!rotationTimer){
+      startCarousel();
+    }
+  }
+
+  // Site content loads async — start the carousel immediately as the
+  // safe default, then switch to single-image mode if that's what's
+  // configured, once the real setting arrives.
+  startCarousel();
+  document.addEventListener('agoSiteContentReady', applyHeroMode);
+  // Also check immediately in case content already loaded before
+  // this script ran (fast connections / cached responses).
+  if (window.__agoSiteContent) applyHeroMode();
+})();
+
+/* ============ CATEGORY FILTER ============ */
+document.getElementById('catStrip').addEventListener('click', (e)=>{
+  const pill = e.target.closest('.pill');
+  if(!pill) return;
+  document.querySelectorAll('.pill').forEach(p=>p.classList.remove('active'));
+  pill.classList.add('active');
+  const filter = pill.dataset.filter;
+  document.querySelectorAll('.card').forEach(card=>{
+    const cats = (card.dataset.cat || '').split(' ');
+    card.style.display = (filter==='all' || cats.includes(filter)) ? '' : 'none';
+  });
+});
+
+/* ============ COUNTDOWN ============ */
+(function(){
+  const target = Date.now() + 1000*60*60*48; // 48hr from page load
+  function tick(){
+    const diff = Math.max(0, target - Date.now());
+    const h = Math.floor(diff/3600000);
+    const m = Math.floor((diff%3600000)/60000);
+    const s = Math.floor((diff%60000)/1000);
+    document.getElementById('cdH').innerHTML = String(h).padStart(2,'0') + '<span>hrs</span>';
+    document.getElementById('cdM').innerHTML = String(m).padStart(2,'0') + '<span>min</span>';
+    document.getElementById('cdS').innerHTML = String(s).padStart(2,'0') + '<span>sec</span>';
+  }
+  tick(); setInterval(tick, 1000);
+})();
+
+/* ============ WISHLIST TOGGLE (per-card heart only — removed from top nav) ============ */
+/* ============ CART + WISHLIST ============ */
+/* ago-cart.js handles all cart + wishlist + stepper logic */
+document.getElementById('cartNavBtn')?.addEventListener('click', () => location.href = 'cart.html');
+
+/* ============ BANNER PARALLAX ============ */
+(function(){
+  const banner = document.getElementById('banner');
+  const bImg = document.getElementById('bannerImg');
+  let ticking = false;
+  window.addEventListener('scroll', ()=>{
+    if(ticking) return;
+    ticking = true;
+    requestAnimationFrame(()=>{
+      const rect = banner.getBoundingClientRect();
+      const offset = rect.top * 0.15;
+      bImg.style.transform = `translateY(${offset}px)`;
+      ticking = false;
+    });
+  });
+})();
+
+/* ============ NEWSLETTER ============ */
+document.getElementById('newsletterForm').addEventListener('submit', (e)=>{
+  e.preventDefault();
+  showToast("You're on the list 🤍");
+  e.target.reset();
+});
+
+/* ============ HAMBURGER ============ */
+/* ============ MENU DRAWER ============ */
+const menuDrawer = document.getElementById('menuDrawer');
+const menuScrim = document.getElementById('menuScrim');
+function openMenu(){ menuDrawer.classList.add('active'); menuScrim.classList.add('active'); }
+function closeMenu(){ menuDrawer.classList.remove('active'); menuScrim.classList.remove('active'); }
+document.getElementById('hamburgerBtn').addEventListener('click', openMenu);
+document.getElementById('menuCloseBtn').addEventListener('click', closeMenu);
+menuScrim.addEventListener('click', closeMenu);
+
+/* ============ IMAGE SKELETON LOADER ============ */
+function skelInit(root){
+  (root||document).querySelectorAll('img.skel-img:not(.skel-bound)').forEach(img=>{
+    img.classList.add('skel-bound');
+    const container = img.closest('.skel-loading');
+    function done(){
+      img.classList.add('loaded');
+      if(container) container.classList.add('img-loaded');
+    }
+    if(img.complete && img.naturalWidth) done();
+    else { img.addEventListener('load', done); img.addEventListener('error', done); }
+  });
+}
+</script>
+</body>
+</html>
